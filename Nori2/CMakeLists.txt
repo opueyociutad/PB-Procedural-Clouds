@@ -76,6 +76,7 @@ add_executable(nori
   src/common.cpp
   src/dielectric.cpp
   src/diffuse.cpp
+  src/direct_whitted.cpp
   src/environment.cpp  
   src/gui.cpp
   src/independent.cpp
@@ -83,10 +84,12 @@ add_executable(nori
   src/mesh.cpp
   src/microfacet.cpp
   src/mirror.cpp
+  src/normals.cpp
   src/obj.cpp
   src/object.cpp
   src/parser.cpp
   src/perspective.cpp
+  src/pointlight.cpp
   src/proplist.cpp
   src/rfilter.cpp
   src/scene.cpp
@@ -115,6 +118,9 @@ else()
 endif()
 
 target_link_libraries(warptest tbb_static nanogui ${NANOGUI_EXTRA_LIBS})
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # Force colored output for the ninja generator
 if (CMAKE_GENERATOR STREQUAL "Ninja")
