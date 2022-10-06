@@ -1,19 +1,19 @@
 /*
-    This file is part of Nori, a simple educational ray tracer
+	This file is part of Nori, a simple educational ray tracer
 
-    Copyright (c) 2015 by Wenzel Jakob
+	Copyright (c) 2015 by Wenzel Jakob
 
-    Nori is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License Version 3
-    as published by the Free Software Foundation.
+	Nori is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License Version 3
+	as published by the Free Software Foundation.
 
-    Nori is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+	Nori is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
@@ -39,19 +39,19 @@ NORI_NAMESPACE_BEGIN
  */
 class ReconstructionFilter : public NoriObject {
 public:
-    /// Return the filter radius in fractional pixels
-    float getRadius() const { return m_radius; }
+	/// Return the filter radius in fractional pixels
+	float getRadius() const { return m_radius; }
 
-    /// Evaluate the filter function
-    virtual float eval(float x) const = 0;
+	/// Evaluate the filter function
+	virtual float eval(float x) const = 0;
 
-    /**
-     * \brief Return the type of object (i.e. Mesh/Camera/etc.) 
-     * provided by this instance
-     * */
-    EClassType getClassType() const { return EReconstructionFilter; }
+	/**
+	 * \brief Return the type of object (i.e. Mesh/Camera/etc.)
+	 * provided by this instance
+	 * */
+	EClassType getClassType() const { return EReconstructionFilter; }
 protected:
-    float m_radius;
+	float m_radius;
 };
 
 NORI_NAMESPACE_END

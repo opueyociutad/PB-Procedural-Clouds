@@ -1,19 +1,19 @@
 /*
-    This file is part of Nori, a simple educational ray tracer
+	This file is part of Nori, a simple educational ray tracer
 
-    Copyright (c) 2015 by Wenzel Jakob
+	Copyright (c) 2015 by Wenzel Jakob
 
-    Nori is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License Version 3
-    as published by the Free Software Foundation.
+	Nori is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License Version 3
+	as published by the Free Software Foundation.
 
-    Nori is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+	Nori is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
@@ -30,27 +30,27 @@ NORI_NAMESPACE_BEGIN
  */
 class Bitmap : public Eigen::Array<Color3f, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> {
 public:
-    typedef Eigen::Array<Color3f, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Base;
+	typedef Eigen::Array<Color3f, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Base;
 
-    /**
-     * \brief Allocate a new bitmap of the specified size
-     *
-     * The contents will initially be undefined, so make sure
-     * to call \ref clear() if necessary
-     */
-    Bitmap(const Vector2i &size = Vector2i(0, 0))
-        : Base(size.y(), size.x()) { }
+	/**
+	 * \brief Allocate a new bitmap of the specified size
+	 *
+	 * The contents will initially be undefined, so make sure
+	 * to call \ref clear() if necessary
+	 */
+	Bitmap(const Vector2i &size = Vector2i(0, 0))
+		: Base(size.y(), size.x()) { }
 
-    /// Load an OpenEXR file with the specified filename
-    Bitmap(const std::string &filename);
+	/// Load an OpenEXR file with the specified filename
+	Bitmap(const std::string &filename);
 
-    /// Save the bitmap as an EXR file with the specified filename
-    void saveEXR(const std::string &filename);
+	/// Save the bitmap as an EXR file with the specified filename
+	void saveEXR(const std::string &filename);
 
-    /// Save the bitmap as a PNG file (with sRGB tonemapping) with the specified filename
-    void savePNG(const std::string &filename);
+	/// Save the bitmap as a PNG file (with sRGB tonemapping) with the specified filename
+	void savePNG(const std::string &filename);
 
-    Color3f eval(const Point2f& uv) const;
+	Color3f eval(const Point2f& uv) const;
 };
 
 /**
@@ -62,21 +62,21 @@ typedef Eigen::Array<uint8_t, 3, 1> Color3b;
 
 class LDRBitmap : public Eigen::Array<Color3b, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> {
 public:
-    typedef Eigen::Array<Color3b, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Base;
+	typedef Eigen::Array<Color3b, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Base;
 
-    /**
-     * \brief Allocate a new bitmap of the specified size
-     *
-     * The contents will initially be undefined, so make sure
-     * to call \ref clear() if necessary
-     */
-    LDRBitmap(const Vector2i& size = Vector2i(0, 0))
-        : Base(size.y(), size.x()) { }
+	/**
+	 * \brief Allocate a new bitmap of the specified size
+	 *
+	 * The contents will initially be undefined, so make sure
+	 * to call \ref clear() if necessary
+	 */
+	LDRBitmap(const Vector2i& size = Vector2i(0, 0))
+		: Base(size.y(), size.x()) { }
 
-    /// Load a PNG file with the specified filename
-    LDRBitmap(const std::string& filename);
+	/// Load a PNG file with the specified filename
+	LDRBitmap(const std::string& filename);
 
-    Color3f eval(const Point2f& uv) const;
+	Color3f eval(const Point2f& uv) const;
 };
 
 NORI_NAMESPACE_END
