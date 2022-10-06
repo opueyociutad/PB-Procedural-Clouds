@@ -87,6 +87,7 @@ add_executable(nori
   src/normals.cpp
   src/obj.cpp
   src/object.cpp
+  src/ortographic.cpp
   src/parser.cpp
   src/perspective.cpp
   src/pointlight.cpp
