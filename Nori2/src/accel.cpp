@@ -1,19 +1,19 @@
 /*
-    This file is part of Nori, a simple educational ray tracer
+	This file is part of Nori, a simple educational ray tracer
 
-    Copyright (c) 2015 by Wenzel Jakob
+	Copyright (c) 2015 by Wenzel Jakob
 
-    Nori is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License Version 3
-    as published by the Free Software Foundation.
+	Nori is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License Version 3
+	as published by the Free Software Foundation.
 
-    Nori is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+	Nori is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <nori/accel.h>
@@ -66,25 +66,25 @@ public:
 
 public:
 	/**
-	 * Create a new build task
-	 *
-	 * \param bvh
-	 *    Reference to the underlying BVH
-	 *
-	 * \param node_idx
-	 *    Index of the BVH node that should be built
-	 *
-	 * \param start
-	 *    Start pointer into a list of triangle indices to be processed
-	 *
-	 * \param end
-	 *    End pointer into a list of triangle indices to be processed
-	 *
-	 *  \param temp
-	 *    Pointer into a temporary memory region that can be used for
-	 *    construction purposes. The usable length is <tt>end-start</tt>
-	 *    unsigned integers.
-	 */
+	* Create a new build task
+	*
+	* \param bvh
+	*	Reference to the underlying BVH
+	*
+	* \param node_idx
+	*	Index of the BVH node that should be built
+	*
+	* \param start
+	*	Start pointer into a list of triangle indices to be processed
+	*
+	* \param end
+	*	End pointer into a list of triangle indices to be processed
+	*
+	*  \param temp
+	*	Pointer into a temporary memory region that can be used for
+	*	construction purposes. The usable length is <tt>end-start</tt>
+	*	unsigned integers.
+	*/
 	BVHBuildTask(Accel &bvh, n_UINT node_idx, n_UINT *start, n_UINT *end, n_UINT *temp)
 		: bvh(bvh), node_idx(node_idx), start(start), end(end), temp(temp) { }
 
@@ -480,11 +480,13 @@ bool Accel::rayIntersect(const Ray3f &_ray, Intersection &its, bool shadowRay) c
 		its.geoFrame = Frame((p1 - p0).cross(p2 - p0).normalized());
 
 		if (N.size() > 0) {
-			/* Compute the shading frame. Note that for simplicity,
-			   the current implementation doesn't attempt to provide
-			   tangents that are continuous across the surface. That
-			   means that this code will need to be modified to be able
-			   use anisotropic BRDFs, which need tangent continuity */
+			/*
+			Compute the shading frame. Note that for simplicity,
+			the current implementation doesn't attempt to provide
+			tangents that are continuous across the surface. That
+			means that this code will need to be modified to be able
+			use anisotropic BRDFs, which need tangent continuity
+			*/
 
 			its.shFrame = Frame(
 				(bary.x() * N.col(idx0) +
