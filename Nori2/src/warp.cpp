@@ -47,36 +47,43 @@ float Warp::squareToUniformDiskPdf(const Point2f &p) {
 }
 
 Point2f Warp::squareToUniformTriangle(const Point2f& sample) {
-	throw NoriException("Warp::squareToUniformTriangle() is not yet implemented!");
+	return sample.x() + sample.y() < 1.0f ?
+	       Point2f(sample.x(), sample.y())
+		   : Point2f(1-sample.x(), 1-sample.y());
 }
 
 float Warp::squareToUniformTrianglePdf(const Point2f& p) {
-	throw NoriException("Warp::squareToUniformTrianglePdf() is not yet implemented!");
+	return p.x() + p.y() > 1.0f ? 0 : 2;
 }
 
-
 Vector3f Warp::squareToUniformSphere(const Point2f &sample) {
-	throw NoriException("Warp::squareToUniformSphere() is not yet implemented!");
+	float theta = acos(2*sample.x() - 1);
+	float phi = 2 * M_PI * sample.y();
+	return Vector3f(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
 
 float Warp::squareToUniformSpherePdf(const Vector3f &v) {
-	throw NoriException("Warp::squareToUniformSpherePdf() is not yet implemented!");
+	return 1 / (4*M_PI);
 }
 
 Vector3f Warp::squareToUniformHemisphere(const Point2f &sample) {
-	throw NoriException("Warp::squareToUniformHemisphere() is not yet implemented!");
+	float theta = acos(sample.x());
+	float phi = 2 * M_PI * sample.y();
+	return Vector3f(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
 
 float Warp::squareToUniformHemispherePdf(const Vector3f &v) {
-	throw NoriException("Warp::squareToUniformHemispherePdf() is not yet implemented!");
+	return v.z() < 0 ? 0.0f : 1 / (2*M_PI);
 }
 
 Vector3f Warp::squareToCosineHemisphere(const Point2f &sample) {
-	throw NoriException("Warp::squareToCosineHemisphere() is not yet implemented!");
+	float theta = acos(sqrt(1-sample.x()));
+	float phi = 2 * M_PI * sample.y();
+	return Vector3f(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
 
 float Warp::squareToCosineHemispherePdf(const Vector3f &v) {
-	throw NoriException("Warp::squareToCosineHemispherePdf() is not yet implemented!");
+	return v.z() < 0.0f ? 0.0f : v.z() / M_PI;
 }
 
 Vector3f Warp::squareToBeckmann(const Point2f &sample, float alpha) {
