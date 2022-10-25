@@ -79,5 +79,47 @@ protected:
 	std::string m_bitmap_name;
 };
 
+
+class CheckerTexture : public Texture {
+public:
+	CheckerTexture(const PropertyList& props) {
+
+		m_color1 = props.getColor("color", Color3f(.9));
+		m_color2 = props.getColor("color", Color3f(.1));
+		m_scale[0] = props.getInteger("scalex", 1.f);
+		m_scale[1] = props.getInteger("scaley", 1.f);
+	}
+	~CheckerTexture()
+	{	}
+
+	virtual std::string toString() const {
+		return tfm::format(
+			"CheckerTexture[\n"
+			"  color1 = %s, color2 = %s\n"
+			"  scale = %s,\n"
+			"]",
+			m_color1.toString(),m_color2.toString(),
+			m_scale.toString()
+			);
+	}
+
+	virtual Color3f eval(const Point2f& uv) const {
+		Point2f pos = uv.cwiseProduct(m_scale);
+		int px = pos[0];
+		int py = pos[1];
+
+		if ((px % 2) == (py % 2))
+			return m_color1;
+		else
+			return m_color2;
+	}
+
+protected:
+	Color3f m_color1,m_color2;
+	Point2f m_scale;
+};
+
+
 NORI_REGISTER_CLASS(BitmapTexture, "textmap")
+NORI_REGISTER_CLASS(CheckerTexture, "checker")
 NORI_NAMESPACE_END

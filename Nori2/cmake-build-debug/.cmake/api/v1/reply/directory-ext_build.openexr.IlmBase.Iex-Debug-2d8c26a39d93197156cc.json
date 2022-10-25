@@ -1,0 +1,69 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"INSTALL"
+		],
+		"files" : 
+		[
+			"ext/openexr/IlmBase/Iex/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"ext_build/openexr/IlmBase/Iex/libIex.a"
+			],
+			"targetId" : "Iex::@2d5ce12303fd5a715ea3",
+			"targetIndex" : 2,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include/OpenEXR",
+			"paths" : 
+			[
+				"ext/openexr/IlmBase/Iex/IexBaseExc.h",
+				"ext/openexr/IlmBase/Iex/IexMathExc.h",
+				"ext/openexr/IlmBase/Iex/IexThrowErrnoExc.h",
+				"ext/openexr/IlmBase/Iex/IexErrnoExc.h",
+				"ext/openexr/IlmBase/Iex/IexMacros.h",
+				"ext/openexr/IlmBase/Iex/Iex.h",
+				"ext/openexr/IlmBase/Iex/IexNamespace.h",
+				"ext/openexr/IlmBase/Iex/IexExport.h",
+				"ext/openexr/IlmBase/Iex/IexForward.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "ext_build/openexr/IlmBase/Iex",
+		"source" : "ext/openexr/IlmBase/Iex"
+	}
+}

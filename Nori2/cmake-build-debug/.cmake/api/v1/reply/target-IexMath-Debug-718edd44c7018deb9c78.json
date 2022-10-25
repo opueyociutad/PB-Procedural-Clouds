@@ -1,0 +1,164 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "ext_build/openexr/IlmBase/IexMath/libIexMath.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"ADD_LIBRARY",
+			"INSTALL",
+			"TARGET_LINK_LIBRARIES",
+			"INCLUDE_DIRECTORIES"
+		],
+		"files" : 
+		[
+			"ext/openexr/IlmBase/IexMath/CMakeLists.txt",
+			"ext/openexr/IlmBase/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 6,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 10,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 47,
+				"parent" : 4
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -std=c++14 -Wno-deprecated-declarations -Wno-misleading-indentation -Wformat-truncation=0 -Wno-int-in-bool-context -Wimplicit-fallthrough=0 -Wno-unused-result -Wno-deprecated -g   -pthread"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-debug/ext_build/openexr/IlmBase/IexMath"
+				},
+				{
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/IexMath"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Iex"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Imath"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Half"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-debug/ext_build/openexr/IlmBase/config"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/IlmThread"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "Iex::@2d5ce12303fd5a715ea3"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "dependencies"
+	},
+	"id" : "IexMath::@334c737c54925b8ad8cb",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "IexMath",
+	"nameOnDisk" : "libIexMath.a",
+	"paths" : 
+	{
+		"build" : "ext_build/openexr/IlmBase/IexMath",
+		"source" : "ext/openexr/IlmBase/IexMath"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "ext/openexr/IlmBase/IexMath/IexMathFloatExc.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "ext/openexr/IlmBase/IexMath/IexMathFpu.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}
