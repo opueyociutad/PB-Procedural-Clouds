@@ -1,0 +1,727 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "nori"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries",
+			"TARGET_LINK_LIBRARIES",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt",
+			"ext/openexr/OpenEXR/IlmImf/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 40,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 118,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 148,
+				"parent" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 6,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -std=c++14 -Wno-deprecated-declarations -Wno-misleading-indentation -Wformat-truncation=0 -Wno-int-in-bool-context -Wimplicit-fallthrough=0 -Wall -Wextra -Wno-unused-parameter -O3 -fdiagnostics-color=always -g"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/tinyformat"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/nanogui/ext/eigen"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Imath"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Iex"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Half"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/OpenEXR/IlmImf"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-debug/ext_build/openexr/OpenEXR/config"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-debug/ext_build/openexr/IlmBase/config"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/tbb/include"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/pcg32"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/pugixml/src"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/hypothesis"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/nanogui/ext/glfw/include"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/nanogui/ext/glew/include"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/nanogui/ext/nanovg/src"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/nanogui/include"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/filesystem"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/nanogui/ext/nanovg/example"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "pugixml::@1513f232e2be2c4ffccf"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "Half::@bc73201a0ff31525839c"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "Iex::@2d5ce12303fd5a715ea3"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "Imath::@cff27ddb2a1d5995498d"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "IlmThread::@ad0fbd93a99e11f50aa5"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "IlmImf::@c7e2e96394a199d2be4c"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "tbb_static::@3dd1ab55f51ddf8a6aef"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "nanogui::@778dc1955f638a1c4882"
+		}
+	],
+	"id" : "nori::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-std=c++14 -Wno-deprecated-declarations -Wno-misleading-indentation -Wformat-truncation=0 -Wno-int-in-bool-context -Wimplicit-fallthrough=0 -Wall -Wextra -Wno-unused-parameter -O3 -fdiagnostics-color=always -g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-rdynamic",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "ext_build/tbb/libtbb_static.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "ext_build/libpugixml.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "ext_build/openexr/OpenEXR/IlmImf/libIlmImf.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "ext_build/nanogui/libnanogui.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lGL",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lXxf86vm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lXrandr",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lXinerama",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lXcursor",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lXi",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lX11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lrt",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "ext_build/openexr/IlmBase/Half/libHalf.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "ext_build/openexr/IlmBase/Imath/libImath.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "ext_build/openexr/IlmBase/IlmThread/libIlmThread.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "ext_build/openexr/IlmBase/Iex/libIex.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lz",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "nori",
+	"nameOnDisk" : "nori",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/accel.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/bbox.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/bitmap.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/block.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/bsdf.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/camera.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/color.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/common.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/dpdf.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/frame.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/gui.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/integrator.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/emitter.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/mesh.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/object.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/parser.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/proplist.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/ray.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/rfilter.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/sampler.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/scene.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/texture.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/timer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/transform.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/vector.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/nori/warp.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/accel.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/area.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/bitmap.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/block.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/chi2test.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/common.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/dielectric.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/diffuse.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/direct_whitted.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/environment.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/gui.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/independent.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/main.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/mesh.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/microfacet.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/mirror.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/normals.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/obj.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/object.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/ortographic.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/parser.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/perspective.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/pointlight.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/proplist.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/rfilter.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/scene.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/texture.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/ttest.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/warp.cpp",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "EXECUTABLE"
+}

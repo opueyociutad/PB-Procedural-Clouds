@@ -154,8 +154,6 @@ Color3f Bitmap::eval(const Point2f& uv) const
     if (ix1 >= cols() || ix1 < 0) ix1 = ix1 % cols();
     if (iy1 >= rows() || iy1 < 0) iy1 = iy1 % rows();
 
-    //cout << "Coordinates: " << ix << ", " << iy << " -- " << ix1 <<", " << iy1;
-
     
     Color3f color = ((1.f - wx) * (1.f - wy)) * coeff(iy, ix) + (wx * (1.f - wy)) * coeff(iy, ix1)
         +((1.f - wx) * wy) * coeff(iy1, ix) + (wx * wy) * coeff(iy1, ix1);
@@ -185,8 +183,8 @@ LDRBitmap::LDRBitmap(const std::string& filename)
 Color3f LDRBitmap::eval(const Point2f& uv) const
 {
     float x = (1.f - uv[0]) * cols();;
-    float y = (1.f-uv[1]) * rows();
-       
+    float y = (1.f - uv[1]) * rows();
+
     int ix = x, iy = y;
     float wx = x - ix, wy = y - iy;
 
@@ -199,9 +197,9 @@ Color3f LDRBitmap::eval(const Point2f& uv) const
     if (ix1 >= cols() || ix1 < 0) ix1 = ix1 % cols();
     if (iy1 >= rows() || iy1 < 0) iy1 = iy1 % rows();
 
-          
-    Color3f color = ((1.f - wx) * (1.f - wy)) * coeff(iy, ix).cast<float>() + (wx * (1.f - wy)) * coeff(iy, ix1).cast<float>();
-            + ((1.f - wx) * wy) * coeff(iy1, ix).cast<float>() +(wx * wy) * coeff(iy1, ix1).cast<float>();
+
+    Color3f color = ((1.f - wx) * (1.f - wy)) * coeff(iy, ix).cast<float>() + (wx * (1.f - wy)) * coeff(iy, ix1).cast<float>()
+                  + ((1.f - wx) * wy) * coeff(iy1, ix).cast<float>() + (wx * wy) * coeff(iy1, ix1).cast<float>();
 
     return color / 255.f;
 }
