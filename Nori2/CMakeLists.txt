@@ -97,6 +97,8 @@ add_executable(nori
   src/texture.cpp
   src/ttest.cpp
   src/warp.cpp
+
+  src/direct_ems.cpp
 )
 
 add_definitions(${NANOGUI_EXTRA_DEFS})

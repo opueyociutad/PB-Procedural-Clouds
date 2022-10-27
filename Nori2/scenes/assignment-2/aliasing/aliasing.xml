@@ -5,7 +5,7 @@
 	</sampler>
 
 	<!-- Use the ambient occlusion integrator -->
-    <integrator type="direct_whitted"/>
+	<integrator type="direct_whitted"/>
 
 	<!-- Load the plane bust -->
 	<mesh type="obj">
@@ -29,7 +29,7 @@
 
 	<!-- Render the scene viewed by a perspective camera -->
 	<camera type="perspective">
-        <!-- 3D origin, target point, and 'up' vector -->
+		<!-- 3D origin, target point, and 'up' vector -->
 		<transform name="toWorld">
 			<lookat target="0, 0, 0" 
 					origin="-4, .5, 0" 
