@@ -50,8 +50,8 @@ float Warp::squareToUniformDiskPdf(const Point2f &p) {
 
 Point2f Warp::squareToUniformTriangle(const Point2f& sample) {
 	return sample.x() + sample.y() < 1.0f ?
-	       Point2f(sample.x(), sample.y())
-		   : Point2f(1-sample.x(), 1-sample.y());
+		Point2f(sample.x(), sample.y())
+		: Point2f(1-sample.x(), 1-sample.y());
 }
 
 float Warp::squareToUniformTrianglePdf(const Point2f& p) {

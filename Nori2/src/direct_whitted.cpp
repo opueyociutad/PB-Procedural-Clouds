@@ -1,7 +1,3 @@
-//
-// Created by oscar on 30/09/22.
-//
-
 #include <nori/warp.h>
 #include <nori/integrator.h>
 #include <nori/scene.h>
