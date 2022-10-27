@@ -190,7 +190,7 @@ protected:
 	BSDF         *m_bsdf = nullptr;      ///< BSDF of the surface
 	Emitter      *m_emitter = nullptr;   ///< Associated emitter, if any
 	BoundingBox3f m_bbox;                ///< Bounding box of the mesh
-	DiscretePDF  m_pdf;                  ///< Discrete pdf for sampling triangles uniformly wrt their area. 
+	DiscretePDF  m_pdf;                  ///< Discrete pdf for sampling triangles uniformly wrt their area.
 };
 
 NORI_NAMESPACE_END
