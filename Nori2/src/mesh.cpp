@@ -113,14 +113,13 @@ Point3f Mesh::getCentroid(n_UINT index) const {
  * respect to surface area. Returns both position and normal
  */
 void Mesh::samplePosition(const Point2f &sample, Point3f &p, Normal3f &n, Point2f &uv) const {
-	Point2f sampleTriangle = Warp::squareToUniformTriangle(sample);
-	Eigen::VectorXf face = m_F.row(0);
+	Point2f sampleInTriangle = Warp::squareToUniformTriangle(sample);
+	Eigen::VectorXi face = m_F.row(0).cast<int>();
 	Eigen::VectorXf v1 = m_V.row(face[0]);
 	Eigen::VectorXf v2 = m_V.row(face[1]);
 	Eigen::VectorXf v3 = m_V.row(face[2]);
-	float det = (v2.y()-v3.y())*(v1.x()-v3.x())+(v3.x()-v2.x())*(v1.y()-v3.y());
-	float a = (v2.y()-v3.y())*(sampleTriangle.x()-v3.x())+(v3.x()-v2.x())*(sampleTriangle.y()-v3.y());
-	float b = (v3.y()-v1.y())*(sampleTriangle.x()-v3.x())+(v1.x()-v3.x())*(sampleTriangle.y()-v3.y());
+	float a = sampleInTriangle.x();
+	float b = sampleInTriangle.y();
 	float c = 1 - a - b;
 	p = Point3f(a*m_V.row(face[0]) + b*m_V.row(face[1]) + c*m_V.row(face[2]));
 	n = Normal3f(a*m_N.row(face[0]) + b*m_N.row(face[1]) + c*m_N.row(face[2]));
