@@ -45,6 +45,10 @@ void Mesh::activate() {
 	}
 
 	m_pdf.reserve(m_F.cols());
+	for (Eigen::Index i = 0; i < m_F.rows(); i++){
+			m_pdf.append(this->surfaceArea(i));
+	}
+	m_pdf.normalize();
 }
 
 float Mesh::surfaceArea(n_UINT index) const {
@@ -113,8 +117,10 @@ Point3f Mesh::getCentroid(n_UINT index) const {
  * respect to surface area. Returns both position and normal
  */
 void Mesh::samplePosition(const Point2f &sample, Point3f &p, Normal3f &n, Point2f &uv) const {
-	Point2f sampleInTriangle = Warp::squareToUniformTriangle(sample);
-	Eigen::VectorXi face = m_F.row(0).cast<int>();
+	Point2f sampleReused = sample;
+	size_t triangle = m_pdf.sampleReuse(sampleReused.x());
+	Point2f sampleInTriangle = Warp::squareToUniformTriangle(sampleReused);
+	Eigen::VectorXi face = m_F.row(triangle).cast<int>();
 	Eigen::VectorXf v1 = m_V.row(face[0]);
 	Eigen::VectorXf v2 = m_V.row(face[1]);
 	Eigen::VectorXf v3 = m_V.row(face[2]);
@@ -124,14 +130,11 @@ void Mesh::samplePosition(const Point2f &sample, Point3f &p, Normal3f &n, Point2
 	p = Point3f(a*m_V.row(face[0]) + b*m_V.row(face[1]) + c*m_V.row(face[2]));
 	n = Normal3f(a*m_N.row(face[0]) + b*m_N.row(face[1]) + c*m_N.row(face[2]));
 	uv = Point2f(a*m_UV.row(face[0]) + b*m_UV.row(face[1]) + c*m_UV.row(face[2]));
-	throw NoriException("Mesh::samplePosition() is not yet implemented!");
 }
 
 /// Return the surface area of the given triangle
 float Mesh::pdf(const Point3f &p) const {
-	throw NoriException("Mesh::pdf() is not yet implemented!");
-
-	return 0.;
+	return 1.0f / m_pdf.getNormalization();
 }
 
 
