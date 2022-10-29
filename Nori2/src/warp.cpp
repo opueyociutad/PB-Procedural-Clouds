@@ -89,8 +89,7 @@ float Warp::squareToCosineHemispherePdf(const Vector3f &v) {
 }
 
 Vector3f Warp::squareToBeckmann(const Point2f &sample, float alpha) {
-	float logx = log(1-sample.x());
-	if (isinf(logx)) logx = 0.0f;
+	float logx = log(1-sample.x()); //Impossible to be infinite because [0, 1)
 	float theta = atan(sqrt(-(alpha*alpha)*logx));
 	float phi = 2 * M_PI * sample.y();
 	return {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
@@ -101,11 +100,9 @@ float Warp::squareToBeckmannPdf(const Vector3f &m, float alpha) {
 	float theta = acos(m.z());
 	float tanTheta = tan(theta);
 	float cosTheta = m.z();
-	float xiPdf = 1/(2*M_PI);
-	float numerator = 2*exp(-(tanTheta*tanTheta) / (alpha*alpha));
-	float denominator = alpha*alpha * cosTheta*cosTheta*cosTheta;
-	float thPdf = (numerator * sin(theta)) / denominator;
-	return xiPdf * thPdf;
+	float numerator = exp(-(tanTheta*tanTheta) / (alpha*alpha));
+	float denominator = M_PI * alpha*alpha * cosTheta*cosTheta*cosTheta;
+	return (numerator * sin(theta)) / denominator;
 }
 
 NORI_NAMESPACE_END
