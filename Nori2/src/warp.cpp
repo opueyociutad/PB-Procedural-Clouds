@@ -75,7 +75,7 @@ Vector3f Warp::squareToUniformHemisphere(const Point2f &sample) {
 }
 
 float Warp::squareToUniformHemispherePdf(const Vector3f &v) {
-	return v.z() < 0 ? 0.0f : 1 / (2*M_PI);
+	return v.z() <= 0 ? 0.0f : 1 / (2*M_PI);
 }
 
 Vector3f Warp::squareToCosineHemisphere(const Point2f &sample) {
@@ -85,26 +85,27 @@ Vector3f Warp::squareToCosineHemisphere(const Point2f &sample) {
 }
 
 float Warp::squareToCosineHemispherePdf(const Vector3f &v) {
-	return v.z() < 0.0f ? 0.0f : v.z() / M_PI;
+	return v.z() <= 0.0f ? 0.0f : v.z() / M_PI;
 }
 
 Vector3f Warp::squareToBeckmann(const Point2f &sample, float alpha) {
-	float theta = atan(sqrt(-(alpha*alpha)*log(1-sample.x())));
+	float logx = log(1-sample.x());
+	if (isinf(logx)) logx = 0.0f;
+	float theta = atan(sqrt(-(alpha*alpha)*logx));
 	float phi = 2 * M_PI * sample.y();
 	return {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
 }
 
 float Warp::squareToBeckmannPdf(const Vector3f &m, float alpha) {
+	if (m.z() <= 0.0f) return 0.0f;
 	float theta = acos(m.z());
 	float tanTheta = tan(theta);
 	float cosTheta = m.z();
-	float xiPdf = (1/(2*M_PI));
-	float numerator = exp(-(tanTheta*tanTheta) / (alpha*alpha));
-	float independent = 2;
+	float xiPdf = 1/(2*M_PI);
+	float numerator = 2*exp(-(tanTheta*tanTheta) / (alpha*alpha));
 	float denominator = alpha*alpha * cosTheta*cosTheta*cosTheta;
-	float thPdf = independent * (numerator * sin(theta)) / denominator;
-	float pdf =  xiPdf * thPdf;
-	return pdf;
+	float thPdf = (numerator * sin(theta)) / denominator;
+	return xiPdf * thPdf;
 }
 
 NORI_NAMESPACE_END
