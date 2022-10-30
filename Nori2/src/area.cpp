@@ -60,9 +60,8 @@ public:
 		m_mesh->samplePosition(sample, lRec.p, lRec.n, lRec.uv);
 		lRec.dist = (lRec.p-lRec.ref).norm();
 		lRec.wi = (lRec.p-lRec.ref) / lRec.dist;
-		float pdfc = pdf(lRec);
-		lRec.pdf = pdfc;
-		Color3f c = eval(lRec) / pdfc;
+		lRec.pdf = pdf(lRec);
+		Color3f c = eval(lRec);
 		assert(!(isnan(c.x()) || isnan(c.y()) || isnan(c.z())));
 		return c;
 	}
