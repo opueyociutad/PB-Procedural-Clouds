@@ -127,10 +127,9 @@ void Mesh::samplePosition(const Point2f &sample, Point3f &p, Normal3f &n, Point2
 	float a = sampleInTriangle.x();
 	float b = sampleInTriangle.y();
 	float c = 1 - a - b;
-	if (m_N.size() > 0)
-		n = Normal3f(a*m_N.col(face[0]) + b*m_N.col(face[1]) + c*m_N.col(face[2])).normalized();
-	else
-		n = (v2 - v1).cross(v3 - v1).normalized();
+	n = m_N.cols() > 0 ?
+			Normal3f(a*m_N.col(face[0]) + b*m_N.col(face[1]) + c*m_N.col(face[2])).normalized()
+			: (v2 - v1).cross(v3 - v1).normalized();
 
 	p = Point3f(a*v1 + b*v2 + c*v3);
 	uv = Point2f(a*m_UV.col(face[0]) + b*m_UV.col(face[1]) + c*m_UV.col(face[2]));
