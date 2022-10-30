@@ -45,7 +45,7 @@ void Mesh::activate() {
 	}
 
 	m_pdf.reserve(m_F.cols());
-	for (Eigen::Index i = 0; i < m_F.rows(); i++){
+	for (Eigen::Index i = 0; i < m_F.cols(); i++){
 			m_pdf.append(this->surfaceArea(i));
 	}
 	m_pdf.normalize();
@@ -120,17 +120,26 @@ void Mesh::samplePosition(const Point2f &sample, Point3f &p, Normal3f &n, Point2
 	Point2f sampleReused = sample;
 	size_t triangle = m_pdf.sampleReuse(sampleReused.x());
 	Point2f sampleInTriangle = Warp::squareToUniformTriangle(sampleReused);
-	Eigen::VectorXi face = m_F.row(triangle).cast<int>();
-	Eigen::VectorXf v1 = m_V.row(face[0]);
-	Eigen::VectorXf v2 = m_V.row(face[1]);
-	Eigen::VectorXf v3 = m_V.row(face[2]);
+	Eigen::VectorXi face = m_F.col(triangle).cast<int>();
+	Point3f v1 = m_V.col(face[0]);
+	Point3f v2 = m_V.col(face[1]);
+	Point3f v3 = m_V.col(face[2]);
 	float a = sampleInTriangle.x();
 	float b = sampleInTriangle.y();
 	float c = 1 - a - b;
-	p = Point3f(a*m_V.row(face[0]) + b*m_V.row(face[1]) + c*m_V.row(face[2]));
-	n = Normal3f(a*m_N.row(face[0]) + b*m_N.row(face[1]) + c*m_N.row(face[2]));
-	uv = Point2f(a*m_UV.row(face[0]) + b*m_UV.row(face[1]) + c*m_UV.row(face[2]));
+	if (m_N.size() > 0)
+		n = Normal3f(a*m_N.col(face[0]) + b*m_N.col(face[1]) + c*m_N.col(face[2])).normalized();
+	else
+		n = (v2 - v1).cross(v3 - v1).normalized();
+
+	p = Point3f(a*v1 + b*v2 + c*v3);
+	uv = Point2f(a*m_UV.col(face[0]) + b*m_UV.col(face[1]) + c*m_UV.col(face[2]));
+
+	assert(!(isnan(p.x()) || isnan(p.y()) || isnan(p.z())
+		|| isnan(n.x()) || isnan(n.y()) || isnan(n.z())
+		|| isnan(uv.x()) || isnan(uv.y())));
 }
+
 
 /// Return the surface area of the given triangle
 float Mesh::pdf(const Point3f &p) const {
