@@ -34,6 +34,7 @@ Scene::Scene(const PropertyList &) {
 }
 
 Scene::~Scene() {
+	m_pdf.clear();
 	delete m_accel;
 	delete m_sampler;
 	delete m_camera;
@@ -60,6 +61,12 @@ void Scene::activate() {
 		m_sampler = static_cast<Sampler*>(
 			NoriObjectFactory::createInstance("independent", PropertyList()));
 	}
+
+	m_pdf.reserve(m_emitters.size());
+	for (const Emitter* em : m_emitters) {
+		//m_pdf.append(em->getRadiance());
+	}
+	m_pdf.normalize();
 
 	cout << endl;
 	cout << "Configuration: " << toString() << endl;

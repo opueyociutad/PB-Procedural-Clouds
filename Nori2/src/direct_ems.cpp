@@ -18,10 +18,12 @@ public :
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
 
-		EmitterQueryRecord emitterRecord(it.p);
 
 		// Add light if emitter
-		if (it.mesh->isEmitter()) Lo += it.mesh->getEmitter()->eval(emitterRecord);
+		if (it.mesh->isEmitter()) {
+			EmitterQueryRecord lightEmitterRecord(it.p);
+			Lo += it.mesh->getEmitter()->eval(lightEmitterRecord);
+		}
 
 		// Sample random light
 		const std::vector<Emitter*> lights = scene->getLights();
@@ -29,16 +31,17 @@ public :
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
 
 		// Add lighting if not in shadow
+		EmitterQueryRecord emitterRecord(it.p);
+		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		Ray3f sray(it.p, emitterRecord.wi);
 		Intersection it_shadow;
 		if (!(scene->rayIntersect(sray, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
-			Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
 			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * it.shFrame.n.dot(emitterRecord.wi));
 			assert(!(isnan(currentLight.x()) || isnan(currentLight.y()) || isnan(currentLight.z())));
 			assert(emitterRecord.pdf != 0);
 			assert(pdflight != 0);
-			Lo += currentLight;
+			Lo += currentLight / (pdflight * emitterRecord.pdf);
 		}
 
 		return Lo;
