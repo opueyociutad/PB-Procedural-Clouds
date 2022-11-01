@@ -41,6 +41,11 @@ public:
 		return 1.;
 	}
 
+	float getRadiance() {
+	#warning sus
+		return  0;
+	}
+
 protected:
 	Point3f m_position;
 	Color3f m_radiance;
