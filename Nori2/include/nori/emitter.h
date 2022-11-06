@@ -139,6 +139,11 @@ public:
 	virtual EClassType getClassType() const { return EEmitter; }
 
 	/**
+	 * Get average relative luminance of the emitter
+	 * */
+	virtual float getLuminance() const = 0;
+
+	/**
 	 * \brief Set the mesh if the emitter is attached to a mesh
 	 * */
 	void setMesh(Mesh * mesh) { m_mesh = mesh; }

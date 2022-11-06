@@ -96,13 +96,13 @@ Vector3f Warp::squareToBeckmann(const Point2f &sample, float alpha) {
 }
 
 float Warp::squareToBeckmannPdf(const Vector3f &m, float alpha) {
-	if (m.z() <= 0.0f) return 0.0f;
+	if (m.z() <= 0.0) return 0;
 	float theta = acos(m.z());
 	float tanTheta = tan(theta);
 	float cosTheta = m.z();
 	float numerator = exp(-(tanTheta*tanTheta) / (alpha*alpha));
 	float denominator = M_PI * alpha*alpha * cosTheta*cosTheta*cosTheta;
-	return (numerator * sin(theta)) / denominator;
+	return (numerator) / denominator;
 }
 
 NORI_NAMESPACE_END

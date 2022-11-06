@@ -41,6 +41,13 @@ public:
 			cout << "Loaded " << m_environment_name << " - SIZE [" << m_environment->rows() << ", " << m_environment->cols() << "]" << endl;
 		}
 		m_radiance = props.getColor("radiance", Color3f(1.));
+		m_luminance = 0;
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				Color3f col = 0.0001*m_radiance*m_environment->eval(Point2f(i/100.0, j/100.0));
+				m_luminance += 0.2126*col.r() + 0.7152*col.g() + 0.0722*col.b();
+			}
+		}
 	}
 	~EnvironmentEmitter()
 	{
@@ -93,6 +100,9 @@ public:
 		return Warp::squareToUniformSpherePdf(lRec.wi);
 	}
 
+	float getLuminance() const {
+		return m_luminance;
+	}
 
 	// Get the parent mesh
 	void setParent(NoriObject* parent)
@@ -104,6 +114,7 @@ protected:
 	Color3f m_radiance;
 	Bitmap *m_environment;
 	std::string m_environment_name;
+	float m_luminance;
 };
 
 NORI_REGISTER_CLASS(EnvironmentEmitter, "environment")
