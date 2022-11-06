@@ -30,7 +30,9 @@ class AreaEmitter : public Emitter {
 public:
 	AreaEmitter(const PropertyList &props) {
 		m_type = EmitterType::EMITTER_AREA;
-		m_radiance = new ConstantSpectrumTexture(props.getColor("radiance", Color3f(1.f)));
+		Color3f radiance = props.getColor("radiance", Color3f(1.f));
+		m_luminance = 0.2126*radiance.r() + 0.7152*radiance.g() + 0.0722*radiance.b();
+		m_radiance = new ConstantSpectrumTexture(radiance);
 		m_scale = props.getFloat("scale", 1.);
 	}
 
@@ -78,6 +80,10 @@ public:
 		return m_mesh->pdf(lRec.p) * (lRec.dist * lRec.dist) / (abs(lRec.n.dot(lRec.wi)));
 	}
 
+	float getLuminance() const {
+		return m_luminance;
+	}
+
 
 	// Get the parent mesh
 	void setParent(NoriObject *parent)
@@ -109,6 +115,7 @@ public:
 protected:
 	Texture* m_radiance;
 	float m_scale;
+	float m_luminance;
 };
 
 NORI_REGISTER_CLASS(AreaEmitter, "area")

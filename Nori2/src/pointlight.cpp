@@ -41,9 +41,8 @@ public:
 		return 1.;
 	}
 
-	float getRadiance() {
-	#warning sus
-		return  0;
+	float getLuminance() const {
+		return 0.2126*m_radiance.r() + 0.7152*m_radiance.g() + 0.0722*m_radiance.b();
 	}
 
 protected:
