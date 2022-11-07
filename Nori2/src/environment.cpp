@@ -44,10 +44,11 @@ public:
 		m_luminance = 0;
 		for (int i = 0; i < 100; i++) {
 			for (int j = 0; j < 100; j++) {
-				Color3f col = 0.0001*m_radiance*m_environment->eval(Point2f(i/100.0, j/100.0));
+				Color3f col = m_radiance*m_environment->eval(Point2f(i/100.0, j/100.0));
 				m_luminance += 0.2126*col.r() + 0.7152*col.g() + 0.0722*col.b();
 			}
 		}
+		m_luminance /= 100*100;
 	}
 	~EnvironmentEmitter()
 	{
