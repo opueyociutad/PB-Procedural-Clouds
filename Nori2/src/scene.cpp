@@ -75,15 +75,13 @@ void Scene::activate() {
 
 /// Sample emitter
 const Emitter * Scene::sampleEmitter(float rnd, float &pdf) const {
-	auto const & n = m_emitters.size();
-	size_t index = std::min(static_cast<size_t>(std::floor(n*rnd)), n - 1);
-	//pdf = 1. / float(n);
-	pdf = m_pdf.getNormalization();
+	size_t index = m_pdf.sample(rnd);
+	pdf = pdfEmitter(m_emitters[index]);
 	return m_emitters[index];
 }
 
 float Scene::pdfEmitter(const Emitter *em) const {
-	return 1. / float(m_emitters.size());
+	return em->getLuminance()*m_pdf.getNormalization();
 }
 
 
