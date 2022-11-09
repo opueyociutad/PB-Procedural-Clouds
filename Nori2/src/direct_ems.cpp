@@ -41,7 +41,7 @@ public :
 			assert(!(isnan(currentLight.x()) || isnan(currentLight.y()) || isnan(currentLight.z())));
 			assert(emitterRecord.pdf != 0);
 			assert(pdflight != 0);
-			Lo += currentLight / (pdflight * emitterRecord.pdf);
+			Lo += currentLight / pdflight;
 		}
 
 		return Lo;
