@@ -65,7 +65,7 @@ public:
 		lRec.pdf = pdf(lRec);
 		Color3f c = eval(lRec);
 		assert(!(isnan(c.x()) || isnan(c.y()) || isnan(c.z())));
-		return c;
+		return c / lRec.pdf;
 	}
 
 	// Returns probability with respect to solid angle given by all the information inside the emitterqueryrecord.

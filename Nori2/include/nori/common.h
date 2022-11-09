@@ -1,19 +1,19 @@
 /*
-	This file is part of Nori, a simple educational ray tracer
+    This file is part of Nori, a simple educational ray tracer
 
-	Copyright (c) 2015 by Wenzel Jakob
+    Copyright (c) 2015 by Wenzel Jakob
 
-	Nori is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License Version 3
-	as published by the Free Software Foundation.
+    Nori is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 3
+    as published by the Free Software Foundation.
 
-	Nori is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+    Nori is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program. If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
@@ -61,8 +61,8 @@
 
 /* Forward declarations */
 namespace filesystem {
-	class path;
-	class resolver;
+    class path;
+    class resolver;
 };
 
 NORI_NAMESPACE_BEGIN
@@ -146,9 +146,9 @@ typedef Eigen::Matrix<uint32_t, Eigen::Dynamic, Eigen::Dynamic> MatrixXu;
 /// Simple exception class, which stores a human-readable error description
 class NoriException : public std::runtime_error {
 public:
-	/// Variadic template constructor to support printf-style arguments
-	template <typename... Args> NoriException(const char *fmt, const Args &... args)
-	 : std::runtime_error(tfm::format(fmt, args...)) { }
+    /// Variadic template constructor to support printf-style arguments
+    template <typename... Args> NoriException(const char *fmt, const Args &... args) 
+     : std::runtime_error(tfm::format(fmt, args...)) { }
 };
 
 /// Return the number of cores (real and virtual)
@@ -189,9 +189,9 @@ extern std::string memString(size_t size, bool precise = false);
 
 /// Measures associated with probability distributions
 enum EMeasure {
-	EUnknownMeasure = 0,
-	ESolidAngle,
-	EDiscrete
+    EUnknownMeasure = 0,
+    ESolidAngle,
+    EDiscrete
 };
 
 //// Convert radians to degrees
@@ -201,40 +201,40 @@ inline float radToDeg(float value) { return value * (180.0f / M_PI); }
 inline float degToRad(float value) { return value * (M_PI / 180.0f); }
 
 #if !defined(_GNU_SOURCE)
-	/// Emulate sincosf using sinf() and cosf()
-	inline void sincosf(float theta, float *_sin, float *_cos) {
-		*_sin = sinf(theta);
-		*_cos = cosf(theta);
-	}
+    /// Emulate sincosf using sinf() and cosf()
+    inline void sincosf(float theta, float *_sin, float *_cos) {
+        *_sin = sinf(theta);
+        *_cos = cosf(theta);
+    }
 #endif
 
 /// Simple floating point clamping function
 inline float clamp(float value, float min, float max) {
-	if (value < min)
-		return min;
-	else if (value > max)
-		return max;
-	else return value;
+    if (value < min)
+        return min;
+    else if (value > max)
+        return max;
+    else return value;
 }
 
 /// Simple integer clamping function
 inline int clamp(int value, int min, int max) {
-	if (value < min)
-		return min;
-	else if (value > max)
-		return max;
-	else return value;
+    if (value < min)
+        return min;
+    else if (value > max)
+        return max;
+    else return value;
 }
 
 /// Linearly interpolate between two values
 inline float lerp(float t, float v1, float v2) {
-	return ((float) 1 - t) * v1 + t * v2;
+    return ((float) 1 - t) * v1 + t * v2;
 }
 
 /// Always-positive modulo operation
 inline int mod(int a, int b) {
-	int r = a % b;
-	return (r < 0) ? r+b : r;
+    int r = a % b;
+    return (r < 0) ? r+b : r;
 }
 
 /// Compute a direction for the given coordinates in spherical coordinates
@@ -242,20 +242,6 @@ extern Vector3f sphericalDirection(float theta, float phi);
 
 /// Compute a direction for the given coordinates in spherical coordinates
 extern Point2f sphericalCoordinates(const Vector3f &dir);
-
-/**
- * \brief Calculates the unpolarized fresnel reflection coefficient for a
- * dielectric material. Handles incidence from either side (i.e.
- * \code cosThetaI<0 is allowed).
- *
- * \param cosThetaI
- *      Cosine of the angle between the normal and the incident ray
- * \param extIOR
- *      Refractive index of the side that contains the surface normal
- * \param intIOR
- *      Refractive index of the interior
- */
-extern float fresnel(float cosThetaI, float extIOR, float intIOR);
 
 /**
  * \brief Return the global file resolver instance

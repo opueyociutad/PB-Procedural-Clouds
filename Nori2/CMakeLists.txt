@@ -92,6 +92,7 @@ add_executable(nori
   src/perspective.cpp
   src/pointlight.cpp
   src/proplist.cpp
+  src/reflectance.cpp
   src/rfilter.cpp
   src/scene.cpp
   src/texture.cpp

@@ -91,7 +91,7 @@ public:
 		lRec.dist = (lRec.p-lRec.ref).norm();
 		lRec.wi = (lRec.p-lRec.ref) / lRec.dist;
 		lRec.pdf = pdf(lRec);
-		return eval(lRec);
+		return eval(lRec) / lRec.pdf;
 	}
 
 	// Returns probability with respect to solid angle given by all the information inside the emitterqueryrecord.
