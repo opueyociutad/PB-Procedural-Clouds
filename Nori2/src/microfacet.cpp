@@ -65,8 +65,9 @@ public:
         is wrong, or when queried for illumination on the backside */
         if (bRec.measure != ESolidAngle
             || Frame::cosTheta(bRec.wi) <= 0
-            || Frame::cosTheta(bRec.wo) <= 0)
-            return 0.0f;
+            || Frame::cosTheta(bRec.wo) <= 0) {
+	        return 0.0f;
+		}
 
 	    Vector3f wh = (bRec.wi + bRec.wo).normalized();
 	    float alpha = m_alpha->eval(bRec.uv).x();
@@ -80,13 +81,14 @@ public:
         // BRDF value divided by the solid angle density and multiplied by the
         // cosine factor from the reflection equation, i.e.
         // return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
-        if (Frame::cosTheta(bRec.wi) <= 0)
-            return Color3f(0.0f);
+        if (Frame::cosTheta(bRec.wi) <= 0){
+	        return {0.0f};
+		}
 
         bRec.measure = ESolidAngle;
 	    float alpha = m_alpha->eval(bRec.uv).x();
-		bRec.wo = Warp::squareToBeckmann(_sample, alpha);
-		return eval(bRec) / (pdf(bRec) * Frame::cosTheta(bRec.wi));
+	    bRec.wo = (2* Warp::squareToBeckmann(_sample, alpha) - bRec.wi).normalized();
+	    return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
     }
 
     bool isDiffuse() const {
@@ -305,15 +307,14 @@ public:
             return Color3f(0.0f);
 
 	    bRec.measure = ESolidAngle;
-	    Vector3f wh = (bRec.wi + bRec.wo).normalized();
-		if (_sample.x() < Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)) {
+		if (_sample.x() < Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR)) {
 			float alpha = m_alpha->eval(bRec.uv).x();
-			bRec.wo = Warp::squareToBeckmann(_sample, alpha);
+			bRec.wo = 2 * Warp::squareToBeckmann(_sample, alpha) - bRec.wi;
 			return eval(bRec) / (pdf(bRec) * Frame::cosTheta(bRec.wi));
 		} else {
 			// Diffuse
 			bRec.wo = Warp::squareToCosineHemisphere(_sample);
-			return eval(bRec) / (pdf(bRec) * Frame::cosTheta(bRec.wi));
+			return eval(bRec)* Frame::cosTheta(bRec.wo) / pdf(bRec);
 		}
         bRec.measure = ESolidAngle;
 	}

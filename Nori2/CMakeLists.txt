@@ -100,6 +100,7 @@ add_executable(nori
   src/warp.cpp
 
   src/direct_ems.cpp
+  src/direct_mats.cpp
 )
 
 add_definitions(${NANOGUI_EXTRA_DEFS})
