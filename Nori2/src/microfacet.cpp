@@ -63,6 +63,8 @@ public:
     float pdf(const BSDFQueryRecord& bRec) const {
         /* This is a smooth BRDF -- return zero if the measure
         is wrong, or when queried for illumination on the backside */
+		assert(Frame::cosTheta(bRec.wi) > 0);
+	    assert(Frame::cosTheta(bRec.wo) > 0);
         if (bRec.measure != ESolidAngle
             || Frame::cosTheta(bRec.wi) <= 0
             || Frame::cosTheta(bRec.wo) <= 0) {
@@ -87,7 +89,8 @@ public:
 
         bRec.measure = ESolidAngle;
 	    float alpha = m_alpha->eval(bRec.uv).x();
-	    bRec.wo = (2* Warp::squareToBeckmann(_sample, alpha) - bRec.wi).normalized();
+		Vector3f wh = Warp::squareToBeckmann(_sample, alpha);
+	    bRec.wo = (bRec.wi - 2 * bRec.wi.dot(wh) * wh).normalized();
 	    return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
     }
 
