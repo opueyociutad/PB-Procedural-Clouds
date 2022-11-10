@@ -82,7 +82,6 @@ public:
 		float x = phi / (2 * M_PI);
 		float y = (theta) / M_PI;
 
-
 		return m_environment->eval(Point2f(x, y))* m_radiance;
 	}
 
