@@ -13,22 +13,20 @@ public :
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		Color3f Lo(0.);
 
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
 
-
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
 			EmitterQueryRecord lightEmitterRecord(it.p);
-			Lo += it.mesh->getEmitter()->eval(lightEmitterRecord);
+			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
+		Color3f Lo(0.);
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-		//cout << bsdfRecord.wi.z() << "," << bsdfRecord.wo.z() << endl;
-		assert(bsdfRecord.wi.z() >= 0.0 && bsdfRecord.wo.z() >= 0.0);
+		if (bsdfRecord.wo.z() <= 0.0f) return Lo;
 		Ray3f sray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection it_light;
 		if (scene->rayIntersect(sray, it_light)){
@@ -36,9 +34,13 @@ public :
 				cout << "Light found" << endl;
 				const Emitter *emitter = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecord(emitter, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
+				assert(it.shFrame.n.dot(emitterRecord.wi) > 0);
+				assert(emitter->eval(emitterRecord).r() > 0 && emitter->eval(emitterRecord).g() > 0 && emitter->eval(emitterRecord).b() > 0);
+				assert(fr.r() > 0 && fr.g() > 0 && fr.b() > 0);
 				Lo += fr * emitter->eval(emitterRecord) * it.shFrame.n.dot(emitterRecord.wi);
 			}
 		} else {
+			assert(bsdfRecord.wo.z() > 0);
 			Lo += fr * scene->getBackground(sray) * bsdfRecord.wo.z();
 		}
 
