@@ -75,7 +75,6 @@ public:
 	virtual float pdf(const EmitterQueryRecord &lRec) const {
 		if (!m_mesh)
 			throw NoriException("There is no shape attached to this Area light!");
-		assert(d != 0.0);
 		assert(m_mesh->pdf(lRec.p) != 0.0);
 		return m_mesh->pdf(lRec.p) * (lRec.dist * lRec.dist) / (abs(lRec.n.dot(lRec.wi)));
 	}
