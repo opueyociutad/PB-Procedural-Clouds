@@ -317,7 +317,7 @@ public:
 		if (_sample.mean() < Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR)) {
 			float alpha = m_alpha->eval(bRec.uv).mean();
 			Vector3f wh = Warp::squareToBeckmann(_sample, alpha);
-			bRec.wo = (bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
+			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
 			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		} else {
 			// Diffuse
