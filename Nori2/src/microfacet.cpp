@@ -323,8 +323,7 @@ public:
 		m_pdf.reserve(2);
 		m_pdf.append(pmf);
 		m_pdf.append(1.0f - pmf);
-		float rrPdf;
-		size_t index = m_pdf.sampleReuse(sample.x(), rrPdf);
+		size_t index = m_pdf.sampleReuse(sample.x());
 		if (index == 0) {
 			// Microfacet-based lobe
 			float alpha = m_alpha->eval(bRec.uv).mean();
