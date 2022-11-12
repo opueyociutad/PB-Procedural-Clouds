@@ -25,6 +25,7 @@
 #include <nori/warp.h>
 #include <nori/reflectance.h>
 #include <nori/texture.h>
+#include "nori/dpdf.h"
 
 NORI_NAMESPACE_BEGIN
 
@@ -73,7 +74,6 @@ public:
 		}
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
-		if (wh.z() <= 0.0f) wh = -wh;
 		float alpha = m_alpha->eval(bRec.uv).mean();
 		float pdf = Warp::squareToBeckmannPdf(wh, alpha);
 		assert(pdf > 0);
@@ -277,10 +277,10 @@ public:
 			* Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)
 			* Reflectance::G1(bRec.wi, wh, alpha) * Reflectance::G1(bRec.wo, wh, alpha))
 			/ (4 * Frame::cosTheta(bRec.wi) * Frame::cosTheta(bRec.wo));
-		float cosi = 1.0f - 0.5 * Frame::cosTheta(bRec.wi);
+		float cosi = 1.0f - 0.5f * Frame::cosTheta(bRec.wi);
 		float iorRatio = (m_extIOR - m_intIOR)/(m_extIOR + m_intIOR);
-		float coso = 1.0f - 0.5 * Frame::cosTheta(bRec.wo);
-		Color3f fdiff = (28 * m_kd->eval(bRec.uv))/(23 * M_PI)
+		float coso = 1.0f - 0.5f * Frame::cosTheta(bRec.wo);
+		Color3f fdiff = (28 * m_kd->eval(bRec.uv)/(23 * M_PI))
 			* (1 - iorRatio * iorRatio)
 			* (1 - cosi * cosi * cosi * cosi * cosi)
 			* (1 - coso * coso * coso * coso * coso);
@@ -316,14 +316,24 @@ public:
 		}
 
 		bRec.measure = ESolidAngle;
-		if (_sample.mean() < Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR)) {
+
+		Point2f sample = _sample;
+		float pmf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+		DiscretePDF m_pdf;
+		m_pdf.reserve(2);
+		m_pdf.append(pmf);
+		m_pdf.append(1.0f - pmf);
+		float rrPdf;
+		size_t index = m_pdf.sampleReuse(sample.x(), rrPdf);
+		if (index == 0) {
+			// Microfacet-based lobe
 			float alpha = m_alpha->eval(bRec.uv).mean();
-			Vector3f wh = Warp::squareToBeckmann(_sample, alpha);
+			Vector3f wh = Warp::squareToBeckmann(sample, alpha);
 			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
 			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		} else {
 			// Diffuse
-			bRec.wo = Warp::squareToCosineHemisphere(_sample);
+			bRec.wo = Warp::squareToCosineHemisphere(sample);
 			return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
 		}
 	}
