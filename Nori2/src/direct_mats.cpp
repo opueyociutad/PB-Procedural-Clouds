@@ -16,7 +16,6 @@ public :
 
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
-		return 0.5+0.5*Color3f(ray.d.x(),ray.d.y(),ray.d.z());
 
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
@@ -46,6 +45,7 @@ public :
 			//cout << "Lo: " << Lo << endl;
 		}
 
+		if (isnan(scene->getBackground(sray).x())) cout << "SUS!" << endl;
 		return Lo;
 	}
 
