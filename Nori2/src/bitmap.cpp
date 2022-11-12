@@ -153,7 +153,6 @@ Color3f Bitmap::eval(const Point2f& uv) const {
 	if (ix1 >= cols() || ix1 < 0) ix1 = ix1 % cols();
 	if (iy1 >= rows() || iy1 < 0) iy1 = iy1 % rows();
 
-	
 	Color3f color = ((1.f - wx) * (1.f - wy)) * coeff(iy, ix) + (wx * (1.f - wy)) * coeff(iy, ix1)
 		+((1.f - wx) * wy) * coeff(iy1, ix) + (wx * wy) * coeff(iy1, ix1);
 
