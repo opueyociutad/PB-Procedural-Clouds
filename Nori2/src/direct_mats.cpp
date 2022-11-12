@@ -32,7 +32,6 @@ public :
 		Intersection it_light;
 		if (scene->rayIntersect(sray, it_light)){
 			if (it_light.mesh->isEmitter()) {
-				cout << "Light found" << endl;
 				const Emitter *emitter = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecord(emitter, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
 				assert(it.shFrame.n.dot(emitterRecord.wi) > 0);
@@ -42,10 +41,7 @@ public :
 			}
 		} else {
 			assert(bsdfRecord.wo.z() > 0);
-			//cout << "Lo: " << Lo << endl;
-			//cout << "fr: " << fr << endl;
-			//cout << "sray: " << sray.d << endl;
-			//cout << "bsdfRecord.wo.z: " << bsdfRecord.wo.z() << endl;
+			assert(!isnan(fr.r()) && !isnan(fr.g()) && !isnan(fr.b()));
 			Lo += fr * scene->getBackground(sray) * bsdfRecord.wo.z();
 			//cout << "Lo: " << Lo << endl;
 		}
