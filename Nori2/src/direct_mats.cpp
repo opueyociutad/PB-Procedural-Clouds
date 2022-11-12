@@ -16,6 +16,7 @@ public :
 
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
+		return 0.5+0.5*Color3f(ray.d.x(),ray.d.y(),ray.d.z());
 
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
@@ -26,7 +27,7 @@ public :
 		Color3f Lo(0.);
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-		if (bsdfRecord.wo.z() <= 0.0f) return Lo;
+		//if (bsdfRecord.wo.z() <= 0.0f) return Lo;
 		Ray3f sray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection it_light;
 		if (scene->rayIntersect(sray, it_light)){
@@ -41,7 +42,12 @@ public :
 			}
 		} else {
 			assert(bsdfRecord.wo.z() > 0);
+			//cout << "Lo: " << Lo << endl;
+			//cout << "fr: " << fr << endl;
+			//cout << "sray: " << sray.d << endl;
+			//cout << "bsdfRecord.wo.z: " << bsdfRecord.wo.z() << endl;
 			Lo += fr * scene->getBackground(sray) * bsdfRecord.wo.z();
+			//cout << "Lo: " << Lo << endl;
 		}
 
 		return Lo;
