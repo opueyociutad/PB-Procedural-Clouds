@@ -67,6 +67,9 @@ public:
 	/// Return a the scene background
 	Color3f getBackground(const Ray3f& ray) const;
 
+	/// Return a the scene background and its queryRecord
+	Color3f getBackground(const Ray3f& ray, float& pdf) const;
+
 	/// Sample emitter
 	const Emitter *sampleEmitter(float rnd, float &pdf) const;
 

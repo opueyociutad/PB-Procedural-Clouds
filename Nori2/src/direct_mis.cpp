@@ -4,31 +4,28 @@
 #include <nori/emitter.h>
 #include <nori/bsdf.h>
 #include <sstream>
+#include <utility>
 
 NORI_NAMESPACE_BEGIN
 
 class DirectMIS : public Integrator {
+private:
+	struct SamplingResults {
+		Color3f L;
+		float p_em;
+		float p_mat;
+
+		SamplingResults(Color3f _l, float _p_em, float _p_mat) :
+				L(std::move(_l)), p_em(_p_em), p_mat(_p_mat) {}
+	};
+
 public :
 	DirectMIS(const PropertyList &props) {
 		/* No parameters this time */
 	}
 
-	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		Color3f Lo(0.);
-
-		Intersection it;
-		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
-
-
-		// Add light if emitter
-		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
-			return it.mesh->getEmitter()->eval(lightEmitterRecord);
-		}
-
-		// todo refactor :D
+	SamplingResults Lem(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
 		// Sample random light
-		const std::vector<Emitter*> lights = scene->getLights();
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
 
@@ -43,43 +40,63 @@ public :
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
 			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * it.shFrame.n.dot(emitterRecord.wi));
 			Lem = currentLight / pdflight;
-			//pem *= pdflight;
+			pem *= pdflight;
 		}
 
+		float pmat = it.mesh->getBSDF()->pdf(BSDFQueryRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), emitterRecord.uv, ESolidAngle));
+
+		return {Lem, pem, pmat};
+	}
+
+	SamplingResults Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
 		// BSDF sampling
 		Vector3f local_ray_wi = it.toLocal(-ray.d);
 		BSDFQueryRecord bsdfRecord(local_ray_wi, it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		Ray3f matLightRay(it.p, it.toWorld(bsdfRecord.wo));
-		Intersection it_light;
+
 		Color3f Lmat(0);
-		float pm = it.mesh->getBSDF()->pdf(bsdfRecord);
-
-		Vector3f p;
-
+		Intersection it_light;
+		float pem = 0.0f;
 		if (scene->rayIntersect(matLightRay, it_light)){
 			if (it_light.mesh->isEmitter()) {
-				const Emitter* emitter = it_light.mesh->getEmitter();
-				EmitterQueryRecord emitterRecordBSDF(emitter, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
-				Lmat = fr * emitter->eval(emitterRecordBSDF) * it.shFrame.n.dot(emitterRecordBSDF.wi);
-				p = it_light.p;
+				const Emitter* em = it_light.mesh->getEmitter();
+				EmitterQueryRecord emitterRecordBSDF(em, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
+				Lmat = fr * em->eval(emitterRecordBSDF) * it.shFrame.n.dot(emitterRecordBSDF.wi);
+				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, it_light.p, it_light.shFrame.n, bsdfRecord.uv));
 			}
 		} else {
-			Lmat = fr * scene->getBackground(matLightRay) * bsdfRecord.wo.z();
-			float maxF = std::numeric_limits<float>::max();
-			p = Vector3f(maxF, maxF, maxF);
+			Lmat = fr * scene->getBackground(matLightRay, pem) * bsdfRecord.wo.z();
+		}
+		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
+
+		return {Lmat, pem, pmat};
+	}
+
+	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
+		Intersection it;
+		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
+
+		// Add light if emitter
+		if (it.mesh->isEmitter()) {
+			EmitterQueryRecord lightEmitterRecord(it.p);
+			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
-		float wem = pem / (it.mesh->getBSDF()->pdf(BSDFQueryRecord(local_ray_wi, it.toLocal(emitterRecord.wi), emitterRecord.uv, ESolidAngle))+pem);
-		// todo HERE it should be the emitter from BSDF, not from the sampled light source...
-		float wmat = pm / (em->pdf(EmitterQueryRecord(em,it.p, p, it_light.shFrame.n, bsdfRecord.uv)) + pm);
+		SamplingResults em = Lem(scene, sampler, ray, it);
+		SamplingResults mat = Lmat(scene, sampler, ray, it);
+
+		float wem = em.p_em / (em.p_em + mat.p_em);
+		float wmat = mat.p_mat/  (em.p_mat + mat.p_mat);
 		if (wem + wmat > 1.1) {
 			std::stringstream ss;
-			ss << "suspicous... " << wem+wmat << "(" << wem << " + " << wmat << ")" << endl;
+			ss << "suspicous... " << wem+wmat << "(" << wem << " + " << wmat << ")" << "\n"
+				<< "\tem: " << " p_em=" << em.p_em << ", p_mat=" << em.p_mat << "\n"
+				<< "\tmat: " << " p_em=" << mat.p_em << ", p_mat=" << mat.p_mat << "\n";
 			cout << ss.str() << std::flush;
 		}
-		Lo = wem*Lem + wmat*Lmat;
 
+		Color3f Lo = wem * em.L + wmat * mat.L;
 		return Lo;
 	}
 
