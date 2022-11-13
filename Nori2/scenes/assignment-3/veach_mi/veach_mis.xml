@@ -25,7 +25,7 @@
 			<translate value="-1.25, 0, 0"/>
 		</transform>
 		<emitter type="area">
-           <color name="radiance" value="100, 100, 100"/>
+			<color name="radiance" value="100, 100, 100"/>
 		</emitter>
 		<bsdf type="diffuse">
 			<color name="albedo" value="0,0,0"/>
@@ -53,7 +53,7 @@
 			<translate value="1.25, 0, 0"/>
 		</transform>
 		<emitter type="area">
-           <color name="radiance" value="11.1111, 11.1111, 11.1111"/>
+			<color name="radiance" value="11.1111, 11.1111, 11.1111"/>
 		</emitter>
 		<bsdf type="diffuse">
 			<color name="albedo" value="0,0,0"/>
@@ -67,21 +67,21 @@
 			<translate value="3.75, 0, 0"/>
 		</transform>
 		<emitter type="area">
-           <color name="radiance" value="1.23457, 1.23457, 1.23457"/>
+			<color name="radiance" value="1.23457, 1.23457, 1.23457"/>
 		</emitter>
 		<bsdf type="diffuse">
 			<color name="albedo" value="0,0,0"/>
 		</bsdf>
 	</mesh>
 
-    <mesh type="obj">
+	<mesh type="obj">
 		<string name="filename" value="meshes/sphere.obj"/>
 		<transform name="toWorld">
 			<scale value="1, 1, 1"/>
 			<translate value="0, 4, 3"/>
 		</transform>
 		<emitter type="area">
-           <color name="radiance" value="100, 100, 100"/>
+			<color name="radiance" value="100, 100, 100"/>
 		</emitter>
 		<bsdf type="diffuse">
 			<color name="albedo" value="0,0,0"/>
