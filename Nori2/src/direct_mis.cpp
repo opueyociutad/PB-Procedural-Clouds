@@ -38,7 +38,7 @@ public :
 		float pem = emitterRecord.pdf;
 		if (!(scene->rayIntersect(emitterShadowRay, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * it.shFrame.n.dot(emitterRecord.wi));
+			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)));
 			Lem = currentLight / pdflight;
 			pem *= pdflight;
 		}
@@ -62,7 +62,7 @@ public :
 			if (it_light.mesh->isEmitter()) {
 				const Emitter* em = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecordBSDF(em, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
-				Lmat = fr * em->eval(emitterRecordBSDF) * it.shFrame.n.dot(emitterRecordBSDF.wi);
+				Lmat = fr * em->eval(emitterRecordBSDF) * abs(it.shFrame.n.dot(emitterRecordBSDF.wi));
 				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, it_light.p, it_light.shFrame.n, it_light.uv));
 			}
 		} else {

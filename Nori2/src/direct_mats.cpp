@@ -36,7 +36,7 @@ public :
 				assert(it.shFrame.n.dot(emitterRecord.wi) > 0);
 				assert(emitter->eval(emitterRecord).r() > 0 && emitter->eval(emitterRecord).g() > 0 && emitter->eval(emitterRecord).b() > 0);
 				assert(fr.r() > 0 && fr.g() > 0 && fr.b() > 0);
-				Lo += fr * emitter->eval(emitterRecord) * it.shFrame.n.dot(emitterRecord.wi);
+				Lo += fr * emitter->eval(emitterRecord) * abs(it.shFrame.n.dot(emitterRecord.wi));
 			}
 		} else {
 			assert(bsdfRecord.wo.z() > 0);
