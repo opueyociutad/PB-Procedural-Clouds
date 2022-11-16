@@ -35,7 +35,7 @@ public :
 		Ray3f emitterShadowRay(it.p, emitterRecord.wi);
 		Intersection it_shadow;
 		Color3f Lem(0);
-		float pem = em->pdf(emitterRecord);
+		float pem = emitterRecord.pdf;
 		if (!(scene->rayIntersect(emitterShadowRay, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
 			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * it.shFrame.n.dot(emitterRecord.wi));
@@ -63,7 +63,7 @@ public :
 				const Emitter* em = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecordBSDF(em, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
 				Lmat = fr * em->eval(emitterRecordBSDF) * it.shFrame.n.dot(emitterRecordBSDF.wi);
-				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, it_light.p, it_light.shFrame.n, bsdfRecord.uv));
+				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, it_light.p, it_light.shFrame.n, it_light.uv));
 			}
 		} else {
 			Lmat = fr * scene->getBackground(matLightRay, pem) * bsdfRecord.wo.z();
