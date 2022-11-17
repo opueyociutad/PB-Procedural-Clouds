@@ -64,7 +64,8 @@ void Scene::activate() {
 
 	m_pdf.reserve(m_emitters.size());
 	for (const Emitter* em : m_emitters) {
-		m_pdf.append(em->getLuminance());
+		//m_pdf.append(em->getLuminance());
+		m_pdf.append(1);
 	}
 	m_pdf.normalize();
 
@@ -81,7 +82,8 @@ const Emitter * Scene::sampleEmitter(float rnd, float &pdf) const {
 }
 
 float Scene::pdfEmitter(const Emitter *em) const {
-	return em->getLuminance()*m_pdf.getNormalization();
+	//return em->getLuminance()*m_pdf.getNormalization();
+	return m_pdf.getNormalization();
 }
 
 

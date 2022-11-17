@@ -19,7 +19,7 @@ public :
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
 
 		float pdflight;
-		EmitterQueryRecord emitterRecord(it.p);
+		EmitterQueryRecord emitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
 
 		const std::vector<Emitter*> lights = scene->getLights();
 
