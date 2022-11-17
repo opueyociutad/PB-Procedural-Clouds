@@ -261,6 +261,26 @@ public:
 		m_kd = new ConstantSpectrumTexture(propList.getColor("kd", Color3f(0.5f)));
 	}
 
+	Color3f microfacetLobe(const BSDFQueryRecord &bRec, const Vector3f& wh, float alpha, float& pdf) const {
+		pdf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+		return (Reflectance::BeckmannNDF(wh, alpha)
+		           * Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)
+		           * Reflectance::G1(bRec.wi, wh, alpha) * Reflectance::G1(bRec.wo, wh, alpha))
+		           / (4 * Frame::cosTheta(bRec.wi) * Frame::cosTheta(bRec.wo));
+	}
+
+	Color3f diffuseLobe(const BSDFQueryRecord &bRec, float& pdf) const {
+		pdf = 1.0f - Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+		float cosi = 1.0f - 0.5f * Frame::cosTheta(bRec.wi);
+		float iorRatio = (m_extIOR - m_intIOR)/(m_extIOR + m_intIOR);
+		float coso = 1.0f - 0.5f * Frame::cosTheta(bRec.wo);
+		return  (28 * m_kd->eval(bRec.uv)/(23 * M_PI))
+		         * (1 - iorRatio * iorRatio)
+		         * (1 - cosi * cosi * cosi * cosi * cosi)
+		         * (1 - coso * coso * coso * coso * coso);
+	}
+
+
 
 	/// Evaluate the BRDF for the given pair of directions
 	Color3f eval(const BSDFQueryRecord &bRec) const {
@@ -273,20 +293,14 @@ public:
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
-		Color3f fmf = (Reflectance::BeckmannNDF(wh, alpha)
-			* Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)
-			* Reflectance::G1(bRec.wi, wh, alpha) * Reflectance::G1(bRec.wo, wh, alpha))
-			/ (4 * Frame::cosTheta(bRec.wi) * Frame::cosTheta(bRec.wo));
-		float cosi = 1.0f - 0.5f * Frame::cosTheta(bRec.wi);
-		float iorRatio = (m_extIOR - m_intIOR)/(m_extIOR + m_intIOR);
-		float coso = 1.0f - 0.5f * Frame::cosTheta(bRec.wo);
-		Color3f fdiff = (28 * m_kd->eval(bRec.uv)/(23 * M_PI))
-			* (1 - iorRatio * iorRatio)
-			* (1 - cosi * cosi * cosi * cosi * cosi)
-			* (1 - coso * coso * coso * coso * coso);
-		float pmf = Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR);
 
-		return pmf*fmf + (1-pmf)*fdiff;
+		float pmf;
+		Color3f fmf = microfacetLobe(bRec, wh, alpha, pmf);
+
+		float pdiff;
+		Color3f fdiff = diffuseLobe(bRec, pmf);
+
+		return pmf*fmf + pdiff*fdiff;
 	}
 
 	/// Evaluate the sampling density of \ref sample() wrt. solid angles
@@ -300,7 +314,7 @@ public:
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
-		float pmf = Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR);
+		float pmf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
 		return pmf * Warp::squareToBeckmannPdf(wh, alpha)
 			+ (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
 	}
@@ -324,19 +338,28 @@ public:
 		m_pdf.reserve(2);
 		m_pdf.append(pmf);
 		m_pdf.append(1.0f - pmf);
+		m_pdf.normalize();
 		size_t index = m_pdf.sampleReuse(sample.x());
 		if (index == 0) {
 			// Microfacet-based lobe
 			float alpha = m_alpha->eval(bRec.uv).mean();
 			Vector3f wh = Warp::squareToBeckmann(sample, alpha);
 			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
-			float pdf = pmf * Warp::squareToBeckmannPdf(wh, alpha);
-			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf;
+
+			if (Frame::cosTheta(bRec.wo) <= 0) return {0.0};
+
+			float pdf;
+			Color3f fmf = microfacetLobe(bRec, wh, alpha, pdf);
+			return fmf * Frame::cosTheta(bRec.wi) / pdf;
 		} else {
 			// Diffuse
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
-			float pdf = (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
-			return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf;
+			if (Frame::cosTheta(bRec.wo) <= 0) return {0.0};
+
+			float pdf;
+			Color3f fdiff = diffuseLobe(bRec, pdf);
+
+			return fdiff * Frame::cosTheta(bRec.wo) / pdf;
 		}
 	}
 
