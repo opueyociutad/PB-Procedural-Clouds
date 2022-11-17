@@ -36,7 +36,7 @@ public :
 		Ray3f sray(it.p, emitterRecord.wi);
 		Intersection it_shadow;
 		if (!(scene->rayIntersect(sray, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
-			neeLight = (Le * it.shFrame.n.dot(emitterRecord.wi)) / pdflight;
+			neeLight = (Le * abs(it.shFrame.n.dot(emitterRecord.wi))) / pdflight;
 		}
 
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);

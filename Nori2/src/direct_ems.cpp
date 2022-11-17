@@ -18,15 +18,13 @@ public :
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
 
-
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
-			Lo += it.mesh->getEmitter()->eval(lightEmitterRecord);
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
+			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
 		// Sample random light
-		const std::vector<Emitter*> lights = scene->getLights();
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
 
@@ -38,9 +36,6 @@ public :
 		if (!(scene->rayIntersect(sray, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
 			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)));
-			assert(!(isnan(currentLight.x()) || isnan(currentLight.y()) || isnan(currentLight.z())));
-			assert(emitterRecord.pdf != 0);
-			assert(pdflight != 0);
 			Lo += currentLight / pdflight;
 		}
 
@@ -48,7 +43,7 @@ public :
 	}
 
 	std::string toString() const {
-		return "Direct Whitted Integrator []" ;
+		return "Direct Ems Integrator []" ;
 	}
 };
 

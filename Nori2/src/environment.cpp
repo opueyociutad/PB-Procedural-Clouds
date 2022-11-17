@@ -86,10 +86,20 @@ public:
 	}
 
 	virtual Color3f sample(EmitterQueryRecord& lRec, const Point2f& sample, float optional_u) const {
-		lRec.p = Warp::squareToUniformSphere(sample);
-		lRec.dist = (lRec.p-lRec.ref).norm();
-		lRec.wi = (lRec.p-lRec.ref) / lRec.dist;
+		lRec.wi = Warp::squareToUniformSphere(sample);
+		lRec.n = -lRec.wi;
+		lRec.dist = INFINITY;
+		lRec.p = lRec.wi * lRec.dist + lRec.ref;
 		lRec.pdf = pdf(lRec);
+
+		float phi = atan2(lRec.wi[2], lRec.wi[0]);
+		float theta = acos(lRec.wi[1]);
+		if (phi < 0) phi += 2 * M_PI;
+
+		float x = phi / (2 * M_PI);
+		float y = (theta) / M_PI;
+		lRec.uv = Point2f(x, y);
+
 		return eval(lRec) / lRec.pdf;
 	}
 
