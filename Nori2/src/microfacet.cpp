@@ -264,9 +264,9 @@ public:
 	Color3f microfacetLobe(const BSDFQueryRecord &bRec, const Vector3f& wh, float alpha, float& pdf) const {
 		pdf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
 		return (Reflectance::BeckmannNDF(wh, alpha)
-		           * Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)
-		           * Reflectance::G1(bRec.wi, wh, alpha) * Reflectance::G1(bRec.wo, wh, alpha))
-		           / (4 * Frame::cosTheta(bRec.wi) * Frame::cosTheta(bRec.wo));
+			* Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)
+			* Reflectance::G1(bRec.wi, wh, alpha) * Reflectance::G1(bRec.wo, wh, alpha))
+			/ (4 * Frame::cosTheta(bRec.wi) * Frame::cosTheta(bRec.wo));
 	}
 
 	Color3f diffuseLobe(const BSDFQueryRecord &bRec, float& pdf) const {
@@ -274,22 +274,21 @@ public:
 		float cosi = 1.0f - 0.5f * Frame::cosTheta(bRec.wi);
 		float iorRatio = (m_extIOR - m_intIOR)/(m_extIOR + m_intIOR);
 		float coso = 1.0f - 0.5f * Frame::cosTheta(bRec.wo);
-		return  (28 * m_kd->eval(bRec.uv)/(23 * M_PI))
-		         * (1 - iorRatio * iorRatio)
-		         * (1 - cosi * cosi * cosi * cosi * cosi)
-		         * (1 - coso * coso * coso * coso * coso);
+		return (28 * m_kd->eval(bRec.uv)/(23 * M_PI))
+			* (1 - iorRatio * iorRatio)
+			* (1 - cosi * cosi * cosi * cosi * cosi)
+			* (1 - coso * coso * coso * coso * coso);
 	}
-
-
 
 	/// Evaluate the BRDF for the given pair of directions
 	Color3f eval(const BSDFQueryRecord &bRec) const {
 		/* This is a smooth BRDF -- return zero if the measure
 		is wrong, or when queried for illumination on the backside */
 		if (bRec.measure != ESolidAngle
-		    || Frame::cosTheta(bRec.wi) <= 0
-		    || Frame::cosTheta(bRec.wo) <= 0)
+			|| Frame::cosTheta(bRec.wi) <= 0
+			|| Frame::cosTheta(bRec.wo) <= 0) {
 			return Color3f(0.0f);
+		}
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
@@ -307,15 +306,16 @@ public:
 		/* This is a smooth BRDF -- return zero if the measure
 		is wrong, or when queried for illumination on the backside */
 		if (bRec.measure != ESolidAngle
-		    || Frame::cosTheta(bRec.wi) <= 0
-		    || Frame::cosTheta(bRec.wo) <= 0)
+			|| Frame::cosTheta(bRec.wi) <= 0
+			|| Frame::cosTheta(bRec.wo) <= 0) {
 			return 0.0f;
+		}
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
 		float pmf = Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR);
 		return pmf * Warp::squareToBeckmannPdf(wh, alpha)
-		       + (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
+			+ (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
 	}
 
 	/// Sample the BRDF
@@ -344,8 +344,6 @@ public:
 			Vector3f wh = Warp::squareToBeckmann(sample, alpha);
 			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
 			// SANITY CHECK
-
-
 			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		} else {
 			// Diffuse

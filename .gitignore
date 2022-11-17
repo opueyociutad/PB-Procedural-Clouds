@@ -13,3 +13,5 @@ Nori2/build
 Nori2/ext_build
 cmake-build-debug
 cmake-build-release
+*.exr
+*.png
