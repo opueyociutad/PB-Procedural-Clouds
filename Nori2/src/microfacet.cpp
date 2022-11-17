@@ -287,18 +287,17 @@ public:
 		/* This is a smooth BRDF -- return zero if the measure
 		is wrong, or when queried for illumination on the backside */
 		if (bRec.measure != ESolidAngle
-			|| Frame::cosTheta(bRec.wi) <= 0
-			|| Frame::cosTheta(bRec.wo) <= 0)
+		    || Frame::cosTheta(bRec.wi) <= 0
+		    || Frame::cosTheta(bRec.wo) <= 0)
 			return Color3f(0.0f);
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
-
 		float pmf;
 		Color3f fmf = microfacetLobe(bRec, wh, alpha, pmf);
 
 		float pdiff;
-		Color3f fdiff = diffuseLobe(bRec, pmf);
+		Color3f fdiff = diffuseLobe(bRec, pdiff);
 
 		return pmf*fmf + pdiff*fdiff;
 	}
@@ -308,15 +307,15 @@ public:
 		/* This is a smooth BRDF -- return zero if the measure
 		is wrong, or when queried for illumination on the backside */
 		if (bRec.measure != ESolidAngle
-			|| Frame::cosTheta(bRec.wi) <= 0
-			|| Frame::cosTheta(bRec.wo) <= 0)
+		    || Frame::cosTheta(bRec.wi) <= 0
+		    || Frame::cosTheta(bRec.wo) <= 0)
 			return 0.0f;
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
-		float pmf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+		float pmf = Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR);
 		return pmf * Warp::squareToBeckmannPdf(wh, alpha)
-			+ (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
+		       + (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
 	}
 
 	/// Sample the BRDF
@@ -338,28 +337,20 @@ public:
 		m_pdf.reserve(2);
 		m_pdf.append(pmf);
 		m_pdf.append(1.0f - pmf);
-		m_pdf.normalize();
 		size_t index = m_pdf.sampleReuse(sample.x());
 		if (index == 0) {
 			// Microfacet-based lobe
 			float alpha = m_alpha->eval(bRec.uv).mean();
 			Vector3f wh = Warp::squareToBeckmann(sample, alpha);
 			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
+			// SANITY CHECK
 
-			if (Frame::cosTheta(bRec.wo) <= 0) return {0.0};
 
-			float pdf;
-			Color3f fmf = microfacetLobe(bRec, wh, alpha, pdf);
-			return fmf * Frame::cosTheta(bRec.wi) / pdf;
+			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		} else {
 			// Diffuse
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
-			if (Frame::cosTheta(bRec.wo) <= 0) return {0.0};
-
-			float pdf;
-			Color3f fdiff = diffuseLobe(bRec, pdf);
-
-			return fdiff * Frame::cosTheta(bRec.wo) / pdf;
+			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		}
 	}
 
