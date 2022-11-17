@@ -19,7 +19,7 @@ public :
 
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
@@ -33,24 +33,19 @@ public :
 			if (it_light.mesh->isEmitter()) {
 				const Emitter *emitter = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecord(emitter, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
-				assert(it.shFrame.n.dot(emitterRecord.wi) > 0);
-				assert(emitter->eval(emitterRecord).r() > 0 && emitter->eval(emitterRecord).g() > 0 && emitter->eval(emitterRecord).b() > 0);
-				assert(fr.r() > 0 && fr.g() > 0 && fr.b() > 0);
-				Lo += fr * emitter->eval(emitterRecord) * abs(it.shFrame.n.dot(emitterRecord.wi));
+				Lo += fr * emitter->eval(emitterRecord) * abs(bsdfRecord.wo.z());
 			}
 		} else {
-			assert(bsdfRecord.wo.z() > 0);
-			assert(!isnan(fr.r()) && !isnan(fr.g()) && !isnan(fr.b()));
 			Lo += fr * scene->getBackground(sray) * bsdfRecord.wo.z();
 			//cout << "Lo: " << Lo << endl;
 		}
 
-		if (isnan(scene->getBackground(sray).x())) cout << "SUS!" << endl;
+		if (isnan(scene->getBackground(sray).x())) cout << "Background error" << endl;
 		return Lo;
 	}
 
 	std::string toString() const {
-		return "Direct Whitted Integrator []" ;
+		return "Direct Material Sampoling Integrator []" ;
 	}
 };
 

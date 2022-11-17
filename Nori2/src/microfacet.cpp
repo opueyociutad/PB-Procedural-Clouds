@@ -284,8 +284,9 @@ public:
 			* (1 - iorRatio * iorRatio)
 			* (1 - cosi * cosi * cosi * cosi * cosi)
 			* (1 - coso * coso * coso * coso * coso);
+		float pmf = Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR);
 
-		return fmf + fdiff;
+		return pmf*fmf + (1-pmf)*fdiff;
 	}
 
 	/// Evaluate the sampling density of \ref sample() wrt. solid angles
@@ -329,11 +330,13 @@ public:
 			float alpha = m_alpha->eval(bRec.uv).mean();
 			Vector3f wh = Warp::squareToBeckmann(sample, alpha);
 			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
-			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
+			float pdf = pmf * Warp::squareToBeckmannPdf(wh, alpha);
+			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf;
 		} else {
 			// Diffuse
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
-			return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
+			float pdf = (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
+			return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf;
 		}
 	}
 
