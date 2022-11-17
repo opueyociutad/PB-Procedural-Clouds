@@ -21,7 +21,7 @@ public :
 
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
 			Lo += it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
@@ -37,7 +37,7 @@ public :
 		Intersection it_shadow;
 		if (!(scene->rayIntersect(sray, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * it.shFrame.n.dot(emitterRecord.wi));
+			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)));
 			assert(!(isnan(currentLight.x()) || isnan(currentLight.y()) || isnan(currentLight.z())));
 			assert(emitterRecord.pdf != 0);
 			assert(pdflight != 0);
