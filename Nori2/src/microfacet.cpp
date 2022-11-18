@@ -331,6 +331,7 @@ public:
 
 		bRec.measure = ESolidAngle;
 
+		// Choose outgoing direction by russian roulete event
 		Point2f sample = _sample;
 		float pmf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
 		DiscretePDF m_pdf;
@@ -343,13 +344,12 @@ public:
 			float alpha = m_alpha->eval(bRec.uv).mean();
 			Vector3f wh = Warp::squareToBeckmann(sample, alpha);
 			bRec.wo = -(bRec.wi - 2 * wh.dot(bRec.wi) * wh).normalized();
-			// SANITY CHECK
-			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		} else {
 			// Diffuse
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
-			return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 		}
+
+		return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
 	}
 
 	bool isDiffuse() const {
