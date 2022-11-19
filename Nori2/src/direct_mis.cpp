@@ -86,8 +86,10 @@ public :
 		SamplingResults em = Lem(scene, sampler, ray, it);
 		SamplingResults mat = Lmat(scene, sampler, ray, it);
 
-		float wem = em.p_em / (em.p_em + em.p_mat);
-		float wmat = mat.p_mat / (mat.p_em + mat.p_mat);
+		float wem = em.p_em*em.p_em / (em.p_em*em.p_em + em.p_mat*em.p_mat);
+		float wmat = mat.p_mat*mat.p_mat / (mat.p_em*mat.p_em + mat.p_mat*mat.p_mat);
+
+		/*
 		if (wem + wmat > 1.1) {
 			std::stringstream ss;
 			ss << "suspicous... " << wem+wmat << "(" << wem << " + " << wmat << ")" << "\n"
@@ -95,6 +97,7 @@ public :
 				<< "\tmat: " << " p_em=" << mat.p_em << ", p_mat=" << mat.p_mat << "\n";
 			cout << ss.str() << std::flush;
 		}
+		*/
 
 		Color3f Lo = wem * em.L + wmat * mat.L;
 		return Lo;
