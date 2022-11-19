@@ -39,14 +39,14 @@ public :
 			}
 		} else {
 			Lo += fr * scene->getBackground(sray) * abs(bsdfRecord.wo.z());
+			if (isnan(scene->getBackground(sray).x())) cout << "Background error" << endl;
 		}
 
-		if (isnan(scene->getBackground(sray).x())) cout << "Background error" << endl;
 		return Lo;
 	}
 
 	std::string toString() const {
-		return "Direct Material Sampoling Integrator []" ;
+		return "Direct Material Sampling Integrator []" ;
 	}
 };
 

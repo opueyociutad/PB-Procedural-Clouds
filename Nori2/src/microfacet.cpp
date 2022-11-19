@@ -313,7 +313,7 @@ public:
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
-		float pmf = Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR);
+		float pmf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
 		return pmf * Warp::squareToBeckmannPdf(wh, alpha)
 			+ (1.0f - pmf) * Warp::squareToCosineHemispherePdf(bRec.wo);
 	}
@@ -334,11 +334,13 @@ public:
 		// Choose outgoing direction by russian roulete event
 		Point2f sample = _sample;
 		float pmf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+
 		DiscretePDF m_pdf;
 		m_pdf.reserve(2);
 		m_pdf.append(pmf);
 		m_pdf.append(1.0f - pmf);
 		size_t index = m_pdf.sampleReuse(sample.x());
+
 		if (index == 0) {
 			// Microfacet-based lobe
 			float alpha = m_alpha->eval(bRec.uv).mean();
@@ -349,7 +351,9 @@ public:
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
 		}
 
-		return eval(bRec) * Frame::cosTheta(bRec.wi) / pdf(bRec);
+		if (bRec.wo.z() <= 0) return {0};
+
+		return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
 	}
 
 	bool isDiffuse() const {

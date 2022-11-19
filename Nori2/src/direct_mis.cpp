@@ -70,6 +70,9 @@ public :
 		}
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
 
+		// Prevent nans
+		if (pmat + pem == 0)  pmat = 1.0;
+
 		return {Lmat, pem, pmat};
 	}
 
@@ -86,8 +89,8 @@ public :
 		SamplingResults em = Lem(scene, sampler, ray, it);
 		SamplingResults mat = Lmat(scene, sampler, ray, it);
 
-		float wem = em.p_em*em.p_em / (em.p_em*em.p_em + em.p_mat*em.p_mat);
-		float wmat = mat.p_mat*mat.p_mat / (mat.p_em*mat.p_em + mat.p_mat*mat.p_mat);
+		float wem = em.p_em / (em.p_em + em.p_mat);
+		float wmat = mat.p_mat / (mat.p_em + mat.p_mat);
 
 		/*
 		if (wem + wmat > 1.1) {
@@ -96,8 +99,8 @@ public :
 				<< "\tem: " << " p_em=" << em.p_em << ", p_mat=" << em.p_mat << "\n"
 				<< "\tmat: " << " p_em=" << mat.p_em << ", p_mat=" << mat.p_mat << "\n";
 			cout << ss.str() << std::flush;
-		}
-		*/
+		}*/
+
 
 		Color3f Lo = wem * em.L + wmat * mat.L;
 		return Lo;
