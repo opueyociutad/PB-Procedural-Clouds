@@ -23,10 +23,12 @@ public :
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
+		// Sample BSDF of surface
 		Color3f Lo(0.);
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-		//if (bsdfRecord.wo.z() <= 0.0f) return Lo;
+
+		// Cast ray for light evaluation
 		Ray3f sray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection it_light;
 		if (scene->rayIntersect(sray, it_light)){
@@ -36,8 +38,7 @@ public :
 				Lo += fr * emitter->eval(emitterRecord) * abs(bsdfRecord.wo.z());
 			}
 		} else {
-			Lo += fr * scene->getBackground(sray) * bsdfRecord.wo.z();
-			//cout << "Lo: " << Lo << endl;
+			Lo += fr * scene->getBackground(sray) * abs(bsdfRecord.wo.z());
 		}
 
 		if (isnan(scene->getBackground(sray).x())) cout << "Background error" << endl;

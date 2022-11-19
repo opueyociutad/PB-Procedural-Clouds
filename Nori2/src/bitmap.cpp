@@ -156,6 +156,11 @@ Color3f Bitmap::eval(const Point2f& uv) const {
 	Color3f color = ((1.f - wx) * (1.f - wy)) * coeff(iy, ix) + (wx * (1.f - wy)) * coeff(iy, ix1)
 		+((1.f - wx) * wy) * coeff(iy1, ix) + (wx * wy) * coeff(iy1, ix1);
 
+	if (isnan(color.r())) {
+		cout << "Bitmap error" << endl;
+		return Color3f(0);
+	}
+
 	return color / 255.f;
 }
 
