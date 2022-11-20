@@ -38,7 +38,7 @@ public :
 		float pem = emitterRecord.pdf;
 		if (!(scene->rayIntersect(emitterShadowRay, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)));
+			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord));
 			Lem = currentLight / pdflight;
 			pem *= pdflight;
 		}
@@ -62,11 +62,11 @@ public :
 			if (it_light.mesh->isEmitter()) {
 				const Emitter* em = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecordBSDF(em, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
-				Lmat = fr * em->eval(emitterRecordBSDF); // * abs(it.shFrame.n.dot(emitterRecordBSDF.wi));
+				Lmat = fr * em->eval(emitterRecordBSDF);
 				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, it_light.p, it_light.shFrame.n, it_light.uv));
 			}
 		} else {
-			Lmat = fr * scene->getBackground(matLightRay, pem) * bsdfRecord.wo.z();
+			Lmat = fr * scene->getBackground(matLightRay, pem);
 		}
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
 
@@ -89,18 +89,9 @@ public :
 		SamplingResults em = Lem(scene, sampler, ray, it);
 		SamplingResults mat = Lmat(scene, sampler, ray, it);
 
-		float wem = em.p_em / (em.p_em + em.p_mat);
-		float wmat = mat.p_mat / (mat.p_em + mat.p_mat);
-
-		/*
-		if (wem + wmat > 1.1) {
-			std::stringstream ss;
-			ss << "suspicous... " << wem+wmat << "(" << wem << " + " << wmat << ")" << "\n"
-				<< "\tem: " << " p_em=" << em.p_em << ", p_mat=" << em.p_mat << "\n"
-				<< "\tmat: " << " p_em=" << mat.p_em << ", p_mat=" << mat.p_mat << "\n";
-			cout << ss.str() << std::flush;
-		}*/
-
+		// Power heuristic
+		float wem = em.p_em*em.p_em / (em.p_em*em.p_em + em.p_mat*em.p_mat);
+		float wmat = mat.p_mat*mat.p_mat / (mat.p_em*mat.p_em + mat.p_mat*mat.p_mat);
 
 		Color3f Lo = wem * em.L + wmat * mat.L;
 		return Lo;

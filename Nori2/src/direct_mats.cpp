@@ -35,10 +35,10 @@ public :
 			if (it_light.mesh->isEmitter()) {
 				const Emitter *emitter = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecord(emitter, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
-				Lo += fr * emitter->eval(emitterRecord);// * abs(bsdfRecord.wo.z());
+				Lo += fr * emitter->eval(emitterRecord);
 			}
 		} else {
-			Lo += fr * scene->getBackground(sray) * abs(bsdfRecord.wo.z());
+			Lo += fr * scene->getBackground(sray);
 			if (isnan(scene->getBackground(sray).x())) cout << "Background error" << endl;
 		}
 
