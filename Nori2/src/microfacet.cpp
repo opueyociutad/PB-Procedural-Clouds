@@ -261,16 +261,14 @@ public:
 		m_kd = new ConstantSpectrumTexture(propList.getColor("kd", Color3f(0.5f)));
 	}
 
-	Color3f microfacetLobe(const BSDFQueryRecord &bRec, const Vector3f& wh, float alpha, float& pdf) const {
-		pdf = Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+	Color3f microfacetLobe(const BSDFQueryRecord &bRec, const Vector3f& wh, float alpha) const {
 		return (Reflectance::BeckmannNDF(wh, alpha)
 			* Reflectance::fresnel(wh.dot(bRec.wi), m_extIOR, m_intIOR)
 			* Reflectance::G1(bRec.wi, wh, alpha) * Reflectance::G1(bRec.wo, wh, alpha))
 			/ (4 * Frame::cosTheta(bRec.wi) * Frame::cosTheta(bRec.wo));
 	}
 
-	Color3f diffuseLobe(const BSDFQueryRecord &bRec, float& pdf) const {
-		pdf = 1.0f - Reflectance::fresnel(Frame::cosTheta(bRec.wi), m_extIOR, m_intIOR);
+	Color3f diffuseLobe(const BSDFQueryRecord &bRec) const {
 		float cosi = 1.0f - 0.5f * Frame::cosTheta(bRec.wi);
 		float iorRatio = (m_extIOR - m_intIOR)/(m_extIOR + m_intIOR);
 		float coso = 1.0f - 0.5f * Frame::cosTheta(bRec.wo);
@@ -292,13 +290,9 @@ public:
 
 		Vector3f wh = (bRec.wi + bRec.wo).normalized();
 		float alpha = m_alpha->eval(bRec.uv).mean();
-		float pmf;
-		Color3f fmf = microfacetLobe(bRec, wh, alpha, pmf);
-
-		float pdiff;
-		Color3f fdiff = diffuseLobe(bRec, pdiff);
-
-		return pmf*fmf + pdiff*fdiff;
+		Color3f fmf = microfacetLobe(bRec, wh, alpha);
+		Color3f fdiff = diffuseLobe(bRec);
+		return fmf + fdiff;
 	}
 
 	/// Evaluate the sampling density of \ref sample() wrt. solid angles
