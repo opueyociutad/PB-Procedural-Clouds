@@ -62,7 +62,7 @@ public :
 			if (it_light.mesh->isEmitter()) {
 				const Emitter* em = it_light.mesh->getEmitter();
 				EmitterQueryRecord emitterRecordBSDF(em, it.p, it_light.p, it_light.shFrame.n, it_light.uv);
-				Lmat = fr * em->eval(emitterRecordBSDF) * abs(it.shFrame.n.dot(emitterRecordBSDF.wi));
+				Lmat = fr * em->eval(emitterRecordBSDF); // * abs(it.shFrame.n.dot(emitterRecordBSDF.wi));
 				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, it_light.p, it_light.shFrame.n, it_light.uv));
 			}
 		} else {
