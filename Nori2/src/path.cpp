@@ -27,7 +27,7 @@ public :
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
-		return fr * Li(scene, sampler, nray) * abs(it.shFrame.n.dot(bsdfRecord.wo)) / (1-absorption);
+		return fr * Li(scene, sampler, nray) / (1-absorption);
 	}
 
 	std::string toString() const {
