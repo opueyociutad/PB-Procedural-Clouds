@@ -345,9 +345,9 @@ public:
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
 		}
 
-		if (bRec.wo.z() <= 0) return {0};
+		//if (bRec.wo.z() <= 0) return {0};
 
-		return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
+		return eval(bRec) * Frame::cosTheta(bRec.wo) / (pdf(bRec));
 	}
 
 	bool isDiffuse() const {
