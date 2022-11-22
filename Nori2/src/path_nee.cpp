@@ -34,7 +34,7 @@ public :
 		// Sample light with next event estimation
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
-		Color3f neeLight(0.);
+		Color3f neeLight(0);
 		EmitterQueryRecord emitterRecord(it.p);
 		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		Ray3f sray(it.p, emitterRecord.wi);
@@ -50,10 +50,13 @@ public :
 
 		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
-		Intersection it_possible_light;
-		Color3f Lip1 = (fr * Li(scene, sampler, nray)) / (1-absorption);
+		Intersection nit;
+		Color3f nLe(0);
+		if (!scene->rayIntersect(nray, nit) || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
+			nLe = (fr * Li(scene, sampler, nray)) / (1-absorption);
+		}
 
-		return Lip1 + neeLight;
+		return nLe + neeLight;
 	}
 
 	std::string toString() const {
