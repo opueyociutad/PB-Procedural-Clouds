@@ -16,25 +16,25 @@ public :
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
 		const float absorption = 0.1;
 
+		// Intersect with scene geometry
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) {
 			return scene->getBackground(ray);
 		}
 
-		// Add light if emitter
+		// Add light if intersected with emitter
 		if (it.mesh->isEmitter()) {
 			EmitterQueryRecord lightEmitterRecord(it.p);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
-		// Absorb ray
+		// Ray absorption event
 		if (sampler->next1D() < absorption) return Color3f(0);
 
+		// Sample light with next event estimation
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
-
 		Color3f neeLight(0.);
-		// Add lighting if not in shadow
 		EmitterQueryRecord emitterRecord(it.p);
 		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		Ray3f sray(it.p, emitterRecord.wi);
@@ -44,17 +44,15 @@ public :
 			neeLight = Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)) / pdflight;
 		}
 
+		// Sample color and bsdf of impact point
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 
+		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection it_possible_light;
-		Color3f Lip1 = 0.0;
-		if (!scene->rayIntersect(nray, it_possible_light)
-			|| !it_possible_light.mesh->isEmitter()
-			|| bsdfRecord.measure == EMeasure::EDiscrete) {
-			Lip1 = (fr * Li(scene, sampler, nray)) / (1-absorption);
-		}
+		Color3f Lip1 = (fr * Li(scene, sampler, nray)) / (1-absorption);
+
 		return Lip1 + neeLight;
 	}
 
