@@ -45,18 +45,16 @@
 	<mesh type="obj">
 		<string name="filename" value="meshes/sphere1.obj"/>
 
-		<bsdf type="microfacet">
-			<color name="kd" value="0.0175, 0.0225, 0.0325"/>
-			<float name="alpha" value="0.005"/>
+		<bsdf type="diffuse">
+			<color name="albedo" value="0.725 0.71 0.68"/>
 		</bsdf>
 	</mesh>
 
 	<mesh type="obj">
 		<string name="filename" value="meshes/sphere2.obj"/>
 
-		<bsdf type="microfacet">
-			<color name="kd" value="0.0175, 0.0225, 0.0325"/>
-			<float name="alpha" value="0.05"/>
+		<bsdf type="diffuse">
+			<color name="albedo" value="0.725 0.71 0.68"/>
 		</bsdf>
 	</mesh>
 

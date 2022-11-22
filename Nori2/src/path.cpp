@@ -22,7 +22,9 @@ public :
 			EmitterQueryRecord lightEmitterRecord(it.p);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
-		if (sampler->next1D() < absorption) return {0.};
+
+		// Absorb ray
+		if (sampler->next1D() < absorption) return Color3f(0);
 
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
