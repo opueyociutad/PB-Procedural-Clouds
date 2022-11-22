@@ -27,7 +27,8 @@ public :
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
-		if (sampler->next1D() < absorption) return {0.};
+		// Absorb ray
+		if (sampler->next1D() < absorption) return Color3f(0);
 
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
