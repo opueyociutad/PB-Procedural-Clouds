@@ -36,12 +36,14 @@ public :
 		float pem = emitterRecord.pdf;
 		if (!(scene->rayIntersect(emitterShadowRay, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Color3f currentLight = (Le * it.mesh->getBSDF()->eval(bsdfRecord));
-			Lem = currentLight / pdflight;
+			Lem = Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)) / pdflight;
 			pem *= pdflight;
 		}
 
 		float pmat = it.mesh->getBSDF()->pdf(BSDFQueryRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), emitterRecord.uv, ESolidAngle));
+
+		// Prevent nans
+		if (pmat + pem == 0)  pmat = 1.0;
 
 		return {Lem, pem, pmat};
 	}
