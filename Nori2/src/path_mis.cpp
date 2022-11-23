@@ -95,18 +95,7 @@ public :
 		// Ray absorption event
 		if (sampler->next1D() < absorption) return Color3f(0);
 
-		// Sample color and bsdf of impact point
-		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
-		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-
-		// Get direction for new ray
-		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
-		Intersection nit;
-		Color3f nLe(0);
-		if (!scene->rayIntersect(nray, nit) || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
-			nLe = (fr * Li(scene, sampler, nray)) / (1-absorption);
-		}
-
+		// Multiple importance sampling
 		SamplingResults em = Lem(scene, sampler, ray, it);
 		SamplingResults mat = Lmat(scene, sampler, ray, it);
 
