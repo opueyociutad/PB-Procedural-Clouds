@@ -12,8 +12,7 @@ public :
 		/* No parameters this time */
 	}
 
-
-	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
+	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary = true) const {
 		// Intersect with scene geometry
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) {
@@ -43,6 +42,7 @@ public :
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		float k = frcos.getLuminance() > 0.9 ? 0.9 : frcos.getLuminance();
+		if (!secondary) k = 1.0;
 		// Absorb ray
 		if (sampler->next1D() > k) return {0};
 
@@ -51,10 +51,15 @@ public :
 		Intersection nit;
 		Color3f nLe(0);
 		if (!scene->rayIntersect(nray, nit) || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
-			nLe = (frcos * Li(scene, sampler, nray)) / k;
+			nLe = (frcos * LiR(scene, sampler, nray)) / k;
 		}
 
 		return nLe + neeLight;
+
+	}
+
+	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
+		return LiR(scene, sampler, ray, false);
 	}
 
 	std::string toString() const {

@@ -62,38 +62,40 @@ public :
 		return {Lem, pem, pmat};
 	}
 
-	SamplingResults Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
+	SamplingResults Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
 		// BSDF sampling
 		Vector3f local_ray_wi = it.toLocal(-ray.d);
 		BSDFQueryRecord bsdfRecord(local_ray_wi, it.uv);
-		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-
+		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+		float k = frcos.getLuminance() > 0.9f ? 0.9f : frcos.getLuminance();
+		if (!secondary) k = 1.0;
 		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection nit;
 		Color3f Lmat(0);
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
 		float pem = 0.0f;
-		bool hit = scene->rayIntersect(nray, nit);
-		if (!hit || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
-			Lmat = (fr * Li(scene, sampler, nray));
-		}
-
-		// Get emitter pdf
-		if (hit && nit.mesh->isEmitter()) {
-			const Emitter* em = nit.mesh->getEmitter();
-			EmitterQueryRecord emitterRecordBSDF(em, it.p, nit.p, nit.shFrame.n, nit.uv);
-			pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
+		if (sampler->next1D() < k) {
+			bool hit = scene->rayIntersect(nray, nit);
+			if (!hit || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
+				Lmat = (frcos * LiR(scene, sampler, nray));
+			}
+			// Get emitter pdf
+			if (hit && nit.mesh->isEmitter()) {
+				const Emitter* em = nit.mesh->getEmitter();
+				EmitterQueryRecord emitterRecordBSDF(em, it.p, nit.p, nit.shFrame.n, nit.uv);
+				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
+			}
 		}
 
 		// Prevent nans
 		if (pmat + pem == 0)  pmat = 1.0;
 
-		return {Lmat, pem, pmat};
+		return {Lmat / k, pem, pmat};
 
 	}
 
-	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
+	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
 		const float absorption = 0.1;
 
 		// Intersect with scene geometry
@@ -108,10 +110,7 @@ public :
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
-		SamplingResults mat = Lmat(scene, sampler, ray, it);
-		float k = mat.L.getLuminance();
-		// Ray absorption event
-		if (sampler->next1D() > k) return {0};
+		SamplingResults mat = Lmat(scene, sampler, ray, it, secondary);
 
 		// Multiple importance sampling
 		SamplingResults em = Lem(scene, sampler, ray, it);
@@ -120,7 +119,11 @@ public :
 		float wem = em.p_em*em.p_em / (em.p_em*em.p_em + em.p_mat*em.p_mat);
 		float wmat = mat.p_mat*mat.p_mat / (mat.p_em*mat.p_em + mat.p_mat*mat.p_mat);
 
-		return (wem * em.L) + (wmat * mat.L) / k;
+		return (wem * em.L) + (wmat * mat.L);
+	}
+
+	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
+		return LiR(scene, sampler, ray, false);
 	}
 
 	std::string toString() const {
