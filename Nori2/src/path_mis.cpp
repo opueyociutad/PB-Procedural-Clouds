@@ -63,41 +63,37 @@ public :
 	}
 
 	SamplingResults Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
-		// BSDF sampling
-		Vector3f local_ray_wi = it.toLocal(-ray.d);
-		BSDFQueryRecord bsdfRecord(local_ray_wi, it.uv);
+		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+
 		float k = frcos.getLuminance() > 0.9f ? 0.9f : frcos.getLuminance();
 		if (!secondary) k = 1.0;
+
+		if (sampler->next1D() > k) return {0, 1, 1};
+
 		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection nit;
-		Color3f Lmat(0);
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
 		float pem = 0.0f;
-		if (sampler->next1D() < k) {
-			bool hit = scene->rayIntersect(nray, nit);
-			if (!hit || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
-				Lmat = (frcos * LiR(scene, sampler, nray));
-			}
-			// Get emitter pdf
-			if (hit && nit.mesh->isEmitter()) {
-				const Emitter* em = nit.mesh->getEmitter();
-				EmitterQueryRecord emitterRecordBSDF(em, it.p, nit.p, nit.shFrame.n, nit.uv);
-				pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
-			}
+
+		Color3f Lmat = (frcos * LiR(scene, sampler, nray));
+
+		bool hit = scene->rayIntersect(nray, nit);
+		// Get emitter pdf
+		if (hit && nit.mesh->isEmitter()) {
+			const Emitter* em = nit.mesh->getEmitter();
+			EmitterQueryRecord emitterRecordBSDF(em, it.p, nit.p, nit.shFrame.n, nit.uv);
+			pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
 		}
 
-		// Prevent nans
-		if (pmat + pem == 0)  pmat = 1.0;
+		//if (bsdfRecord.measure == EDiscrete) return {Lmat / k, 0, 1};
 
+		if (pmat + pem == 0.0f)  pmat = 1.0f;
 		return {Lmat / k, pem, pmat};
-
 	}
 
 	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
-		const float absorption = 0.1;
-
 		// Intersect with scene geometry
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) {
@@ -110,6 +106,7 @@ public :
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
+		// MIS if not delta
 		SamplingResults mat = Lmat(scene, sampler, ray, it, secondary);
 
 		// Multiple importance sampling
