@@ -13,7 +13,6 @@ public :
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		const float absorption = 0.1;
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
 
@@ -23,13 +22,15 @@ public :
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
-		// Absorb ray
-		if (sampler->next1D() < absorption) return Color3f(0);
-
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
-		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+		float k = it.mesh->getBSDF()->eval(bsdfRecord).getLuminance();
+		if (k > 1) cout << k << endl;
+		// Absorb ray
+		if (sampler->next1D() > k) return {0};
+
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
-		return fr * Li(scene, sampler, nray) / (1-absorption);
+		return frcos * Li(scene, sampler, nray) / k;
 	}
 
 	std::string toString() const {
