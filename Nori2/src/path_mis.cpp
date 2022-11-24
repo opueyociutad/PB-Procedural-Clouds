@@ -34,9 +34,13 @@ public :
 		Intersection it_shadow;
 		Color3f Lem(0);
 		float pem = emitterRecord.pdf;
+		Color3f be;
+		float cs;
 		if (!(scene->rayIntersect(emitterShadowRay, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Lem = Le * it.mesh->getBSDF()->eval(bsdfRecord) * abs(it.shFrame.n.dot(emitterRecord.wi)) / pdflight;
+			be = it.mesh->getBSDF()->eval(bsdfRecord);
+			cs = abs(it.shFrame.n.dot(emitterRecord.wi));
+			Lem = Le * be * cs / pdflight;
 			pem *= pdflight;
 		}
 
@@ -44,6 +48,16 @@ public :
 
 		// Prevent nans
 		if (pmat + pem == 0)  pmat = 1.0;
+
+		if (!isfinite(pem)) {
+			cout << "---\nsus light:" << endl;
+			cout << "pem: " << pem << endl;
+			cout << "pdflight: " << pdflight << endl;
+			cout << "emitterRecord.pdf: " << emitterRecord.pdf << endl;
+			cout << "Le: " << Le << endl;
+			cout << "cs: " << cs << endl;
+			cout << "bsdf.eval: " << be << endl;
+		}
 
 		return {Lem, pem, pmat};
 	}
@@ -90,7 +104,7 @@ public :
 
 		// Add light if intersected with emitter
 		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
