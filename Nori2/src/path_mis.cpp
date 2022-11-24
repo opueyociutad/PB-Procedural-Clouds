@@ -94,18 +94,19 @@ public :
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
+		SamplingResults mat = Lmat(scene, sampler, ray, it);
+		float k = mat.L.getLuminance();
 		// Ray absorption event
-		if (sampler->next1D() < absorption) return Color3f(0);
+		if (sampler->next1D() > k) return {0};
 
 		// Multiple importance sampling
 		SamplingResults em = Lem(scene, sampler, ray, it);
-		SamplingResults mat = Lmat(scene, sampler, ray, it);
 
 		// Power heuristic
 		float wem = em.p_em*em.p_em / (em.p_em*em.p_em + em.p_mat*em.p_mat);
 		float wmat = mat.p_mat*mat.p_mat / (mat.p_em*mat.p_em + mat.p_mat*mat.p_mat);
 
-		return (wem * em.L + wmat * mat.L) / (1-absorption);
+		return (wem * em.L) + (wmat * mat.L) / k;
 	}
 
 	std::string toString() const {

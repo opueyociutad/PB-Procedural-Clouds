@@ -14,8 +14,6 @@ public :
 
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		const float absorption = 0.1;
-
 		// Intersect with scene geometry
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) {
@@ -27,9 +25,6 @@ public :
 			EmitterQueryRecord lightEmitterRecord(it.p);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
-
-		// Ray absorption event
-		if (sampler->next1D() < absorption) return Color3f(0);
 
 		// Sample light with next event estimation
 		float pdflight;
@@ -47,13 +42,16 @@ public :
 		// Sample color and bsdf of impact point
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+		float k = fr.getLuminance();
+		// Absorb ray
+		if (sampler->next1D() > k) return {0};
 
 		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection nit;
 		Color3f nLe(0);
 		if (!scene->rayIntersect(nray, nit) || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
-			nLe = (fr * Li(scene, sampler, nray)) / (1-absorption);
+			nLe = (fr * Li(scene, sampler, nray)) / k;
 		}
 
 		return nLe + neeLight;
