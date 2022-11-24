@@ -25,11 +25,16 @@ public :
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		float k = frcos.getLuminance() > 0.9 ? 0.9 : frcos.getLuminance();
+
 		// Absorb ray
-		if (sampler->next1D() > k) return {0};
+		if (sampler->next1D() > k) return Color3f(0);
 
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
-		return frcos * Li(scene, sampler, nray) / k;
+		Color3f ret = frcos * Li(scene, sampler, nray) / k;
+		if (isnan(frcos.x())) {
+			cout << it.mesh->getBSDF()->toString() << endl;
+		}
+		return ret;
 	}
 
 	std::string toString() const {
