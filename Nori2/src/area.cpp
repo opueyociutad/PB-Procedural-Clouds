@@ -47,24 +47,24 @@ public:
 
 	// We don't assume anything about the visibility of points specified in 'ref' and 'p' in the EmitterQueryRecord.
 	virtual Color3f eval(const EmitterQueryRecord & lRec) const {
-		if (!m_mesh)
-			throw NoriException("There is no shape attached to this Area light!");
+		if (!m_mesh) throw NoriException("There is no shape attached to this Area light!");
 		// This function call can be done by bsdf sampling routines.
 		// Hence the ray was already traced for us - i.e a visibility test was already performed.
 		// Hence just check if the associated normal in emitter query record and incoming direction are not backfacing
-		if (lRec.n.dot(lRec.wi) > 0 ) return {0.0, 0.0, 0.0};
+		if (lRec.n.dot(lRec.wi) >= 0 ) return {0.0, 0.0, 0.0};
 		return m_radiance->eval(lRec.uv);
 	}
 
 	virtual Color3f sample(EmitterQueryRecord & lRec, const Point2f & sample, float optional_u) const {
-		if (!m_mesh)
-			throw NoriException("There is no shape attached to this Area light!");
+		if (!m_mesh) throw NoriException("There is no shape attached to this Area light!");
 		m_mesh->samplePosition(sample, lRec.p, lRec.n, lRec.uv);
 		lRec.dist = (lRec.p-lRec.ref).norm();
 		lRec.wi = (lRec.p-lRec.ref) / lRec.dist;
+		if (lRec.n.dot(lRec.wi) >= 0) {
+			return Color3f(0);
+		}
 		lRec.pdf = pdf(lRec);
 		Color3f c = eval(lRec);
-		assert(!(isnan(c.x()) || isnan(c.y()) || isnan(c.z())));
 		return c / lRec.pdf;
 	}
 
@@ -73,9 +73,7 @@ public:
 	// WARNING: Use with care. Malformed EmitterQueryRecords can result in undefined behavior.
 	//			Plus no visibility is considered.
 	virtual float pdf(const EmitterQueryRecord &lRec) const {
-		if (!m_mesh)
-			throw NoriException("There is no shape attached to this Area light!");
-		assert(m_mesh->pdf(lRec.p) != 0.0);
+		if (!m_mesh) throw NoriException("There is no shape attached to this Area light!");
 		return m_mesh->pdf(lRec.p) * (lRec.dist * lRec.dist) / (abs(lRec.n.dot(lRec.wi)));
 	}
 
