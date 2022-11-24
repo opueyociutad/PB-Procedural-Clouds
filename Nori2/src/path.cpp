@@ -18,14 +18,13 @@ public :
 
 		// Add light if emitter
 		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-		float k = it.mesh->getBSDF()->eval(bsdfRecord).getLuminance();
-		if (k > 1) cout << k << endl;
+		float k = frcos.getLuminance() > 0.9 ? 0.9 : frcos.getLuminance();
 		// Absorb ray
 		if (sampler->next1D() > k) return {0};
 

@@ -22,7 +22,7 @@ public :
 
 		// Add light if intersected with emitter
 		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.p);
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
 			return it.mesh->getEmitter()->eval(lightEmitterRecord);
 		}
 
@@ -41,8 +41,8 @@ public :
 
 		// Sample color and bsdf of impact point
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
-		Color3f fr = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-		float k = fr.getLuminance();
+		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+		float k = frcos.getLuminance() > 0.9 ? 0.9 : frcos.getLuminance();
 		// Absorb ray
 		if (sampler->next1D() > k) return {0};
 
@@ -51,14 +51,14 @@ public :
 		Intersection nit;
 		Color3f nLe(0);
 		if (!scene->rayIntersect(nray, nit) || !nit.mesh->isEmitter() || bsdfRecord.measure == EDiscrete) {
-			nLe = (fr * Li(scene, sampler, nray)) / k;
+			nLe = (frcos * Li(scene, sampler, nray)) / k;
 		}
 
 		return nLe + neeLight;
 	}
 
 	std::string toString() const {
-		return "Direct Whitted Integrator []" ;
+		return "Next Event Estimation Integrator []" ;
 	}
 };
 
