@@ -345,7 +345,7 @@ public:
 			bRec.wo = Warp::squareToCosineHemisphere(sample);
 		}
 
-		//if (bRec.wo.z() <= 0) return {0};
+		if (bRec.wo.z() <= 0) return Color3f(0);
 
 		return eval(bRec) * Frame::cosTheta(bRec.wo) / (pdf(bRec));
 	}

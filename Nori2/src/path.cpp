@@ -27,7 +27,7 @@ public :
 		float k = frcos.getLuminance() > 0.9 ? 0.9 : frcos.getLuminance();
 		if (!secondary) k = 1.0;
 		// Absorb ray
-		if (sampler->next1D() > k) return {0};
+		if (sampler->next1D() > k) return Color3f(0);
 
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
 		return frcos * LiR(scene, sampler, nray) / k;
