@@ -87,10 +87,12 @@ public :
 			pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
 		}
 
-		//if (bsdfRecord.measure == EDiscrete) return {Lmat / k, 0, 1};
-
+		if (bsdfRecord.measure == EDiscrete) {
+			return {Lmat / k, 0.0f, 1.0f};
+		}
 		if (pmat + pem == 0.0f)  pmat = 1.0f;
 		return {Lmat / k, pem, pmat};
+
 	}
 
 	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
