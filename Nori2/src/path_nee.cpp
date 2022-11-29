@@ -55,7 +55,6 @@ public :
 		}
 
 		return nLe + neeLight;
-
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
