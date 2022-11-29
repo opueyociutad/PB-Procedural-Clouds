@@ -8,21 +8,33 @@ NORI_NAMESPACE_BEGIN
 
 class PathTracingMIS : public Integrator {
 private:
-	struct SamplingResults {
+	struct LQueryRecord {
 		Color3f L;
-		float p_em;
-		float p_mat;
+		bool lastRayHitdLight;
+		EMeasure pdfType;
 
-		SamplingResults(Color3f _l, float _p_em, float _p_mat) :
-				L(std::move(_l)), p_em(_p_em), p_mat(_p_mat) {}
+		LQueryRecord(Color3f _l, bool _lastRay, EMeasure _pdfType) :
+				L(std::move(_l)), lastRayHitdLight(_lastRay), pdfType(_pdfType) {}
+
+		bool needLightSample() {
+			return !(lastRayHitdLight || pdfType == EDiscrete);
+		}
+
+		bool willLastRay() {
+			return lastRayHitdLight && pdfType == EDiscrete;
+		}
 	};
+
+	static Color3f powerHeuristic(Color3f L, float p, float o) {
+		return p*p * L / (p*p + o*o);
+	}
 
 public :
 	PathTracingMIS(const PropertyList &props) {
 		/* No parameters this time */
 	}
 
-	SamplingResults Lem(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
+	LQueryRecord Lem(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
 		// Sample random light
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
@@ -59,17 +71,17 @@ public :
 			cout << "bsdf.eval: " << be << endl;
 		}
 
-		return {Lem, pem, pmat};
+		return {powerHeuristic(Lem, pem, pmat), true, ESolidAngle};
 	}
 
-	SamplingResults Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
+	LQueryRecord Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 
 		float k = frcos.getLuminance() > 0.9f ? 0.9f : frcos.getLuminance();
 		if (!secondary) k = 1.0;
 
-		if (sampler->next1D() > k) return {0, 1, 1};
+		if (sampler->next1D() > k) return {0, false, EUnknownMeasure};
 
 		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
@@ -77,7 +89,11 @@ public :
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
 		float pem = 0.0f;
 
-		Color3f Lmat = (frcos * LiR(scene, sampler, nray));
+		LQueryRecord nextRay = LiR(scene, sampler, nray);
+		Color3f Lmat = (frcos * nextRay.L) / k;
+		if (bsdfRecord.measure == EDiscrete || !nextRay.lastRayHitdLight) {
+			return {Lmat, nextRay.willLastRay(), bsdfRecord.measure};
+		}
 
 		bool hit = scene->rayIntersect(nray, nit);
 		// Get emitter pdf
@@ -87,42 +103,36 @@ public :
 			pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
 		}
 
-		if (bsdfRecord.measure == EDiscrete) {
-			return {Lmat / k, 0.0f, 1.0f};
-		}
 		if (pmat + pem == 0.0f)  pmat = 1.0f;
-		return {Lmat / k, pem, pmat};
+		return {secondary? powerHeuristic(Lmat, pmat, pem) : Lmat, false, bsdfRecord.measure};
 
 	}
 
-	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
+	LQueryRecord LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
 		// Intersect with scene geometry
 		Intersection it;
 		if (!scene->rayIntersect(ray, it)) {
-			return scene->getBackground(ray);
+			return {scene->getBackground(ray), true, EUnknownMeasure};
 		}
 
 		// Add light if intersected with emitter
 		if (it.mesh->isEmitter()) {
 			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
-			return it.mesh->getEmitter()->eval(lightEmitterRecord);
+			return {it.mesh->getEmitter()->eval(lightEmitterRecord), true, EUnknownMeasure};
 		}
 
 		// MIS if not delta
-		SamplingResults mat = Lmat(scene, sampler, ray, it, secondary);
+		LQueryRecord mat = Lmat(scene, sampler, ray, it, secondary);
+		if (!mat.needLightSample()) return mat;
 
 		// Multiple importance sampling
-		SamplingResults em = Lem(scene, sampler, ray, it);
+		LQueryRecord em = Lem(scene, sampler, ray, it);
 
-		// Power heuristic
-		float wem = em.p_em*em.p_em / (em.p_em*em.p_em + em.p_mat*em.p_mat);
-		float wmat = mat.p_mat*mat.p_mat / (mat.p_em*mat.p_em + mat.p_mat*mat.p_mat);
-
-		return (wem * em.L) + (wmat * mat.L);
+		return {mat.L + em.L, false, mat.pdfType};
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		return LiR(scene, sampler, ray, false);
+		return LiR(scene, sampler, ray, false).L;
 	}
 
 	std::string toString() const {
