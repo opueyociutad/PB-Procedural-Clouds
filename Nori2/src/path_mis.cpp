@@ -13,20 +13,16 @@ private:
 		bool lastRayHitdLight;
 		EMeasure pdfType;
 
-		LQueryRecord(Color3f _l, bool _lastRay, EMeasure _pdfType) :
-				L(std::move(_l)), lastRayHitdLight(_lastRay), pdfType(_pdfType) {}
+		LQueryRecord(Color3f _l, bool _lastRayHitdLight, EMeasure _pdfType) :
+				L(std::move(_l)), lastRayHitdLight(_lastRayHitdLight), pdfType(_pdfType) {}
 
 		bool needLightSample() {
 			return !(lastRayHitdLight || pdfType == EDiscrete);
 		}
-
-		bool willLastRay() {
-			return lastRayHitdLight && pdfType == EDiscrete;
-		}
 	};
 
 	static Color3f powerHeuristic(Color3f L, float p, float o) {
-		return p*p * L / (p*p + o*o);
+		return p * L / (p + o);
 	}
 
 public :
@@ -34,7 +30,7 @@ public :
 		/* No parameters this time */
 	}
 
-	LQueryRecord Lem(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
+	Color3f Lem(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
 		// Sample random light
 		float pdflight;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
@@ -61,26 +57,16 @@ public :
 		// Prevent nans
 		if (pmat + pem == 0)  pmat = 1.0;
 
-		if (!isfinite(pem)) {
-			cout << "---\nsus light:" << endl;
-			cout << "pem: " << pem << endl;
-			cout << "pdflight: " << pdflight << endl;
-			cout << "emitterRecord.pdf: " << emitterRecord.pdf << endl;
-			cout << "Le: " << Le << endl;
-			cout << "cs: " << cs << endl;
-			cout << "bsdf.eval: " << be << endl;
-		}
-
-		return {powerHeuristic(Lem, pem, pmat), true, ESolidAngle};
+		return powerHeuristic(Lem, pem, pmat);
 	}
 
 	LQueryRecord Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 
+		// Russian Roulette
 		float k = frcos.getLuminance() > 0.9f ? 0.9f : frcos.getLuminance();
 		if (!secondary) k = 1.0;
-
 		if (sampler->next1D() > k) return {0, false, EUnknownMeasure};
 
 		// Get direction for new ray
@@ -91,9 +77,11 @@ public :
 
 		LQueryRecord nextRay = LiR(scene, sampler, nray);
 		Color3f Lmat = (frcos * nextRay.L) / k;
-		if (bsdfRecord.measure == EDiscrete || !nextRay.lastRayHitdLight) {
-			return {Lmat, nextRay.willLastRay(), bsdfRecord.measure};
-		}
+
+		// Case last bounce, not sample
+		//if (bsdfRecord.measure == EDiscrete || nextRay.lastRayHitdLight) {
+		//	return {Lmat, false, bsdfRecord.measure};
+		//}
 
 		bool hit = scene->rayIntersect(nray, nit);
 		// Get emitter pdf
@@ -123,12 +111,12 @@ public :
 
 		// MIS if not delta
 		LQueryRecord mat = Lmat(scene, sampler, ray, it, secondary);
-		if (!mat.needLightSample()) return mat;
+		if (!mat.needLightSample() || !secondary) return mat;
 
-		// Multiple importance sampling
-		LQueryRecord em = Lem(scene, sampler, ray, it);
+		// Emitter sampling
+		Color3f emL = Lem(scene, sampler, ray, it);
 
-		return {mat.L + em.L, false, mat.pdfType};
+		return {mat.L + emL, false, mat.pdfType};
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
