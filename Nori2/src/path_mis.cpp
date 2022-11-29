@@ -60,28 +60,35 @@ public :
 		return powerHeuristic(Lem, pem, pmat);
 	}
 
-	LQueryRecord Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
+	std::tuple<LQueryRecord, bool> Lmat(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, bool secondary) const {
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 
 		// Russian Roulette
 		float k = frcos.getLuminance() > 0.9f ? 0.9f : frcos.getLuminance();
 		if (!secondary) k = 1.0;
-		if (sampler->next1D() > k) return {0, false, EUnknownMeasure};
+		if (sampler->next1D() > k) return {{0, false, EUnknownMeasure}, true};
 
 		// Get direction for new ray
 		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
 		Intersection nit;
-		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
-		float pem = 0.0f;
 
 		LQueryRecord nextRay = LiR(scene, sampler, nray);
 		Color3f Lmat = (frcos * nextRay.L) / k;
 
-		// Case last bounce, not sample
-		//if (bsdfRecord.measure == EDiscrete || nextRay.lastRayHitdLight) {
-		//	return {Lmat, false, bsdfRecord.measure};
-		//}
+		// If specular bounce not MIS
+		if (bsdfRecord.measure == EDiscrete) {
+			return {{Lmat, false, bsdfRecord.measure}, false};
+		}
+
+		// Case not last bounce
+		if (!secondary || !nextRay.lastRayHitdLight) {
+			return {{Lmat, false, bsdfRecord.measure}, false};
+		}
+
+		// Case last bounce
+		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
+		float pem = 0.0f;
 
 		bool hit = scene->rayIntersect(nray, nit);
 		// Get emitter pdf
@@ -90,9 +97,9 @@ public :
 			EmitterQueryRecord emitterRecordBSDF(em, it.p, nit.p, nit.shFrame.n, nit.uv);
 			pem = scene->pdfEmitter(em) * em->pdf(EmitterQueryRecord(em,it.p, nit.p, nit.shFrame.n, nit.uv));
 		}
-
-		if (pmat + pem == 0.0f)  pmat = 1.0f;
-		return {secondary? powerHeuristic(Lmat, pmat, pem) : Lmat, false, bsdfRecord.measure};
+		// Prevent nans and combine with MIS
+		if (pmat + pem == 0.0f) pmat = 1.0f;
+		return {{powerHeuristic(Lmat, pmat, pem), false, bsdfRecord.measure}, false};
 
 	}
 
@@ -110,8 +117,8 @@ public :
 		}
 
 		// MIS if not delta
-		LQueryRecord mat = Lmat(scene, sampler, ray, it, secondary);
-		if (!mat.needLightSample() || !secondary) return mat;
+		auto [mat, needLight] = Lmat(scene, sampler, ray, it, secondary);
+		if (!needLight) return mat;
 
 		// Emitter sampling
 		Color3f emL = Lem(scene, sampler, ray, it);
@@ -120,7 +127,7 @@ public :
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		return LiR(scene, sampler, ray, false).L;
+		return LiR(scene, sampler, ray, true).L;
 	}
 
 	std::string toString() const {
