@@ -81,12 +81,14 @@ public :
 			return {{Lmat, false, bsdfRecord.measure}, false};
 		}
 
-		// Case not last bounce
-		if (!secondary || !nextRay.lastRayHitdLight) {
+		/*
+		// Case last bounce or first
+		if (!secondary || nextRay.lastRayHitdLight) {
 			return {{Lmat, false, bsdfRecord.measure}, false};
 		}
+		 */
 
-		// Case last bounce
+		// Case not last bounce
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
 		float pem = 0.0f;
 
@@ -99,7 +101,7 @@ public :
 		}
 		// Prevent nans and combine with MIS
 		if (pmat + pem == 0.0f) pmat = 1.0f;
-		return {{powerHeuristic(Lmat, pmat, pem), false, bsdfRecord.measure}, false};
+		return {{powerHeuristic(Lmat, pmat, pem), false, bsdfRecord.measure}, true};
 
 	}
 
@@ -127,7 +129,7 @@ public :
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		return LiR(scene, sampler, ray, true).L;
+		return LiR(scene, sampler, ray, false).L;
 	}
 
 	std::string toString() const {
