@@ -98,6 +98,7 @@ add_executable(nori
   src/texture.cpp
   src/ttest.cpp
   src/warp.cpp
+  src/texture_diffuse.cpp
 
   src/direct_ems.cpp
   src/direct_mats.cpp
