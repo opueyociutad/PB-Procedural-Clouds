@@ -90,8 +90,8 @@ public :
 
 		// Case not last bounce
 		float pmat = it.mesh->getBSDF()->pdf(bsdfRecord);
-		float pem = 0.0f;
 
+		float pem = 0.0f;
 		bool hit = scene->rayIntersect(nray, nit);
 		// Get emitter pdf
 		if (hit && nit.mesh->isEmitter()) {
@@ -133,7 +133,7 @@ public :
 	}
 
 	std::string toString() const {
-		return "Path Tracer Integrator []" ;
+		return "Path Tracer mis Integrator []" ;
 	}
 };
 
