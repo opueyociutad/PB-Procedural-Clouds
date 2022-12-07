@@ -12,11 +12,11 @@ public :
 		/* No parameters this time */
 	}
 
-	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
+	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
 		Ray3f nray = ray;
 		Color3f throughput(1.0f);
+		bool secondary = false;
 		while (true) {
-
 			Intersection it;
 			if (!scene->rayIntersect(nray, it)) return throughput * scene->getBackground(ray);
 
@@ -42,10 +42,6 @@ public :
 
 			nray = Ray3f(it.p, it.toWorld(bsdfRecord.wo));
 		}
-	}
-
-	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		return LiR(scene, sampler, ray, false);
 	}
 
 	std::string toString() const {
