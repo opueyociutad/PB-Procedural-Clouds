@@ -13,24 +13,35 @@ public :
 	}
 
 	Color3f LiR(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool secondary=true) const {
-		Intersection it;
-		if (!scene->rayIntersect(ray, it)) return scene->getBackground(ray);
+		Ray3f nray = ray;
+		Color3f throughput(1.0f);
+		while (true) {
 
-		// Add light if emitter
-		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
-			return it.mesh->getEmitter()->eval(lightEmitterRecord);
+			Intersection it;
+			if (!scene->rayIntersect(nray, it)) return throughput * scene->getBackground(ray);
+
+			// Add light if emitter
+			if (it.mesh->isEmitter()) {
+				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
+				return throughput * it.mesh->getEmitter()->eval(lightEmitterRecord);
+			}
+
+			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
+			Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+			throughput *= frcos;
+			if (throughput.isZero()) return throughput;
+			// RR with throughput instead of just fr
+			float k = throughput.getLuminance() > 0.9 ? 0.9 : throughput.getLuminance();
+			if (!secondary) {
+				k = 1.0;
+				secondary = true;
+			}
+			// Absorb ray
+			if (sampler->next1D() > k) return Color3f(0);
+			throughput /= k;
+
+			nray = Ray3f(it.p, it.toWorld(bsdfRecord.wo));
 		}
-
-		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
-		Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-		float k = frcos.getLuminance() > 0.9 ? 0.9 : frcos.getLuminance();
-		if (!secondary) k = 1.0;
-		// Absorb ray
-		if (sampler->next1D() > k) return Color3f(0);
-
-		Ray3f nray(it.p, it.toWorld(bsdfRecord.wo));
-		return frcos * LiR(scene, sampler, nray) / k;
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
