@@ -18,15 +18,15 @@ public :
 		bool secondary = false;
 		while (true) {
 			Intersection it;
-			if (!scene->rayIntersect(nray, it)) return throughput * scene->getBackground(ray);
+			if (!scene->rayIntersect(nray, it)) return throughput * scene->getBackground(nray);
 
 			// Add light if emitter
 			if (it.mesh->isEmitter()) {
-				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
+				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), nray.o, it.p, it.shFrame.n, it.uv);
 				return throughput * it.mesh->getEmitter()->eval(lightEmitterRecord);
 			}
 
-			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
+			BSDFQueryRecord bsdfRecord(it.toLocal(-nray.d), it.uv);
 			Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 			throughput *= frcos;
 			if (throughput.isZero()) return throughput;
