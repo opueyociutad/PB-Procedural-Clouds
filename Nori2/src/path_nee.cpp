@@ -12,8 +12,19 @@ public :
 		/* No parameters this time */
 	}
 
-	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
+	bool RR(Color3f& throughput, Sampler* sampler, bool& secondary, float maxRR=0.9f) const {
+		// RR with throughput instead of just fr
+		float k = throughput.getLuminance() > maxRR ? maxRR : throughput.getLuminance();
+		if (!secondary) {
+			k = 1.0;
+			secondary = true;
+		}
+		throughput /= k;
+		return sampler->next1D() > k;;
 
+	}
+
+	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
 		Ray3f nray = ray;
 		Color3f throughput(1.0f);
 		Color3f L(0.0f);
@@ -23,14 +34,11 @@ public :
 		bool intersected = scene->rayIntersect(nray, it);
 
 		while (true) {
-
 			if (!intersected) {
 				L += throughput * scene->getBackground(nray);
 				break;
-			}
-
-			// Add light if intersected with emitter
-			if (it.mesh->isEmitter()) {
+			} else if (it.mesh->isEmitter()) {
+				// Add light if intersected with emitter
 				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), nray.o, it.p, it.shFrame.n, it.uv);
 				L += throughput * it.mesh->getEmitter()->eval(lightEmitterRecord);
 				break;
@@ -50,24 +58,15 @@ public :
 
 			// Sample color and bsdf of impact point
 			BSDFQueryRecord bsdfRecord(it.toLocal(-nray.d), it.uv);
-			Color3f frcos = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
-			throughput *= frcos;
-			if (throughput.isZero()) return L;
-			// RR with throughput instead of just fr
-			float k = throughput.getLuminance() > 0.9 ? 0.9 : throughput.getLuminance();
-			if (!secondary) {
-				k = 1.0;
-				secondary = true;
-			}
+			throughput *= it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 
-			// Absorb ray
-			if (sampler->next1D() > k) break;
-			throughput /= k;
+			bool absorbRay = RR(throughput, sampler, secondary);
+			if (absorbRay) break;
 
 			// Get direction for new ray
 			nray = Ray3f(it.p, it.toWorld(bsdfRecord.wo));
 			intersected = scene->rayIntersect(nray, it);
-			if (it.mesh->isEmitter() && bsdfRecord.measure != EDiscrete) {
+			if ((intersected && it.mesh->isEmitter()) && bsdfRecord.measure != EDiscrete) {
 				break;
 			}
 
