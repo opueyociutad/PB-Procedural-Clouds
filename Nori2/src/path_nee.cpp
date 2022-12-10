@@ -31,50 +31,45 @@ public :
 		// Intersect with scene geometry
 		Intersection it;
 		bool intersected = scene->rayIntersect(nray, it);
+		if (!intersected) {
+			L += throughput * scene->getBackground(nray);
+		} else if (it.mesh->isEmitter()) {
+			// Add light if intersected with emitter
+			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), nray.o, it.p, it.shFrame.n, it.uv);
+			L += throughput * it.mesh->getEmitter()->eval(lightEmitterRecord);
+		} else {
+			while (true) {
+				Color3f currThroughput = throughput;
+				// Sample color and bsdf of impact point
+				BSDFQueryRecord bsdfRecord(it.toLocal(-nray.d), it.uv);
+				throughput *= it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 
-		while (true) {
-			if (!intersected) {
-				L += throughput * scene->getBackground(nray);
-				break;
-			} else if (it.mesh->isEmitter()) {
-				// Add light if intersected with emitter
-				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), nray.o, it.p, it.shFrame.n, it.uv);
-				L += throughput * it.mesh->getEmitter()->eval(lightEmitterRecord);
-				break;
-			}
+				// Get direction for new ray
+				Ray3f oldRay = nray;
+				nray = Ray3f(it.p, it.toWorld(bsdfRecord.wo));
+				Intersection nit;
+				intersected = scene->rayIntersect(nray, nit);
 
-			Color3f currThroughput = throughput;
-			// Sample color and bsdf of impact point
-			BSDFQueryRecord bsdfRecord(it.toLocal(-nray.d), it.uv);
-			throughput *= it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
+				if (bsdfRecord.measure != EDiscrete) {
+					// Sample light with next event estimation
+					float pdflight;
+					const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
+					EmitterQueryRecord emitterRecord(it.p);
+					Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
+					Ray3f sray(it.p, emitterRecord.wi);
+					Intersection it_shadow;
+					if (!(scene->rayIntersect(sray, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
+						BSDFQueryRecord bsdfRecord(it.toLocal(-oldRay.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
+						L += currThroughput * it.mesh->getBSDF()->eval(bsdfRecord) * Le * abs(it.shFrame.n.dot(emitterRecord.wi)) / pdflight;
+					}
 
-			// Get direction for new ray
-			Ray3f oldRay = nray;
-			nray = Ray3f(it.p, it.toWorld(bsdfRecord.wo));
-			Intersection nit;
-			intersected = scene->rayIntersect(nray, nit);
-
-			if (bsdfRecord.measure != EDiscrete) {
-				// Sample light with next event estimation
-				float pdflight;
-				const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
-				EmitterQueryRecord emitterRecord(it.p);
-				Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
-				Ray3f sray(it.p, emitterRecord.wi);
-				Intersection it_shadow;
-				if (!(scene->rayIntersect(sray, it_shadow) && it_shadow.t < (emitterRecord.dist - 1.e-5))) {
-					BSDFQueryRecord bsdfRecord(it.toLocal(-oldRay.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-					L += currThroughput * it.mesh->getBSDF()->eval(bsdfRecord) * Le * abs(it.shFrame.n.dot(emitterRecord.wi)) / pdflight;
+					if (!intersected || nit.mesh->isEmitter()) break;
 				}
+				it = nit;
 
-				if (!intersected || nit.mesh->isEmitter()) break;
+				bool absorbRay = RR(throughput, sampler, secondary);
+				if (absorbRay) break;
 			}
-			it = nit;
-
-			bool absorbRay = RR(throughput, sampler, secondary);
-			if (absorbRay) break;
-
-
 		}
 		return L;
 	}
