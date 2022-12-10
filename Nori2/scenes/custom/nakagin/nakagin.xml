@@ -17,12 +17,6 @@
 		<integer name="width" value="1280"/>
 	</camera>
 
-	<emitter type="environment">
-		<string name="filename" value="env.exr"/>
-		<float name ="rotate" value="-180"/>
-		<color name ="radiance" value="0,0,0"/>
-	</emitter>
-
 	<mesh type="obj">
 		<string name="filename" value="NakaginFrame.obj"/>
 		<bsdf type="roughconductor">
