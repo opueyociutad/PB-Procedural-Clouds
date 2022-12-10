@@ -20,8 +20,7 @@ public :
 			secondary = true;
 		}
 		throughput /= k;
-		return sampler->next1D() > k;;
-
+		return sampler->next1D() > k;
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
