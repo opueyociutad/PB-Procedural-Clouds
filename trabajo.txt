@@ -1,0 +1,38 @@
+pointlight
+
+
+sampling light
+- luminaire sampling - next event estimation
+sampling distance
+- null collision - delta tracking
+sampling transmittance
+- la del punto de colisión - delta tracking
+
+intersecting geometry
+	- PLANO OCÉANO
+	- BOUNDING BOX NUBE
+		- MODELAR DENSIDAD RUIDO PERLIN
+		- SDF DE MANERA QUE LA DENSIDAD ES MENOR CUANTO MÁS CERCA DEL BORDE
+	- PUNTO DE LUZ ENCIMA DE LA NUBE
+
+
+CÓMO HACERLO EN NORI
+	- luz pointlight
+	- nube prioritaria y dentro de fog
+	- volúmenes encajetados
+	- asumes que estás dentro de uno ya (por simplificar)
+	- separados gemoetría rígida y media
+	- hardcodeo al principio de estar en un medio
+	- impactar con objetos normales: idéntico
+	- si en niebla:
+		- sampleo mean free path
+		- y ya
+	- si en caja nube:
+		- si fuera de sdf se rechaza la colisión
+		- si dentro:
+			null collision - delta tracking etc
+
+DATA STRUCTURES NORI
+	- Homogéneos
+		- 
+	- Heterogéneos
