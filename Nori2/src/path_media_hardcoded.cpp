@@ -13,11 +13,13 @@ public :
 	}
 
 	float meanFreePathSampling(float mu_t, float sample) const {
-		return - log(1-sample) / mu_t;
+		float a =  -log(1-sample) / mu_t;
+		return a;
 	}
 
 	float meanFreePathSamplingPDF(float mu_t, float t) const {
-		return mu_t * exp(- mu_t * t);
+		float a = mu_t * exp(- mu_t * t);
+		return a;
 	}
 
 	float henyeyGreenstein(double g, double cosTheta) const {
@@ -28,20 +30,20 @@ public :
 		return (3 / (16*M_PI)) * (1 + cosTheta*cosTheta);
 	}
 
-	float transmittance(float mu_t, float t) const {
-		return exp(-mu_t * t);
+	float T(float mu_t, float t) const {
+		float a = exp(-mu_t * t);
+		return a;
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
-		const float mu_a = 0.05, mu_s = 0.8;
+		const float p = 1.0;
+		const float sigma_a = 0.15, sigma_s = 0.7;
+		const float mu_a = p * sigma_a, mu_s = p*sigma_s;
 		const float mu_t = mu_a + mu_s;
 		const float alpha = mu_s / mu_t;
 		Ray3f nray = ray;
 		Color3f throughput(1.0f);
 		Color3f L(0.0f);
-		float t = 0.5; //meanFreePathSampling(mu_t, sampler->next1D());
-		Intersection it;
-		bool intersected = scene->rayIntersect(nray, it);
 		while (true) {
 			// RR to keep marching, assume first bounce doesn't geometry
 			float RRsample = sampler->next1D();
@@ -49,29 +51,19 @@ public :
 			throughput /= alpha;
 
 			// March
-			nray.o += t*nray.d;
-			if (intersected && it.t < t) {
-				if (it.mesh->isEmitter()) {
-					const Emitter* emitter = it.mesh->getEmitter();
-					EmitterQueryRecord lightEmitterRecord(emitter, nray.o, it.p, it.shFrame.n, it.uv);
-					L += throughput * transmittance(mu_t, t) * emitter->eval(lightEmitterRecord);
-					cout << "plock" << endl;
-				}
-				break;
-			} else {
-				it.t -= t;
-			}
+			float dt = meanFreePathSampling(mu_t, sampler->next1D());
+			nray.o += dt * nray.d;
 			// through not modified according to T because sampling according to free path ut*T.
-			throughput *= transmittance(mu_t, t);
+			throughput *= T(mu_t, dt) / meanFreePathSamplingPDF(mu_t, dt);
 
 			// Single scattering
-			float pdflight;
-			const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdflight);
+			float pdf_light;
+			const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
 			EmitterQueryRecord emitterRecord(nray.o);
-			Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
-			L += throughput * transmittance(mu_t, emitterRecord.dist) * t * rayleigh(abs(nray.d.dot(emitterRecord.wi))) * Le / pdflight;
+			Color3f Li = em->sample(emitterRecord, sampler->next2D(), 0);
+			Li *= T(mu_t, emitterRecord.dist);
+			L += throughput  * rayleigh(abs(nray.d.dot(emitterRecord.wi))) * Li / pdf_light;
 		}
-
 		return L;
 	}
 
