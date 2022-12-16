@@ -106,6 +106,7 @@ add_executable(nori
   src/path.cpp
   src/path_nee.cpp
   src/path_mis.cpp
+  src/path_media_hardcoded.cpp
 )
 
 add_definitions(${NANOGUI_EXTRA_DEFS})
