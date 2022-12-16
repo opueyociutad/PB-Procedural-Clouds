@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene>
+	<integrator type="path_media_hardcoded"/>
+
+	<camera type="perspective">
+		<float name="fov" value="27.7856"/>
+		<transform name="toWorld">
+			<scale value="-1,1,1"/>
+			<lookat target="0, 0.893051, 4.41198" origin="0, 0.919769, 5.41159" up="0, 1, 0"/>
+		</transform>
+
+		<integer name="height" value="600"/>
+		<integer name="width" value="800"/>
+	</camera>
+
+	<sampler type="independent">
+		<integer name="sampleCount" value="64"/>
+	</sampler>
+
+	<!-- Define the light source
+	<emitter type="pointlight">
+		<color name="radiance" value="100, 100, 100"/>
+		<point name="position" value="0, 0.893051, 4.41198"/>
+	</emitter>
+	-->
+
+	<mesh type="obj">
+		<string name="filename" value="light.obj"/>
+
+		<emitter type="area">
+			<color name="radiance" value="40 40 40"/>
+		</emitter>
+	</mesh>
+</scene>
