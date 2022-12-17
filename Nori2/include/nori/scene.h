@@ -124,6 +124,9 @@ public:
 		return m_accel->getBoundingBox();
 	}
 
+	/// Returns whether p is visible from ref or not
+	bool isVisible(const Vector3f& ref, const Vector3f& p) const;
+
 	/**
 	 * \brief Inherited from \ref NoriObject::activate()
 	 *

@@ -86,6 +86,15 @@ float Scene::pdfEmitter(const Emitter *em) const {
 	return m_pdf.getNormalization();
 }
 
+/// Returns whether p is visible from ref or not
+bool Scene::isVisible(const Vector3f& ref, const Vector3f& p) const {
+	float t = (p - ref).norm();
+	Vector3f wi = (p - ref).normalized();
+	Ray3f sray(ref, wi);
+	Intersection it_shadow;
+	return !(this->rayIntersect(sray, it_shadow) && it_shadow.t < (t- 1.e-5));
+}
+
 
 void Scene::addChild(NoriObject *obj, const std::string& name) {
 	switch (obj->getClassType()) {
