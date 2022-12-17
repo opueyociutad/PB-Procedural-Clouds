@@ -15,12 +15,12 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="64"/>
+		<integer name="sampleCount" value="1024"/>
 	</sampler>
 
 	<!-- Define the light source
 	<emitter type="pointlight">
-		<color name="radiance" value="100, 100, 100"/>
+		<color name="radiance" value="40, 40, 40"/>
 		<point name="position" value="0, 0.893051, 4.41198"/>
 	</emitter>
 	-->
