@@ -33,6 +33,24 @@ CÓMO HACERLO EN NORI
 			null collision - delta tracking etc
 
 DATA STRUCTURES NORI
-	- Homogéneos
-		- 
-	- Heterogéneos
+	- Medios
+		Transmittance(xref, xp) // los dos puntos
+	
+		heredan:
+		- Homogéneos:
+			todo lo que devuelve respecto a coeficientes es constante
+		- Heterogéneos:
+			los coeficientes dependen de la posición
+	- Media intersection:
+		- Phase Function
+		- dist
+		- pdf
+		- objeto intersectado
+		- ... añadir conforme sea necesario
+	- de alguna manera, que se pueda usar una mesh y una mesh procedural transparentemente (si es posible)
+	- procedural mesh:
+		- intersection: por spheremarching pero que devuelva la distancia rayo-objeto, no punto-objeto.
+	- PhaseFunction: Como las BSDF pero con PhaseFunction y que pueda crear las mías. Lógicamente son otra cosa, así que si lo prefieres puedes hacer que PhaseFunction herede de BSDF pero con un comentario bien grande de que no son lo mismo xD. Probablemente haya que linkearle la mesh o proceduralmesh o lo que sea (quizás es mejor separar la parte procedural de coeficientes d ela mesh y añadir eso) para hacer el sample o eval
+		- Eval
+		- Sample
+		- Pdf
