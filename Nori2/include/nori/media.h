@@ -66,7 +66,7 @@ struct MediaIntersection {
 };
 
 
-class ParticipatingMedia : NoriObject {
+class PMedia : public NoriObject {
 private:
 	/// Bounding box
 	const Mesh* mesh;

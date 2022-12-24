@@ -149,6 +149,8 @@ public:
 private:
 	std::vector<Mesh *> m_meshes;
 	std::vector<Emitter *> m_emitters;
+	std::vector<PMedia *> m_medias;
+
 	Emitter *m_enviromentalEmitter = nullptr;
 
 	Integrator *m_integrator = nullptr;

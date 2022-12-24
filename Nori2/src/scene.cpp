@@ -118,6 +118,12 @@ void Scene::addChild(NoriObject *obj, const std::string& name) {
 			}
 			break;
 
+		case EMedium: {
+				PMedia *pMedia = static_cast<PMedia *>(obj);
+				m_medias.push_back(pMedia);
+			}
+			break;
+
 		case ESampler:
 			if (m_sampler)
 				throw NoriException("There can only be one sampler per scene!");
