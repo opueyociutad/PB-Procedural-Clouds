@@ -131,6 +131,7 @@ class NoriObject;
 class NoriObjectFactory;
 class NoriScreen;
 class PhaseFunction;
+class ParticipatingMedia;
 class ReconstructionFilter;
 class Sampler;
 class Scene;

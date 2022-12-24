@@ -66,6 +66,8 @@ add_executable(nori
   include/nori/transform.h
   include/nori/vector.h
   include/nori/warp.h
+  include/nori/media.h
+  include/nori/phasefunction.h
 
   # Source code files
   src/accel.cpp
@@ -109,6 +111,7 @@ add_executable(nori
   src/path_media_hardcoded.cpp
   src/path_media_slides.cpp
   src/path_sdf.cpp
+  src/phasefunction.cpp
 )
 
 add_definitions(${NANOGUI_EXTRA_DEFS})

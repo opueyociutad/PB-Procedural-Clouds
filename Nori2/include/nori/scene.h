@@ -22,6 +22,7 @@
 #pragma once
 
 #include <nori/accel.h>
+#include <nori/media.h>
 
 NORI_NAMESPACE_BEGIN
 
@@ -126,6 +127,9 @@ public:
 
 	/// Returns whether p is visible from ref or not
 	bool isVisible(const Vector3f& ref, const Vector3f& p) const;
+
+	bool rayIntersectMedia(const Ray3f& ray, MediaIntersection& medIts) const;
+
 
 	/**
 	 * \brief Inherited from \ref NoriObject::activate()
