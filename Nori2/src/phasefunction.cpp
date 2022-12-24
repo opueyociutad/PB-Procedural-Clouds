@@ -11,7 +11,7 @@ class HenyeyGreenstein : PhaseFunction {
 private:
 	float g;
 public:
-	HenyeyGreenstein(const PropertyList &propList) {
+	explicit HenyeyGreenstein(const PropertyList &propList) {
 		g = propList.getFloat("g", 0.0f);
 	}
 

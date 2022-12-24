@@ -30,6 +30,27 @@ struct MediaCoeffs {
 	}
 };
 
+
+class FreePathSampler {
+	FreePathSampler() {};
+
+	/// Returns the distance t to collision wrt mu_t
+	float sample(float mu_t, float sample) const {
+		return -log(1-sample) / mu_t;
+	}
+
+	/// Returns the pdf of the sample t wrt mu_t
+	float pdf(float mu_t, float t) const {
+		return mu_t * exp(- mu_t * t);
+	}
+
+	/// Returns the cdf of the sample t wrt mu_t
+	float cdf(float mu_t, float t) const {
+		return 1 - exp(- mu_t * t);
+	}
+};
+
+
 struct MediaIntersection {
 	/// Intersection point
 	const Point3f p;
@@ -45,22 +66,7 @@ struct MediaIntersection {
 };
 
 
-class FreePathSampler {
-	FreePathSampler();
-
-	/// Returns the distance t to collision
-	float sample(float mu_t) const;
-
-	/// Returns the pdf o
-	float pdf(float mu_t, float t) const;
-
-	float cdf(float mu_t, float t) const;
-
-	// pdf, cdf, sample
-};
-
-
-class ParticipatingMedia {
+class ParticipatingMedia : NoriObject {
 private:
 	/// Bounding box
 	const Mesh* mesh;
@@ -83,19 +89,10 @@ public:
 
 	/// Free path sampler getter
 	const FreePathSampler* getFreePathSampler() const { return freePathSampler; }
+
+	EClassType getClassType() const override{ return EMedium; }
 };
 
-class HomogeneousMedia : public ParticipatingMedia {
-private:
-	/// Density of the media
-	float rho;
-	/// Cross section TODO (name)
-	float sigma_a, sigma_s;
-public:
-	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
-	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz) const override;
-};
 
 class SDFObject {
 public:
@@ -104,18 +101,5 @@ public:
 };
 
 
-class HeterogeneousMedia : public ParticipatingMedia {
-private:
-	float mu_max_boundary;
-	/// Total intersection coefficient
-	float mu;
-	/// Cross section TODO
-	float sigma_a, sigma_s;
-
-public:
-	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
-	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz) const override;
-};
 
 NORI_NAMESPACE_END
