@@ -95,6 +95,28 @@ bool Scene::isVisible(const Vector3f& ref, const Vector3f& p) const {
 	return !(this->rayIntersect(sray, it_shadow) && it_shadow.t < (t- 1.e-5));
 }
 
+bool Scene::rayIntersectMedia(const Ray3f& ray, MediaIntersection& medIts) const {
+	bool hasIntersected = false;
+	float closestT = INFINITY;
+	for (const PMedia* media : m_medias) {
+		MediaIntersection currMedIts;
+		if (media->rayIntersect(ray, m_sampler->next1D(), currMedIts) && (!hasIntersected || currMedIts.t < closestT)) {
+			hasIntersected = true;
+			closestT = currMedIts.t;
+			medIts = currMedIts;
+		}
+	}
+	return hasIntersected;
+}
+
+float Scene::transmittance(const Point3f& x0, const Point3f& xz) const {
+	float T = 1.0f;
+	for (const PMedia* media : m_medias) {
+		T *= media->transmittance(x0, xz);
+	}
+	return T;
+}
+
 
 void Scene::addChild(NoriObject *obj, const std::string& name) {
 	switch (obj->getClassType()) {

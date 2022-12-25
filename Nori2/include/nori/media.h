@@ -25,6 +25,8 @@ struct MediaCoeffs {
 	/// Total collision coefficient
 	float mu_t;
 
+	MediaCoeffs() {}
+
 	MediaCoeffs(float _mu_a, float _mu_s, float _mu_t) : mu_a(_mu_a), mu_s(_mu_s), mu_t(_mu_t) {
 		mu_n = mu_t - (mu_a + mu_s);
 	}
@@ -63,19 +65,18 @@ NORI_REGISTER_CLASS(FreePathSampler, "free_path_sampler");
 
 struct MediaIntersection {
 	/// Intersection point
-	const Point3f p;
+	Point3f p;
 	/// Distance along the ray
 	float t;
-	/// Phase function associated to the media
-	const PhaseFunction* phaseFunction;
-	/// Free path sampler used
-	const FreePathSampler* freePathSampler;
+	/// Intersected media
+	const PMedia* pMedia;
 	/// Media coefficients associated with the intersection
-	const MediaCoeffs coeffs;
+	MediaCoeffs coeffs;
 
-	MediaIntersection(Point3f  _p, float _t, const PhaseFunction* _phaseFunction,
-					  const FreePathSampler* _freePathSampler, const MediaCoeffs _coeffs) :
-		p(std::move(_p)), t(_t), phaseFunction(_phaseFunction), freePathSampler(_freePathSampler), coeffs(_coeffs) {}
+	MediaIntersection() {}
+
+	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const MediaCoeffs _coeffs) :
+		p(std::move(_p)), t(_t), pMedia(_pMedia), coeffs(_coeffs) {}
 };
 
 
@@ -102,6 +103,9 @@ public:
 
 	/// Free path sampler getter
 	const FreePathSampler* getFreePathSampler() const { return m_freePathSampler; }
+
+	/// Ray intersection with media (sampling)
+	bool rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const;
 
 	EClassType getClassType() const override{ return EMedium; }
 

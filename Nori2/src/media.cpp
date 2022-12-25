@@ -7,6 +7,13 @@
 
 NORI_NAMESPACE_BEGIN
 
+bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const {
+	MediaCoeffs coeffs = getMediaCoeffs(ray.o);
+	float t = m_freePathSampler->sample(coeffs.mu_t, sample);
+	medIts = MediaIntersection(ray.o + ray.d*t, t, this, coeffs);
+	return true;
+}
+
 void PMedia::addChild(NoriObject *obj, const std::string& name) {
 	switch (obj->getClassType()) {
 		case EMesh: {

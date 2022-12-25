@@ -113,6 +113,7 @@ add_executable(nori
   src/path_sdf.cpp
   src/phasefunction.cpp
   src/media.cpp
+  src/path_media_slides_refactor.cpp
 )
 
 add_definitions(${NANOGUI_EXTRA_DEFS})
