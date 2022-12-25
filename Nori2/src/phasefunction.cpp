@@ -7,7 +7,7 @@
 
 NORI_NAMESPACE_BEGIN
 
-class HenyeyGreenstein : PhaseFunction {
+class HenyeyGreenstein : public PhaseFunction {
 private:
 	float g;
 public:
@@ -29,9 +29,19 @@ public:
 		throw std::logic_error("Function not yet implemented");
 		return 0;
 	}
+
+	std::string toString() const override {
+		return tfm::format(
+				"HenyeyGreenstein[\n"
+				"  g = %f,\n"
+				"]",
+				g);
+	}
 };
 
-class Rayleigh : PhaseFunction {
+NORI_REGISTER_CLASS(HenyeyGreenstein, "HenyeyGreenstein");
+
+class Rayleigh : public PhaseFunction {
 public:
 	Rayleigh(const PropertyList &propList) {
 	}
@@ -50,6 +60,14 @@ public:
 		throw std::logic_error("Function not yet implemented");
 		return 0;
 	}
+
+	std::string toString() const override {
+		return tfm::format(
+				"Rayleigh[\n"
+				"]");
+	}
 };
+
+NORI_REGISTER_CLASS(Rayleigh, "Rayleigh");
 
 NORI_NAMESPACE_END

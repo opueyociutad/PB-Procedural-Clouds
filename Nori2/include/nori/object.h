@@ -43,7 +43,8 @@ public:
 		ESampler,
 		ETest,
 		EReconstructionFilter,
-		EClassTypeCount
+		EClassTypeCount,
+		EFreePathSampler
 	};
 
 	/// Virtual destructor

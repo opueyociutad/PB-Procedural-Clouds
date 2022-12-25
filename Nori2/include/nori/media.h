@@ -31,8 +31,10 @@ struct MediaCoeffs {
 };
 
 
-class FreePathSampler {
-	FreePathSampler() {};
+class FreePathSampler : public NoriObject {
+public:
+
+	explicit FreePathSampler(const PropertyList& list) {};
 
 	/// Returns the distance t to collision wrt mu_t
 	float sample(float mu_t, float sample) const {
@@ -48,7 +50,15 @@ class FreePathSampler {
 	float cdf(float mu_t, float t) const {
 		return 1 - exp(- mu_t * t);
 	}
+
+	EClassType getClassType() const override { return EFreePathSampler; }
+
+	std::string toString() const {
+		return tfm::format("Mean Free Path Sampler\n");
+	}
 };
+
+NORI_REGISTER_CLASS(FreePathSampler, "free_path_sampler");
 
 
 struct MediaIntersection {
@@ -58,24 +68,27 @@ struct MediaIntersection {
 	float t;
 	/// Phase function associated to the media
 	const PhaseFunction* phaseFunction;
+	/// Free path sampler used
+	const FreePathSampler* freePathSampler;
 	/// Media coefficients associated with the intersection
 	const MediaCoeffs coeffs;
 
-	MediaIntersection(Point3f  _p, float _t, const PhaseFunction* _phaseFunction, const MediaCoeffs _coeffs) :
-		p(std::move(_p)), t(_t), phaseFunction(_phaseFunction), coeffs(_coeffs) {}
+	MediaIntersection(Point3f  _p, float _t, const PhaseFunction* _phaseFunction,
+					  const FreePathSampler* _freePathSampler, const MediaCoeffs _coeffs) :
+		p(std::move(_p)), t(_t), phaseFunction(_phaseFunction), freePathSampler(_freePathSampler), coeffs(_coeffs) {}
 };
 
 
 class PMedia : public NoriObject {
 private:
 	/// Bounding box
-	const Mesh* mesh;
+	Mesh* m_mesh;
 	/// Accelerated bounding box of the associated mesh
-	const Accel* accel;
+	Accel* m_accel;
 	/// Phase function of the media
-	const PhaseFunction* phaseFunction;
+	PhaseFunction* m_phaseFunction;
 	/// Free path sampler
-	const FreePathSampler* freePathSampler;
+	FreePathSampler* m_freePathSampler;
 
 public:
 	/// Transmittance between 2 points
@@ -85,12 +98,14 @@ public:
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const = 0;
 
 	/// Phase function getter
-	const PhaseFunction* getPhaseFunction() const { return phaseFunction; }
+	const PhaseFunction* getPhaseFunction() const { return m_phaseFunction; }
 
 	/// Free path sampler getter
-	const FreePathSampler* getFreePathSampler() const { return freePathSampler; }
+	const FreePathSampler* getFreePathSampler() const { return m_freePathSampler; }
 
 	EClassType getClassType() const override{ return EMedium; }
+
+	void addChild(NoriObject *obj, const std::string& name);
 };
 
 
