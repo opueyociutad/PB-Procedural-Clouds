@@ -16,7 +16,7 @@ private:
 
 	double g;
 
-public :
+public:
 	PathTracingMediaSlides(const PropertyList &props) {
 		p = 1.0;
 		sigma_a = 0.15, sigma_s = 0.5;

@@ -43,8 +43,7 @@ public:
 		ESampler,
 		ETest,
 		EReconstructionFilter,
-		EClassTypeCount,
-		EFreePathSampler
+		EClassTypeCount
 	};
 
 	/// Virtual destructor
@@ -99,8 +98,8 @@ public:
 			case ECamera:           return "camera";
 			case EIntegrator:       return "integrator";
 			case ESampler:          return "sampler";
-			case EMedium:           return "pMedia";
-			case EPhaseFunction:    return "phaseFunction";
+			case EMedium:           return "medium";
+			case EPhaseFunction:    return "phasefunction";
 			case ETest:             return "test";
 			default:                return "<unknown>";
 		}

@@ -15,17 +15,17 @@ public:
 		g = propList.getFloat("g", 0.0f);
 	}
 
-	virtual Color3f sample(MediaQueryRecord& mRec, const Point2f &sample) const {
+	virtual Color3f sample(PFQueryRecord& mRec, const Point2f &sample) const {
 		throw std::logic_error("Function not yet implemented");
 		return {0};
 	}
 
-	virtual Color3f eval(const MediaQueryRecord &mRec) const override {
+	virtual Color3f eval(const PFQueryRecord &mRec) const override {
 		float cosTheta = mRec.wi.dot(mRec.wo);
 		return (1/M_PI) * (1 - g*g)/(1 + g*g - 2*g*cosTheta);
 	}
 
-	virtual float pdf(const MediaQueryRecord &mRec) const override {
+	virtual float pdf(const PFQueryRecord &mRec) const override {
 		throw std::logic_error("Function not yet implemented");
 		return 0;
 	}
@@ -39,24 +39,24 @@ public:
 	}
 };
 
-NORI_REGISTER_CLASS(HenyeyGreenstein, "HenyeyGreenstein");
+NORI_REGISTER_CLASS(HenyeyGreenstein, "henyey_greenstein");
 
 class Rayleigh : public PhaseFunction {
 public:
 	Rayleigh(const PropertyList &propList) {
 	}
 
-	virtual Color3f sample(MediaQueryRecord& mRec, const Point2f &sample) const {
+	virtual Color3f sample(PFQueryRecord& mRec, const Point2f &sample) const {
 		throw std::logic_error("Function not yet implemented");
 		return {0};
 	}
 
-	virtual Color3f eval(const MediaQueryRecord &mRec) const override {
+	virtual Color3f eval(const PFQueryRecord &mRec) const override {
 		float cosTheta = mRec.wi.dot(mRec.wo);
 		return (3 / (16*M_PI)) * (1 + cosTheta*cosTheta);
 	}
 
-	virtual float pdf(const MediaQueryRecord &mRec) const override {
+	virtual float pdf(const PFQueryRecord &mRec) const override {
 		throw std::logic_error("Function not yet implemented");
 		return 0;
 	}
@@ -68,6 +68,6 @@ public:
 	}
 };
 
-NORI_REGISTER_CLASS(Rayleigh, "Rayleigh");
+NORI_REGISTER_CLASS(Rayleigh, "rayleigh");
 
 NORI_NAMESPACE_END

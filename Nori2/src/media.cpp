@@ -4,13 +4,32 @@
 
 #include <nori/common.h>
 #include <nori/media.h>
+#include <nori/phasefunction.h>
 
 NORI_NAMESPACE_BEGIN
+
+
+PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSampler) {}
+
+float cdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t) {
+	float cdf = 1.0; // ASSUMING independent pdfs AND CDFS CAN BE CONCATENATED BY PRODUCT
+	for (const MediaIntersection& currMedIt : mediaIts) {
+		if (currMedIt.pMedia != pMedia) {
+			float mu_t = currMedIt.coeffs.mu_t;
+			float tBoundary = currMedIt.tBoundary;
+			if (tBoundary < t) {
+				cdf *= currMedIt.pMedia->getFreePathSampler()->cdf(mu_t, t - tBoundary);
+			}
+		}
+	}
+	return cdf;
+}
 
 bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const {
 	MediaCoeffs coeffs = getMediaCoeffs(ray.o);
 	float t = m_freePathSampler->sample(coeffs.mu_t, sample);
-	medIts = MediaIntersection(ray.o + ray.d*t, t, this, coeffs);
+	float pdf = m_freePathSampler->pdf(coeffs.mu_t, t);
+	medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, pdf, this, coeffs);
 	return true;
 }
 
@@ -24,15 +43,12 @@ void PMedia::addChild(NoriObject *obj, const std::string& name) {
 				m_accel->build();
 			}
 		break;
-		case EFreePathSampler: {
-				if (m_freePathSampler)  throw NoriException("There can only be one Phase Function per participating Media!");
-				m_freePathSampler = static_cast<FreePathSampler*>(obj);
-			}
-		break;
 		case EPhaseFunction: {
-
+				if (m_phaseFunction) throw NoriException("There can only be one Phase Function per participating Media!");
+				m_phaseFunction = static_cast<PhaseFunction*>(obj);
 			}
 		break;
+		default: { }
 	}
 }
 
@@ -46,7 +62,9 @@ private:
 	float mu_a, mu_s, mu_t;
 public:
 
-	explicit HomogeneousMedia(const PropertyList &propList) {
+	explicit HomogeneousMedia(const PropertyList &propList) :
+		PMedia(new FreePathSampler)
+	{
 		rho = propList.getFloat("rho", 0.0f);
 		sigma_a = propList.getFloat("sigma_a", 0.0f);
 		sigma_s = propList.getFloat("sigma_s", 0.0f);
@@ -56,7 +74,7 @@ public:
 	}
 
 	MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
-		return MediaCoeffs(mu_a, mu_s, mu_t);
+		return {mu_a, mu_s, mu_t};
 	}
 
 	float transmittance(const Point3f& x0, const Point3f& xz) const override {
@@ -65,13 +83,18 @@ public:
 	}
 
 	std::string toString() const override {
+		std::string pf = m_phaseFunction->toString();
 		return tfm::format(
 				"HomogeneousMedia[\n"
 				"  rho = %f,\n"
-				"  sigma_a = %f\n"
-				"  sigma_s = %f\n"
+				"  sigma_a = %f,\n"
+				"  sigma_s = %f,\n"
+				"  pf = %s\n"
 				"]",
-				rho, sigma_a, sigma_s);
+				rho,
+				sigma_a,
+				sigma_s,
+				indent(pf, 2));
 	}
 };
 

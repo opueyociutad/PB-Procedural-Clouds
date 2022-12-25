@@ -8,17 +8,17 @@
 #include <utility>
 NORI_NAMESPACE_BEGIN
 
-struct MediaQueryRecord {
+struct PFQueryRecord {
 	/// Incident vector wi (global coordinates)
 	Vector3f wi;
-	/// Outgoing vector wi (global coordinates)
+	/// Outgoing vector wo (global coordinates)
 	Vector3f wo;
 	/// pdf of the sampled wo
 	float pdf;
 
-	MediaQueryRecord(Vector3f  _wi) : wi(std::move(_wi)) {}
+	PFQueryRecord(Vector3f  _wi) : wi(std::move(_wi)) {}
 
-	MediaQueryRecord(Vector3f  _wi, Vector3f  _wo) : wi(std::move(_wi)), wo(std::move(_wo)) {}
+	PFQueryRecord(Vector3f  _wi, Vector3f  _wo) : wi(std::move(_wi)), wo(std::move(_wo)) {}
 };
 
 /**
@@ -37,7 +37,7 @@ public:
 	 * \return The PF value divided by the probability density of the sample
 	 *		 sample. A zero value means that sampling failed.
 	 */
-	virtual Color3f sample(MediaQueryRecord& mRec, const Point2f &sample) const = 0;
+	virtual Color3f sample(PFQueryRecord& mRec, const Point2f &sample) const = 0;
 
 	/**
 	 * \brief Evaluate the PF for a pair of directions and measure
@@ -48,7 +48,7 @@ public:
 	 * \return
 	 *	 The PF value, evaluated for each color channel
 	 */
-	virtual Color3f eval(const MediaQueryRecord &mRec) const = 0;
+	virtual Color3f eval(const PFQueryRecord &mRec) const = 0;
 
 	/**
 	 * \brief Compute the probability of sampling \c mRec.wo
@@ -64,7 +64,7 @@ public:
 	 *	 A probability/density value expressed with respect
 	 *	 to the specified measure
 	 */
-	virtual float pdf(const MediaQueryRecord &mRec) const = 0;
+	virtual float pdf(const PFQueryRecord &mRec) const = 0;
 
 	/**
 	 * \brief Return the type of object (i.e. Mesh/BSDF/etc.)

@@ -30,13 +30,15 @@ struct MediaCoeffs {
 	MediaCoeffs(float _mu_a, float _mu_s, float _mu_t) : mu_a(_mu_a), mu_s(_mu_s), mu_t(_mu_t) {
 		mu_n = mu_t - (mu_a + mu_s);
 	}
+
+	float alpha() const { return mu_s / (mu_a + mu_s); }
 };
 
 
-class FreePathSampler : public NoriObject {
+class FreePathSampler {
 public:
 
-	explicit FreePathSampler(const PropertyList& list) {};
+	FreePathSampler() {};
 
 	/// Returns the distance t to collision wrt mu_t
 	float sample(float mu_t, float sample) const {
@@ -52,15 +54,7 @@ public:
 	float cdf(float mu_t, float t) const {
 		return 1 - exp(- mu_t * t);
 	}
-
-	EClassType getClassType() const override { return EFreePathSampler; }
-
-	std::string toString() const {
-		return tfm::format("Mean Free Path Sampler\n");
-	}
 };
-
-NORI_REGISTER_CLASS(FreePathSampler, "free_path_sampler");
 
 
 struct MediaIntersection {
@@ -68,6 +62,10 @@ struct MediaIntersection {
 	Point3f p;
 	/// Distance along the ray
 	float t;
+	/// Distance to reach boundary
+	float tBoundary;
+	/// pdf of the sampled t
+	float pdf;
 	/// Intersected media
 	const PMedia* pMedia;
 	/// Media coefficients associated with the intersection
@@ -75,13 +73,15 @@ struct MediaIntersection {
 
 	MediaIntersection() {}
 
-	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const MediaCoeffs _coeffs) :
-		p(std::move(_p)), t(_t), pMedia(_pMedia), coeffs(_coeffs) {}
+	MediaIntersection(Point3f  _p, float _t, float _tBoundary, float _pdf, const PMedia* _pMedia, const MediaCoeffs _coeffs) :
+		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pdf(_pdf), pMedia(_pMedia), coeffs(_coeffs) {}
 };
 
+/// Calculates cdf across all medias that are not it up to distance t
+float cdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t);
 
 class PMedia : public NoriObject {
-private:
+protected:
 	/// Bounding box
 	Mesh* m_mesh;
 	/// Accelerated bounding box of the associated mesh
@@ -92,6 +92,7 @@ private:
 	FreePathSampler* m_freePathSampler;
 
 public:
+	PMedia(FreePathSampler* freePathSampler);
 	/// Transmittance between 2 points
 	virtual float transmittance(const Point3f& x0, const Point3f& xz) const = 0;
 
