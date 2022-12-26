@@ -64,8 +64,6 @@ struct MediaIntersection {
 	float t;
 	/// Distance to reach boundary
 	float tBoundary;
-	/// pdf of the sampled t
-	float pdf;
 	/// Intersected media
 	const PMedia* pMedia;
 	/// Media coefficients associated with the intersection
@@ -73,8 +71,10 @@ struct MediaIntersection {
 
 	MediaIntersection() {}
 
-	MediaIntersection(Point3f  _p, float _t, float _tBoundary, float _pdf, const PMedia* _pMedia, const MediaCoeffs _coeffs) :
-		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pdf(_pdf), pMedia(_pMedia), coeffs(_coeffs) {}
+	MediaIntersection(Point3f  _p, float _t, float _tBoundary, const PMedia* _pMedia, const MediaCoeffs& _coeffs) :
+		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pMedia(_pMedia), coeffs(_coeffs) {}
+
+	float pdf() const;
 };
 
 /// Calculates cdf across all medias that are not it up to distance t

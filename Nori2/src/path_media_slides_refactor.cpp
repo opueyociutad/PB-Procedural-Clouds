@@ -32,9 +32,11 @@ public :
 		EmitterQueryRecord emitterRecord(ray.o);
 		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		if (scene->isVisible(ray.o, emitterRecord.p)) {
+			// No nan here
 			PFQueryRecord mRec(ray.d, emitterRecord.wi);
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
-			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * abs(ray.d.dot(emitterRecord.wi)) * itMedia.coeffs.mu_s;
+			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * abs(ray.d.dot(emitterRecord.wi)) * itMedia.coeffs.mu_s
+				   / pdf_light;
 		}
 
 		// Sample the phase function, NOT FOR NOW, todo
@@ -59,7 +61,7 @@ public :
 		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		if (scene->isVisible(ray.o, emitterRecord.p)) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Lems = Le * it.mesh->getBSDF()->eval(bsdfRecord) * scene->transmittance(ray.o, emitterRecord.p) * mu_s;
+			Lems = Le * it.mesh->getBSDF()->eval(bsdfRecord) * scene->transmittance(ray.o, emitterRecord.p) * mu_s / pdf_light;
 		}
 
 		// Sample the BRDF and MIS, NOT FOR NOW, todo
@@ -82,10 +84,11 @@ public :
 		bool intersected = scene->rayIntersect(ray, it);
 		MediaIntersection itMedia; std::vector<MediaIntersection> itAllMedias;
 		bool intersectedMedia = scene->rayIntersectMedia(ray, itMedia, itAllMedias);
+		if (!intersected && !intersectedMedia) return {0.0f};
 
 		Color3f L(0.0f);
 		float pdf;
-		if (intersected || (!intersectedMedia && itMedia.t >= it.t)) { // We hit a surface!
+		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
 			float mu_s = intersectedMedia? itMedia.coeffs.mu_s : 1.0f;
 #warning not sure about this mu_s;
 			L = scene->transmittance(ray.o, it.p) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
@@ -93,7 +96,11 @@ public :
 		} else { // Medium interaction!
 			L = scene->transmittance(ray.o, itMedia.p) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
 			// NOT SURE ABOUT THIS
-			pdf = itMedia.pdf * (1 - cdf(itAllMedias, itMedia.pMedia, it.t));
+			pdf = itMedia.pdf();
+
+			if (isnan(L.x())) {
+				cout << L << endl;
+			}
 		}
 
 		return L / pdf;
