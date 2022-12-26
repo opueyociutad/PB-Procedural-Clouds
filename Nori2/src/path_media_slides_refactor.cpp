@@ -37,17 +37,23 @@ public :
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
 			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * abs(ray.d.dot(emitterRecord.wi)) * itMedia.coeffs.mu_s
 				   / pdf_light;
+			if (isnan(Lems.x()) || isinf(Lems.x())) {
+				cout << "Lems media nan or inf!!" << endl << std::flush;
+			}
 		}
 
 		// Sample the phase function, NOT FOR NOW, todo
 
 		Color3f Lmis = Lems;
 		float pdfRR;
+		// No nan from RR
 		if (RR(itMedia.coeffs.alpha(), sampler, pdfRR)) {
 			return Lmis;
 		}
 
-		return Lmis + this->Li(scene, sampler, ray) / pdfRR;
+
+		Color3f Lret = Lmis + this->Li(scene, sampler, ray) / pdfRR;
+		return Lret;
 	}
 
 	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, float mu_s) const {
@@ -92,15 +98,11 @@ public :
 			float mu_s = intersectedMedia? itMedia.coeffs.mu_s : 1.0f;
 #warning not sure about this mu_s;
 			L = scene->transmittance(ray.o, it.p) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
-			pdf = 1 - cdf(itAllMedias, nullptr, it.t);
+			pdf = 1 - mediacdf(itAllMedias, nullptr, it.t);
 		} else { // Medium interaction!
 			L = scene->transmittance(ray.o, itMedia.p) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
-			// NOT SURE ABOUT THIS
+#warning NOT SURE ABOUT THIS, MISSING OTHER MEDIAS CDFS
 			pdf = itMedia.pdf();
-
-			if (isnan(L.x())) {
-				cout << L << endl;
-			}
 		}
 
 		return L / pdf;

@@ -78,7 +78,7 @@ struct MediaIntersection {
 };
 
 /// Calculates cdf across all medias that are not it up to distance t
-float cdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t);
+float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t);
 
 class PMedia : public NoriObject {
 protected:

@@ -18,7 +18,8 @@ float MediaIntersection::pdf() const {
 	return sampler->pdf(mu_t, t);
 }
 
-float cdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t) {
+
+float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t) {
 #warning This is not being used and it is **probably** wrong
 	float cdf = 1.0; // ASSUMING independent pdfs AND CDFS CAN BE CONCATENATED BY PRODUCT
 	for (const MediaIntersection& currMedIt : mediaIts) {
@@ -36,8 +37,7 @@ float cdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, 
 bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const {
 	MediaCoeffs coeffs = getMediaCoeffs(ray.o);
 	float t = m_freePathSampler->sample(coeffs.mu_t, sample);
-	float pdf = m_freePathSampler->pdf(coeffs.mu_t, t);
-	medIts = MediaIntersection(ray.o + ray.d*t, t, pdf, this, coeffs);
+	medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, coeffs);
 	return true;
 }
 
