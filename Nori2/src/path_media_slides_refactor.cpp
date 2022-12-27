@@ -26,6 +26,8 @@ public :
 		Color3f Lems(0);
 		Color3f Lpf(0);
 
+		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
+		std::cout << coeffs << std::endl << std::flush;
 		// Sample
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
@@ -35,10 +37,10 @@ public :
 			// No nan here
 			PFQueryRecord mRec(ray.d, emitterRecord.wi);
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
-			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * abs(ray.d.dot(emitterRecord.wi)) * itMedia.coeffs.mu_s
+			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s // * abs(ray.d.dot(emitterRecord.wi))
 				   / pdf_light;
 			if (isnan(Lems.x()) || isinf(Lems.x())) {
-				cout << "Lems media nan or inf!!" << endl << std::flush;
+				std::cout << "Lems media nan or inf!!" << std::endl << std::flush;
 			}
 		}
 
@@ -47,10 +49,9 @@ public :
 		Color3f Lmis = Lems;
 		float pdfRR;
 		// No nan from RR
-		if (RR(itMedia.coeffs.alpha(), sampler, pdfRR)) {
+		if (RR(coeffs.alpha(), sampler, pdfRR)) {
 			return Lmis;
 		}
-
 
 		Color3f Lret = Lmis + this->Li(scene, sampler, ray) / pdfRR;
 		return Lret;
@@ -95,7 +96,7 @@ public :
 		Color3f L(0.0f);
 		float pdf;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
-			float mu_s = intersectedMedia? itMedia.coeffs.mu_s : 1.0f;
+			float mu_s = intersectedMedia? itMedia.pMedia->getMediaCoeffs(it.p).mu_s : 1.0f;
 #warning not sure about this mu_s;
 			L = scene->transmittance(ray.o, it.p) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
 			pdf = 1 - mediacdf(itAllMedias, nullptr, it.t);

@@ -35,14 +35,14 @@ CÓMO HACERLO EN NORI
 DATA STRUCTURES NORI
 	- Medios
 		Transmittance(xref, xp) // los dos puntos
-	
+
 		heredan:
 		- Homogéneos:
 			todo lo que devuelve respecto a coeficientes es constante
 		- Heterogéneos:
 			los coeficientes dependen de la posición
 	- Media intersection:
-		- Phase Function
+		- Phase Function: Por separado de las BSDF
 		- dist
 		- pdf
 		- objeto intersectado

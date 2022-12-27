@@ -1,0 +1,4 @@
+- Estoy fuera y la t es sampled + t to vertex
+- Estoy dentro y la t es sampled
+
+Comprobar que esa t está dentro del medio

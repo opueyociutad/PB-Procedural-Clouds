@@ -13,18 +13,21 @@ PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSam
 
 float MediaIntersection::pdf() const {
 	const FreePathSampler* sampler = pMedia->getFreePathSampler();
-	float t = t - tBoundary;
-	float mu_t = coeffs.mu_t;
-	return sampler->pdf(mu_t, t);
+	float tIn = t - tBoundary;
+	return sampler->pdf(mu_t, tIn);
 }
 
+std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
+	os << "MediaCoeffs[mu_a: " << m.mu_a << ", mu_s: " << m.mu_s << ", mu_n: " << m.mu_n << ", mu_t: " << m.mu_t << "]";
+	return os;
+}
 
 float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t) {
 #warning This is not being used and it is **probably** wrong
 	float cdf = 1.0; // ASSUMING independent pdfs AND CDFS CAN BE CONCATENATED BY PRODUCT
 	for (const MediaIntersection& currMedIt : mediaIts) {
 		if (currMedIt.pMedia != pMedia) {
-			float mu_t = currMedIt.coeffs.mu_t;
+			float mu_t = currMedIt.mu_t;
 			float tBoundary = currMedIt.tBoundary;
 			if (tBoundary < t) {
 				cdf *= currMedIt.pMedia->getFreePathSampler()->cdf(mu_t, t - tBoundary);
@@ -35,9 +38,8 @@ float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMe
 }
 
 bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const {
-	MediaCoeffs coeffs = getMediaCoeffs(ray.o);
-	float t = m_freePathSampler->sample(coeffs.mu_t, sample);
-	medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, coeffs);
+	float t = m_freePathSampler->sample(mu_t, sample);
+	medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, mu_t);
 	return true;
 }
 
@@ -67,7 +69,7 @@ private:
 	/// Cross-sectional areas
 	float sigma_a, sigma_s;
 	/// Final coefficients, derived from previous
-	float mu_a, mu_s, mu_t;
+	float mu_a, mu_s;
 public:
 
 	explicit HomogeneousMedia(const PropertyList &propList) :
@@ -78,7 +80,7 @@ public:
 		sigma_s = propList.getFloat("sigma_s", 0.0f);
 		mu_a = rho * sigma_a;
 		mu_s = rho * sigma_s;
-		mu_t = mu_a + mu_s;
+		mu_t = mu_s + mu_a;
 	}
 
 	MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
@@ -97,11 +99,13 @@ public:
 				"  rho = %f,\n"
 				"  sigma_a = %f,\n"
 				"  sigma_s = %f,\n"
+				"  mu_t = %f,\n"
 				"  pf = %s\n"
 				"]",
 				rho,
 				sigma_a,
 				sigma_s,
+				mu_t,
 				indent(pf, 2));
 	}
 };
@@ -112,8 +116,7 @@ NORI_REGISTER_CLASS(HomogeneousMedia, "homogeneous_media");
 class HeterogeneousMedia : public PMedia {
 private:
 	float mu_max_boundary;
-	/// Total intersection coefficient
-	float mu;
+	float max_rho;
 	/// Cross section TODO
 	float sigma_a, sigma_s;
 

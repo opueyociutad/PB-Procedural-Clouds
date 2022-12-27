@@ -32,6 +32,9 @@ struct MediaCoeffs {
 	}
 
 	float alpha() const { return mu_s / (mu_a + mu_s); }
+
+
+	friend std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m);
 };
 
 
@@ -67,12 +70,12 @@ struct MediaIntersection {
 	/// Intersected media
 	const PMedia* pMedia;
 	/// Media coefficients associated with the intersection
-	MediaCoeffs coeffs;
+	float mu_t;
 
 	MediaIntersection() {}
 
-	MediaIntersection(Point3f  _p, float _t, float _tBoundary, const PMedia* _pMedia, const MediaCoeffs& _coeffs) :
-		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pMedia(_pMedia), coeffs(_coeffs) {}
+	MediaIntersection(Point3f  _p, float _t, float _tBoundary, const PMedia* _pMedia, const float _mu_t) :
+		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pMedia(_pMedia), mu_t(_mu_t) {}
 
 	float pdf() const;
 };
@@ -91,6 +94,9 @@ protected:
 	/// Free path sampler
 	FreePathSampler* m_freePathSampler;
 
+	/// Max free path coefficient
+	float mu_t;
+
 public:
 	PMedia(FreePathSampler* freePathSampler);
 	/// Transmittance between 2 points
@@ -99,14 +105,17 @@ public:
 	/// Media coefficients
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const = 0;
 
+	/// Ray intersection with media (sampling)
+	bool rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const;
+
 	/// Phase function getter
 	const PhaseFunction* getPhaseFunction() const { return m_phaseFunction; }
 
 	/// Free path sampler getter
 	const FreePathSampler* getFreePathSampler() const { return m_freePathSampler; }
 
-	/// Ray intersection with media (sampling)
-	bool rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const;
+	/// Gets max free path coefficient
+	float getMu_t() const { return mu_t; }
 
 	EClassType getClassType() const override{ return EMedium; }
 
