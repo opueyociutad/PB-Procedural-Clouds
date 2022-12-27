@@ -132,6 +132,9 @@ public:
 	bool rayIntersectMedia(const Ray3f& ray, MediaIntersection& medIts, std::vector<MediaIntersection>& medAllIts) const;
 
 	/// Returns the transmittance of traversing from x0 to xz through all mediums
+	float transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaIntersection>& mediaIts) const;
+
+	/// Returns the transmittance of traversing from x0 to xz through all mediums
 	float transmittance(const Point3f& x0, const Point3f& xz) const;
 
 

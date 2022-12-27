@@ -112,13 +112,25 @@ bool Scene::rayIntersectMedia(const Ray3f& ray, MediaIntersection& medIts, std::
 	return hasIntersected;
 }
 
-float Scene::transmittance(const Point3f& x0, const Point3f& xz) const {
+float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaIntersection>& mediaIts) const {
 	float T = 1.0f;
-	for (const PMedia* media : m_medias) {
-		T *= media->transmittance(x0, xz);
+	for (const MediaIntersection& mediaIt : mediaIts) {
+		T *= mediaIt.pMedia->transmittance(x0, xz, mediaIt);
 	}
 	return T;
 }
+
+float Scene::transmittance(const Point3f& x0, const Point3f& xz) const {
+	std::vector<MediaIntersection> mediaIts;
+	MediaIntersection bestMediaIt;
+	this->rayIntersectMedia(Ray3f(x0, (xz-x0).normalized()), bestMediaIt, mediaIts);
+	float T = 1.0f;
+	for (const MediaIntersection& mediaIt : mediaIts) {
+		T *= mediaIt.pMedia->transmittance(x0, xz, mediaIt);
+	}
+	return T;
+}
+
 
 
 void Scene::addChild(NoriObject *obj, const std::string& name) {

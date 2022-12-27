@@ -72,10 +72,13 @@ struct MediaIntersection {
 	/// Media coefficients associated with the intersection
 	float mu_t;
 
+	bool wasInside;
+	float tOut;
+
 	MediaIntersection() {}
 
-	MediaIntersection(Point3f  _p, float _t, float _tBoundary, const PMedia* _pMedia, const float _mu_t) :
-		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pMedia(_pMedia), mu_t(_mu_t) {}
+	MediaIntersection(Point3f  _p, float _t, float _tBoundary, const PMedia* _pMedia, const float _mu_t, bool _wasInside, float _tOut) :
+		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pMedia(_pMedia), mu_t(_mu_t), wasInside(_wasInside), tOut(_tOut) {}
 
 	float pdf() const;
 };
@@ -100,7 +103,7 @@ protected:
 public:
 	PMedia(FreePathSampler* freePathSampler);
 	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz) const = 0;
+	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaIntersection& mediaIt) const = 0;
 
 	/// Media coefficients
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const = 0;

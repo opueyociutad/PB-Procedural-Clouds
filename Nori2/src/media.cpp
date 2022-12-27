@@ -45,10 +45,11 @@ bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& med
 	bool inside = its.shFrame.n.dot(ray.d) >= 0;
 	float t = m_freePathSampler->sample(mu_t, sample);
 	if (inside) { // Case inside
-
-		if (t > its.t) return false; // Intersection outside media boundary
+		if (t > its.t) {
+			return false; // Intersection outside media boundary
+		}
 		else {
-			medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, mu_t);
+			medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, mu_t, true, its.t);
 			return true;
 		}
 	} else {
@@ -56,11 +57,10 @@ bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& med
 		Ray3f insideRay(its.p + 0.00001f*ray.d, ray.d);
 		Intersection itsInside;
 		bool intersectedInside = m_accel->rayIntersect(ray, itsInside, false);
-		if (!intersectedInside) throw std::logic_error("WHY THE RAY CAN'T ESCAPE");
 
 		if (t > itsInside.t) return false; // Intersection outside media boundary
 		else {
-			medIts = MediaIntersection(ray.o + ray.d*t, its.t + t, its.t, this, mu_t);
+			medIts = MediaIntersection(ray.o + ray.d*t, its.t + t, its.t, this, mu_t, false, itsInside.t);
 			return true;
 		}
 	}
@@ -112,8 +112,11 @@ public:
 		return {mu_a, mu_s, mu_t};
 	}
 
-	float transmittance(const Point3f& x0, const Point3f& xz) const override {
+	float transmittance(const Point3f& x0, const Point3f& xz, const MediaIntersection& mediaIt) const override {
 		float t = (xz-x0).norm();
+		if (mediaIt.wasInside) t = std::min(t, mediaIt.tOut);
+		else if (t > mediaIt.tBoundary) t = std::min(mediaIt.tOut - mediaIt.tBoundary, t - mediaIt.tBoundary);
+		else return 1.0f; // Case not intersecting media
 		return exp(-mu_t * t);
 	}
 
@@ -148,6 +151,6 @@ private:
 public:
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
 	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz) const override;
+	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaIntersection& mediaIt) const override;
 };
 NORI_NAMESPACE_END

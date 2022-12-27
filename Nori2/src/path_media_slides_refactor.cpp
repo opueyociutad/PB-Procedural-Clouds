@@ -98,10 +98,10 @@ public :
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
 			float mu_s = intersectedMedia? itMedia.pMedia->getMediaCoeffs(it.p).mu_s : 1.0f;
 #warning not sure about this mu_s;
-			L = scene->transmittance(ray.o, it.p) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
+			L = scene->transmittance(ray.o, it.p, itAllMedias) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
 			pdf = 1 - mediacdf(itAllMedias, nullptr, it.t);
 		} else { // Medium interaction!
-			L = scene->transmittance(ray.o, itMedia.p) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
+			L = scene->transmittance(ray.o, itMedia.p, itAllMedias) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
 #warning NOT SURE ABOUT THIS, MISSING OTHER MEDIAS CDFS
 			pdf = itMedia.pdf();
 		}
