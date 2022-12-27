@@ -9,7 +9,7 @@
 NORI_NAMESPACE_BEGIN
 
 
-PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSampler) {}
+PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSampler), m_accel(new Accel) {}
 
 float MediaIntersection::pdf() const {
 	const FreePathSampler* sampler = pMedia->getFreePathSampler();
@@ -24,6 +24,7 @@ std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
 
 float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t) {
 #warning This is not being used and it is **probably** wrong
+	if (mediaIts.empty()) return 0.0;
 	float cdf = 1.0; // ASSUMING independent pdfs AND CDFS CAN BE CONCATENATED BY PRODUCT
 	for (const MediaIntersection& currMedIt : mediaIts) {
 		if (currMedIt.pMedia != pMedia) {
@@ -38,9 +39,31 @@ float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMe
 }
 
 bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const {
+	Intersection its;
+	if (!m_accel->rayIntersect(ray, its, false)) return false;
+
+	bool inside = its.shFrame.n.dot(ray.d) >= 0;
 	float t = m_freePathSampler->sample(mu_t, sample);
-	medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, mu_t);
-	return true;
+	if (inside) { // Case inside
+
+		if (t > its.t) return false; // Intersection outside media boundary
+		else {
+			medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, mu_t);
+			return true;
+		}
+	} else {
+		// little march as sanity check
+		Ray3f insideRay(its.p + 0.00001f*ray.d, ray.d);
+		Intersection itsInside;
+		bool intersectedInside = m_accel->rayIntersect(ray, itsInside, false);
+		if (!intersectedInside) throw std::logic_error("WHY THE RAY CAN'T ESCAPE");
+
+		if (t > itsInside.t) return false; // Intersection outside media boundary
+		else {
+			medIts = MediaIntersection(ray.o + ray.d*t, its.t + t, its.t, this, mu_t);
+			return true;
+		}
+	}
 }
 
 void PMedia::addChild(NoriObject *obj, const std::string& name) {
@@ -48,8 +71,9 @@ void PMedia::addChild(NoriObject *obj, const std::string& name) {
 		case EMesh: {
 				if (m_mesh) throw NoriException("There can only be one mesh per participating Media!");
 				Mesh *mesh = static_cast<Mesh *>(obj);
-				m_accel->addMesh(mesh);
 				m_mesh = mesh;
+				m_accel->addMesh(mesh);
+				std::cout << "SUS4" << std::endl;
 				m_accel->build();
 			}
 		break;
@@ -58,7 +82,8 @@ void PMedia::addChild(NoriObject *obj, const std::string& name) {
 				m_phaseFunction = static_cast<PhaseFunction*>(obj);
 			}
 		break;
-		default: { }
+		default: {
+		}
 	}
 }
 

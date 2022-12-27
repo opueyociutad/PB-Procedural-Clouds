@@ -20,7 +20,7 @@
 
 	<!-- Define the light source
 	<emitter type="pointlight">
-		<color name="radiance" value="10, 10, 10"/>
+		<color name="radiance" value="40, 40, 40"/>
 		<point name="position" value="0, 0.893051, 4.41198"/>
 	</emitter>
 	-->
@@ -49,7 +49,7 @@
 		</bsdf>
 	</mesh>
 
-	<!-- Area light -->
+	<!-- Area light	-->
 	<mesh type="obj">
 		<string name="filename" value="meshes/light.obj"/>
 
@@ -57,14 +57,38 @@
 			<color name="radiance" value="40 40 40"/>
 		</emitter>
 	</mesh>
+	<!--
+	<mesh type="obj">
+		<string name="filename" value="meshes/sphere.obj"/>
+		<transform name="toWorld">
+			<scale value="1, 1, 1"/>
+			<translate value="0, 0, 0"/>
+		</transform>
+		<bsdf type="diffuse">
+			<color name="albedo" value="1,0.5,0"/>
+		</bsdf>
+	</mesh>
+	-->
 
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
-		<float name="sigma_a" value="0.35" />
-		<float name="sigma_s" value="0.5" />
+		<float name="sigma_a" value="0.15" />
+		<float name="sigma_s" value="0.8" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0.2" />
 		</phase>
+
+		<mesh type="obj">
+			<string name="filename" value="meshes/sphere.obj"/>
+			<transform name="toWorld">
+				<scale value="5, 5, 5"/>
+				<translate value="0, 4, 3"/>
+			</transform>
+			<bsdf type="diffuse">
+				<color name="albedo" value="0,0,0"/>
+			</bsdf>
+		</mesh>
 	</medium>
+
 </scene>

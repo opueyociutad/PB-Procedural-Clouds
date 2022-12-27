@@ -27,7 +27,7 @@ public :
 		Color3f Lpf(0);
 
 		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
-		std::cout << coeffs << std::endl << std::flush;
+		//std::cout << coeffs << std::endl << std::flush;
 		// Sample
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
