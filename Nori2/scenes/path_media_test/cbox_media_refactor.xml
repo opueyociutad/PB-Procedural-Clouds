@@ -15,7 +15,7 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="128"/>
+		<integer name="sampleCount" value="4096"/>
 	</sampler>
 
 	<!-- Define the light source
@@ -72,8 +72,8 @@
 
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
-		<float name="sigma_a" value="0.15" />
-		<float name="sigma_s" value="0.25" />
+		<float name="sigma_a" value="0.05" />
+		<float name="sigma_s" value="0.05" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0.0" />
@@ -82,7 +82,7 @@
 		<mesh type="obj">
 			<string name="filename" value="meshes/sphere.obj"/>
 			<transform name="toWorld">
-				<scale value="2, 2, 2"/>
+				<scale value="0.5, 0.5, 0.5"/>
 				<translate value="0, 0.893051, 0.41198"/>
 			</transform>
 			<bsdf type="diffuse">
