@@ -57,7 +57,7 @@ public :
 		return Lret;
 	}
 
-	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it, float mu_s) const {
+	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
 		Color3f Lems(0);
 		Color3f Lmat(0);
 
@@ -68,7 +68,7 @@ public :
 		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		if (scene->isVisible(ray.o, emitterRecord.p)) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
-			Lems = Le * it.mesh->getBSDF()->eval(bsdfRecord) * scene->transmittance(ray.o, emitterRecord.p) * mu_s / pdf_light;
+			Lems = Le * it.mesh->getBSDF()->eval(bsdfRecord) * scene->transmittance(ray.o, emitterRecord.p) / pdf_light;
 		}
 
 		// Sample the BRDF and MIS, NOT FOR NOW, todo
@@ -98,8 +98,7 @@ public :
 		float pdf = 1.0f;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
 			float mu_s = (intersectedMedia && it.t < itMedia.medBound.tOut)? itMedia.pMedia->getMediaCoeffs(it.p).mu_s : 1.0f;
-#warning not sure about this mu_s;
-			L = scene->transmittance(ray.o, it.p, allMediaBoundaries) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
+			L = scene->transmittance(ray.o, it.p, allMediaBoundaries) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
 			if (intersectedMedia) pdf = 1 - mediacdf(itMedia, it.t);
 		} else { // Medium interaction!
 			L = scene->transmittance(ray.o, itMedia.p, allMediaBoundaries) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
