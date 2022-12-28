@@ -13,7 +13,7 @@ PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSam
 
 float MediaIntersection::pdf() const {
 	const FreePathSampler* sampler = pMedia->getFreePathSampler();
-	float tIn = t - tBoundary;
+	float tIn = t - medBound.tBoundary;
 	return sampler->pdf(mu_t, tIn);
 }
 
@@ -22,46 +22,55 @@ std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
 	return os;
 }
 
-float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t) {
-#warning This is not being used and it is **probably** wrong
-	if (mediaIts.empty()) return 0.0;
-	float cdf = 1.0; // ASSUMING independent pdfs AND CDFS CAN BE CONCATENATED BY PRODUCT
-	for (const MediaIntersection& currMedIt : mediaIts) {
-		if (currMedIt.pMedia != pMedia) {
-			float mu_t = currMedIt.mu_t;
-			float tBoundary = currMedIt.tBoundary;
-			if (tBoundary < t) {
-				cdf *= currMedIt.pMedia->getFreePathSampler()->cdf(mu_t, t - tBoundary);
-			}
-		}
+float mediacdf(const MediaIntersection& mediaIts, float t) {
+	float cdf;
+	float mu_t = mediaIts.mu_t;
+	const FreePathSampler* fsm = mediaIts.pMedia->getFreePathSampler();
+	if (mediaIts.medBound.wasInside) {
+		cdf = fsm->cdf(mu_t, std::min(t, mediaIts.medBound.tOut));
+	} else if (t < mediaIts.medBound.tBoundary){
+		cdf = 0.0f;
+	} else {
+		cdf = fsm->cdf(mu_t, std::min(t, mediaIts.medBound.tOut) - mediaIts.medBound.tBoundary);
 	}
 	return cdf;
 }
 
-bool PMedia::rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const {
+bool PMedia::rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoundaries) const {
 	Intersection its;
 	if (!m_accel->rayIntersect(ray, its, false)) return false;
 
 	bool inside = its.shFrame.n.dot(ray.d) >= 0;
-	float t = m_freePathSampler->sample(mu_t, sample);
-	if (inside) { // Case inside
-		if (t > its.t) {
-			return false; // Intersection outside media boundary
-		}
-		else {
-			medIts = MediaIntersection(ray.o + ray.d*t, t, 0.0f, this, mu_t, true, its.t);
-			return true;
-		}
+	if (inside) {
+		mediaBoundaries = MediaBoundaries(this, true, 0.0f, true, its.t);
 	} else {
 		// little march as sanity check
-		Ray3f insideRay(its.p + 0.00001f*ray.d, ray.d);
+		const float rayMarchTrick = 0.00001f;
+		Ray3f insideRay(its.p + rayMarchTrick*ray.d, ray.d);
 		Intersection itsInside;
-		bool intersectedInside = m_accel->rayIntersect(ray, itsInside, false);
+		m_accel->rayIntersect(ray, itsInside, false);
+		mediaBoundaries = MediaBoundaries(this, true, its.t, false,  its.t + itsInside.t - rayMarchTrick);
+	}
+	return true;
+}
 
-		if (t > itsInside.t) return false; // Intersection outside media boundary
-		else {
-			medIts = MediaIntersection(ray.o + ray.d*t, its.t + t, its.t, this, mu_t, false, itsInside.t);
-			return true;
+bool PMedia::rayIntersectSample(const Ray3f& ray, const MediaBoundaries& boundaries, float sample, MediaIntersection& medIts) const {
+	if (!boundaries.intersected) return false;
+	else {
+		float t = m_freePathSampler->sample(mu_t, sample);
+		if (boundaries.wasInside) {
+			if (t > boundaries.tOut) return false;
+			else {
+				medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_t, boundaries);
+				return true;
+			}
+		} else {
+			if (t > boundaries.tOut) return false;
+			else {
+				t += boundaries.tBoundary;
+				medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_t, boundaries);
+				return true;
+			}
 		}
 	}
 }
@@ -112,10 +121,10 @@ public:
 		return {mu_a, mu_s, mu_t};
 	}
 
-	float transmittance(const Point3f& x0, const Point3f& xz, const MediaIntersection& mediaIt) const override {
+	float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const override {
 		float t = (xz-x0).norm();
-		if (mediaIt.wasInside) t = std::min(t, mediaIt.tOut);
-		else if (t > mediaIt.tBoundary) t = std::min(mediaIt.tOut - mediaIt.tBoundary, t - mediaIt.tBoundary);
+		if (medBound.wasInside) t = std::min(t, medBound.tOut);
+		else if (t > medBound.tBoundary) t = std::min(medBound.tOut - medBound.tBoundary, t - medBound.tBoundary);
 		else return 1.0f; // Case not intersecting media
 		return exp(-mu_t * t);
 	}
@@ -151,6 +160,6 @@ private:
 public:
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
 	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaIntersection& mediaIt) const override;
+	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const override;
 };
 NORI_NAMESPACE_END

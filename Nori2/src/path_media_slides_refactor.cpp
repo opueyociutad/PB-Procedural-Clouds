@@ -89,19 +89,20 @@ public :
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
 		Intersection it;
 		bool intersected = scene->rayIntersect(ray, it);
-		MediaIntersection itMedia; std::vector<MediaIntersection> itAllMedias;
-		bool intersectedMedia = scene->rayIntersectMedia(ray, itMedia, itAllMedias);
+		std::vector<MediaBoundaries> allMediaBoundaries = scene->rayIntersectMediaBoundaries(ray);
+		MediaIntersection itMedia;
+		bool intersectedMedia = scene->rayIntersectMediaSample(ray, allMediaBoundaries, itMedia);
 		if (!intersected && !intersectedMedia) return {0.0f};
 
 		Color3f L(0.0f);
-		float pdf;
+		float pdf = 1.0f;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
-			float mu_s = intersectedMedia? itMedia.pMedia->getMediaCoeffs(it.p).mu_s : 1.0f;
+			float mu_s = (intersectedMedia && it.t < itMedia.medBound.tOut)? itMedia.pMedia->getMediaCoeffs(it.p).mu_s : 1.0f;
 #warning not sure about this mu_s;
-			L = scene->transmittance(ray.o, it.p, itAllMedias) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
-			pdf = 1 - mediacdf(itAllMedias, nullptr, it.t);
+			L = scene->transmittance(ray.o, it.p, allMediaBoundaries) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it, mu_s);
+			if (intersectedMedia) pdf = 1 - mediacdf(itMedia, it.t);
 		} else { // Medium interaction!
-			L = scene->transmittance(ray.o, itMedia.p, itAllMedias) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
+			L = scene->transmittance(ray.o, itMedia.p, allMediaBoundaries) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
 #warning NOT SURE ABOUT THIS, MISSING OTHER MEDIAS CDFS
 			pdf = itMedia.pdf();
 		}

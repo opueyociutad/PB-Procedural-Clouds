@@ -128,11 +128,14 @@ public:
 	/// Returns whether p is visible from ref or not
 	bool isVisible(const Vector3f& ref, const Vector3f& p) const;
 
+	/// Intersects with boundaries of participating media
+	std::vector<MediaBoundaries> rayIntersectMediaBoundaries(const Ray3f& ray) const;
+
 	/// Samples intersections with all mediums and returns the closest one
-	bool rayIntersectMedia(const Ray3f& ray, MediaIntersection& medIts, std::vector<MediaIntersection>& medAllIts) const;
+	bool rayIntersectMediaSample(const Ray3f& ray, const std::vector<MediaBoundaries>& allMediaBoundaries, MediaIntersection& medIts) const;
 
 	/// Returns the transmittance of traversing from x0 to xz through all mediums
-	float transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaIntersection>& mediaIts) const;
+	float transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds) const;
 
 	/// Returns the transmittance of traversing from x0 to xz through all mediums
 	float transmittance(const Point3f& x0, const Point3f& xz) const;

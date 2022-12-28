@@ -59,32 +59,48 @@ public:
 	}
 };
 
+struct MediaBoundaries {
+	/// Associated pMedia
+	const PMedia* pMedia;
+	/// Intersected with geometry
+	bool intersected;
+	/// Distance to reach to enter boundary
+	float tBoundary;
+	/// Initial ray was inside
+	bool wasInside;
+	/// Distance to reach to exit boundary
+	float tOut;
+
+	MediaBoundaries() {}
+
+	MediaBoundaries(const PMedia* _pMedia, bool _intersected, float _tBoundary, bool _wasInside, float _tOut) :
+			pMedia(_pMedia), intersected(_intersected), tBoundary(_tBoundary), wasInside(_wasInside), tOut(_tOut) {}
+};
+
 
 struct MediaIntersection {
 	/// Intersection point
 	Point3f p;
 	/// Distance along the ray
 	float t;
-	/// Distance to reach boundary
-	float tBoundary;
 	/// Intersected media
 	const PMedia* pMedia;
 	/// Media coefficients associated with the intersection
 	float mu_t;
 
-	bool wasInside;
-	float tOut;
+	/// Associated media boundaries
+	MediaBoundaries medBound;
 
 	MediaIntersection() {}
 
-	MediaIntersection(Point3f  _p, float _t, float _tBoundary, const PMedia* _pMedia, const float _mu_t, bool _wasInside, float _tOut) :
-		p(std::move(_p)), t(_t), tBoundary(_tBoundary), pMedia(_pMedia), mu_t(_mu_t), wasInside(_wasInside), tOut(_tOut) {}
+	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const float _mu_t, const MediaBoundaries& _medBound) :
+		p(std::move(_p)), t(_t), pMedia(_pMedia), mu_t(_mu_t), medBound(_medBound) {}
 
 	float pdf() const;
 };
 
 /// Calculates cdf across all medias that are not it up to distance t
-float mediacdf(const std::vector<MediaIntersection>& mediaIts, const PMedia* pMedia, float t);
+	float mediacdf(const MediaIntersection& mediaIts, float t);
 
 class PMedia : public NoriObject {
 protected:
@@ -103,13 +119,16 @@ protected:
 public:
 	PMedia(FreePathSampler* freePathSampler);
 	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaIntersection& mediaIt) const = 0;
+	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const = 0;
 
 	/// Media coefficients
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const = 0;
 
+	// Ray intersection with media boundaries
+	bool rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoundaries) const ;
+
 	/// Ray intersection with media (sampling)
-	bool rayIntersect(const Ray3f& ray, float sample, MediaIntersection& medIts) const;
+	bool rayIntersectSample(const Ray3f& ray, const MediaBoundaries& boundaries, float sample, MediaIntersection& medIts) const ;
 
 	/// Phase function getter
 	const PhaseFunction* getPhaseFunction() const { return m_phaseFunction; }

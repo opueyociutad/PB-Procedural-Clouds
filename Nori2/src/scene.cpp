@@ -95,43 +95,44 @@ bool Scene::isVisible(const Vector3f& ref, const Vector3f& p) const {
 	return !(this->rayIntersect(sray, it_shadow) && it_shadow.t < (t- 1.e-5));
 }
 
-bool Scene::rayIntersectMedia(const Ray3f& ray, MediaIntersection& medIts, std::vector<MediaIntersection>& medAllIts) const {
+std::vector<MediaBoundaries> Scene::rayIntersectMediaBoundaries(const Ray3f& ray) const {
+	std::vector<MediaBoundaries> allMediaBoundaries;
+	for (const PMedia* media : m_medias) {
+		MediaBoundaries currMedBound;
+		if (media->rayIntersectBoundaries(ray, currMedBound)) {
+			allMediaBoundaries.emplace_back(currMedBound);
+		}
+	}
+	return allMediaBoundaries;
+}
+
+bool Scene::rayIntersectMediaSample(const Ray3f& ray, const std::vector<MediaBoundaries>& allMediaBoundaries, MediaIntersection& medIts) const {
 	bool hasIntersected = false;
 	float closestT = INFINITY;
-	for (const PMedia* media : m_medias) {
+	for (const MediaBoundaries& mediaBound : allMediaBoundaries) {
 		MediaIntersection currMedIts;
-		if (media->rayIntersect(ray, m_sampler->next1D(), currMedIts)) {
-			medAllIts.emplace_back(currMedIts);
-			if (!hasIntersected || currMedIts.t < closestT) {
-				hasIntersected = true;
-				closestT = currMedIts.t;
-				medIts = currMedIts;
-			}
+		if (mediaBound.pMedia->rayIntersectSample(ray, mediaBound, m_sampler->next1D(), currMedIts) &&
+				(!hasIntersected || currMedIts.t < closestT)) {
+			hasIntersected = true;
+			closestT = currMedIts.t;
+			medIts = currMedIts;
 		}
 	}
 	return hasIntersected;
 }
 
-float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaIntersection>& mediaIts) const {
+float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds) const {
 	float T = 1.0f;
-	for (const MediaIntersection& mediaIt : mediaIts) {
-		T *= mediaIt.pMedia->transmittance(x0, xz, mediaIt);
+	for (const MediaBoundaries& medBound : medBounds) {
+		T *= medBound.pMedia->transmittance(x0, xz, medBound);
 	}
 	return T;
 }
 
 float Scene::transmittance(const Point3f& x0, const Point3f& xz) const {
-	std::vector<MediaIntersection> mediaIts;
-	MediaIntersection bestMediaIt;
-	this->rayIntersectMedia(Ray3f(x0, (xz-x0).normalized()), bestMediaIt, mediaIts);
-	float T = 1.0f;
-	for (const MediaIntersection& mediaIt : mediaIts) {
-		T *= mediaIt.pMedia->transmittance(x0, xz, mediaIt);
-	}
-	return T;
+	std::vector<MediaBoundaries> medBounds = this->rayIntersectMediaBoundaries(Ray3f(x0, (xz - x0).normalized()));
+	return transmittance(x0, xz, medBounds);
 }
-
-
 
 void Scene::addChild(NoriObject *obj, const std::string& name) {
 	switch (obj->getClassType()) {
