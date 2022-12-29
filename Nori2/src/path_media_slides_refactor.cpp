@@ -24,31 +24,28 @@ public :
 		#warning Null collision not implemented!
 
 		Color3f Lems(0);
-		Color3f Lpf(0);
 
 		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
-		//std::cout << coeffs << std::endl << std::flush;
-		// Sample
-		float pdf_light;
-		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
-		EmitterQueryRecord emitterRecord(ray.o);
-		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
-		if (scene->isVisible(ray.o, emitterRecord.p)) {
-			// No nan here
-			PFQueryRecord mRec(ray.d, emitterRecord.wi);
-			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
-			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s // * abs(ray.d.dot(emitterRecord.wi))
-				   / pdf_light;
-			if (isnan(Lems.x()) || isinf(Lems.x())) {
-				std::cout << "Lems media nan or inf!!" << std::endl << std::flush;
+		float inscatteringPDF = coeffs.mu_s / (coeffs.mu_s + coeffs.mu_n);
+		// If not null collision do inscattering event
+		if (sampler->next1D() < inscatteringPDF) {
+			//std::cout << coeffs << std::endl << std::flush;
+			// Sample
+			float pdf_light;
+			const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
+			EmitterQueryRecord emitterRecord(ray.o);
+			Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
+			if (scene->isVisible(ray.o, emitterRecord.p)) {
+				PFQueryRecord mRec(ray.d, emitterRecord.wi);
+				Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
+				       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s // * abs(ray.d.dot(emitterRecord.wi))
+				       / pdf_light;
 			}
 		}
 
-		// Sample the phase function, NOT FOR NOW, todo
-
-		Color3f Lmis = Lems;
+		Color3f Lmis = Lems / inscatteringPDF;
 		float pdfRR;
-		// No nan from RR
+		// If absorption do not continue the ray
 		if (RR(coeffs.alpha(), sampler, pdfRR)) {
 			return Lmis;
 		}
@@ -101,9 +98,9 @@ public :
 			L = scene->transmittance(ray.o, it.p, allMediaBoundaries) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
 			if (intersectedMedia) pdf = 1 - mediacdf(itMedia, it.t);
 		} else { // Medium interaction!
-			L = scene->transmittance(ray.o, itMedia.p, allMediaBoundaries) * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
-#warning NOT SURE ABOUT THIS, MISSING OTHER MEDIAS CDFS
-			pdf = itMedia.pdf();
+			L = scene->transmittance(ray.o, itMedia.p, allMediaBoundaries, itMedia)
+					* InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
+			pdf = 1.0f;
 		}
 
 		return L / pdf;

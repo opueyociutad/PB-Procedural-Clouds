@@ -140,6 +140,8 @@ public:
 	/// Returns the transmittance of traversing from x0 to xz through all mediums
 	float transmittance(const Point3f& x0, const Point3f& xz) const;
 
+	/// Returns the transmittance of traversing from x0 to xz through all mediums, taking into account that medIt is the sampled one
+	float transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds, const MediaIntersection& medIt) const;
 
 	/**
 	 * \brief Inherited from \ref NoriObject::activate()

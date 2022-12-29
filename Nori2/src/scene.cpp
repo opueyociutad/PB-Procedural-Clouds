@@ -121,6 +121,20 @@ bool Scene::rayIntersectMediaSample(const Ray3f& ray, const std::vector<MediaBou
 	return hasIntersected;
 }
 
+
+float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds, const MediaIntersection& medIt) const {
+	float T = 1.0f;
+	for (const MediaBoundaries& medBound : medBounds) {
+		if (medBound.pMedia == medIt.pMedia) {
+			T /= medIt.mu_max;
+		} else {
+			T *= medBound.pMedia->transmittance(x0, xz, medBound);
+		}
+	}
+	return T;
+}
+
+
 float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds) const {
 	float T = 1.0f;
 	for (const MediaBoundaries& medBound : medBounds) {

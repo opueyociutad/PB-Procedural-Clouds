@@ -23,12 +23,12 @@ struct MediaCoeffs {
 	/// Null collisions
 	float mu_n;
 	/// Total collision coefficient
-	float mu_t;
+	float mu_max;
 
 	MediaCoeffs() {}
 
-	MediaCoeffs(float _mu_a, float _mu_s, float _mu_t) : mu_a(_mu_a), mu_s(_mu_s), mu_t(_mu_t) {
-		mu_n = mu_t - (mu_a + mu_s);
+	MediaCoeffs(float _mu_a, float _mu_s, float _mu_t) : mu_a(_mu_a), mu_s(_mu_s), mu_max(_mu_t) {
+		mu_n = mu_max - (mu_a + mu_s);
 	}
 
 	float alpha() const { return mu_s / (mu_a + mu_s); }
@@ -86,7 +86,7 @@ struct MediaIntersection {
 	/// Intersected media
 	const PMedia* pMedia;
 	/// Media coefficients associated with the intersection
-	float mu_t;
+	float mu_max;
 
 	/// Associated media boundaries
 	MediaBoundaries medBound;
@@ -94,13 +94,13 @@ struct MediaIntersection {
 	MediaIntersection() {}
 
 	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const float _mu_t, const MediaBoundaries& _medBound) :
-		p(std::move(_p)), t(_t), pMedia(_pMedia), mu_t(_mu_t), medBound(_medBound) {}
+			p(std::move(_p)), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound) {}
 
 	float pdf() const;
 };
 
 /// Calculates cdf across all medias that are not it up to distance t
-	float mediacdf(const MediaIntersection& mediaIts, float t);
+float mediacdf(const MediaIntersection& mediaIts, float t);
 
 class PMedia : public NoriObject {
 protected:
@@ -114,7 +114,7 @@ protected:
 	FreePathSampler* m_freePathSampler;
 
 	/// Max free path coefficient
-	float mu_t;
+	float mu_max;
 
 public:
 	PMedia(FreePathSampler* freePathSampler);
@@ -137,7 +137,7 @@ public:
 	const FreePathSampler* getFreePathSampler() const { return m_freePathSampler; }
 
 	/// Gets max free path coefficient
-	float getMu_t() const { return mu_t; }
+	float getMu_t() const { return mu_max; }
 
 	EClassType getClassType() const override{ return EMedium; }
 
