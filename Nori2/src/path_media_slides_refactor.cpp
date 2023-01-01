@@ -79,7 +79,7 @@ public :
 			return Lmis;
 		}
 
-		Ray3f newRay(it.t, it.toWorld(bsdfRecord.wo));
+		Ray3f newRay(ray.o, it.toWorld(bsdfRecord.wo));
 		return Lmis + throughput * this->Li(scene, sampler, newRay) / pdfRR;
 	}
 
@@ -94,7 +94,6 @@ public :
 		Color3f L(0.0f);
 		float pdf = 1.0f;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
-			float mu_s = (intersectedMedia && it.t < itMedia.medBound.tOut)? itMedia.pMedia->getMediaCoeffs(it.p).mu_s : 1.0f;
 			L = scene->transmittance(ray.o, it.p, allMediaBoundaries) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
 			if (intersectedMedia) pdf = 1 - mediacdf(itMedia, it.t);
 		} else { // Medium interaction!
@@ -102,6 +101,7 @@ public :
 					* InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
 			pdf = 1.0f;
 		}
+#warning MISSING NOT INTERSECTING CASE
 
 		return L / pdf;
 	}
