@@ -1,0 +1,150 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "ext_build/openexr/IlmBase/Iex/libIex.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"ADD_LIBRARY",
+			"INSTALL",
+			"INCLUDE_DIRECTORIES"
+		],
+		"files" : 
+		[
+			"ext/openexr/IlmBase/Iex/CMakeLists.txt",
+			"ext/openexr/IlmBase/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 47,
+				"parent" : 3
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -std=c++14 -fvisibility=hidden -Wno-deprecated-declarations -Wno-misleading-indentation -Wformat-truncation=0 -Wno-int-in-bool-context -Wimplicit-fallthrough=0 -Wno-unused-result -Wno-deprecated -O3 -DNDEBUG   -pthread"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-release/ext_build/openexr/IlmBase/Iex"
+				},
+				{
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Iex"
+				},
+				{
+					"backtrace" : 4,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/IexMath"
+				},
+				{
+					"backtrace" : 4,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Imath"
+				},
+				{
+					"backtrace" : 4,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/Half"
+				},
+				{
+					"backtrace" : 4,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-release/ext_build/openexr/IlmBase/config"
+				},
+				{
+					"backtrace" : 4,
+					"path" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/ext/openexr/IlmBase/IlmThread"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"folder" : 
+	{
+		"name" : "dependencies"
+	},
+	"id" : "Iex::@2d5ce12303fd5a715ea3",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "Iex",
+	"nameOnDisk" : "libIex.a",
+	"paths" : 
+	{
+		"build" : "ext_build/openexr/IlmBase/Iex",
+		"source" : "ext/openexr/IlmBase/Iex"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "ext/openexr/IlmBase/Iex/IexBaseExc.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "ext/openexr/IlmBase/Iex/IexThrowErrnoExc.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

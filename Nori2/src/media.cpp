@@ -14,6 +14,7 @@ PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSam
 float MediaIntersection::pdf() const {
 	const FreePathSampler* sampler = pMedia->getFreePathSampler();
 	float tIn = t - medBound.tBoundary;
+#warning pdf might not be properly calculated with boundaries
 	return sampler->pdf(mu_max, tIn);
 }
 
