@@ -40,7 +40,7 @@ public:
 
 	float pdf(const PFQueryRecord &mRec) const override {
 		//     phi               azimuth
-		return (0.5f * INV_PI);// * ();
+		return (0.5f * INV_PI) * mRec.wi.dot(mRec.wo);
 	}
 
 	std::string toString() const override {
