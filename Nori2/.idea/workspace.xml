@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="nori" targetName="Imath" />
+      <config projectName="nori" targetName="toFloat" />
+      <config projectName="nori" targetName="Iex" />
+      <config projectName="nori" targetName="IlmImf-obj" />
+      <config projectName="nori" targetName="CopyIlmBaseLibs" />
+      <config projectName="nori" targetName="glfw" />
+      <config projectName="nori" targetName="tbb_static" />
+      <config projectName="nori" targetName="IexMath" />
+      <config projectName="nori" targetName="IlmThread" />
+      <config projectName="nori" targetName="warptest" />
+      <config projectName="nori" targetName="nanogui-obj" />
+      <config projectName="nori" targetName="tbb_def_files" />
+      <config projectName="nori" targetName="nori" />
+      <config projectName="nori" targetName="dwaLookups" />
+      <config projectName="nori" targetName="b44ExpLogTable" />
+      <config projectName="nori" targetName="pugixml" />
+      <config projectName="nori" targetName="nanogui" />
+      <config projectName="nori" targetName="IlmImf" />
+      <config projectName="nori" targetName="glfw_objects" />
+      <config projectName="nori" targetName="eLut" />
+      <config projectName="nori" targetName="Half" />
+    </generated>
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9c06758c-7004-4ca6-894c-41cb67ce447f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/media.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/media.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2022" />
+    <option name="minorVersion" value="2.3" />
+  </component>
+  <component name="ProjectId" id="2FlL9K5zcOixBp3pvRVufNkShSk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/scenes/path_media_test/meshes&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scenes/path_media_test/meshes" />
+      <recent name="$PROJECT_DIR$/scenes/path_media_test" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/cmake-build-release" />
+      <recent name="$PROJECT_DIR$/scenes/assignment-3/serapis" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scenes/path_media_test/meshes" />
+    </key>
+  </component>
+  <component name="RunManager" selected="CMake Application.nori">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CopyIlmBaseLibs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="CopyIlmBaseLibs" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Half" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="Half" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Iex" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="Iex" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IexMath" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="IexMath" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IlmImf-obj" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="IlmImf-obj" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IlmImf" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="IlmImf" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IlmThread" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="IlmThread" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Imath" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="Imath" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="b44ExpLogTable" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="b44ExpLogTable" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="b44ExpLogTable">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="dwaLookups" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="dwaLookups" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="dwaLookups">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="eLut" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="eLut" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="eLut">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="glfw" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="glfw" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="glfw_objects" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="glfw_objects" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="nanogui-obj" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nanogui-obj" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="nanogui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nanogui" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="nori" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="scenes/path_media_test/cbox_media_refactor.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nori" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="nori">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="pugixml" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="pugixml" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tbb_def_files" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="tbb_def_files" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tbb_static" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="tbb_static" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="toFloat" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="toFloat" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="toFloat">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="warptest" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="warptest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="warptest">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.nori" />
+      <item itemvalue="CMake Application.warptest" />
+      <item itemvalue="CMake Application.pugixml" />
+      <item itemvalue="CMake Application.nanogui" />
+      <item itemvalue="CMake Application.nanogui-obj" />
+      <item itemvalue="CMake Application.glfw" />
+      <item itemvalue="CMake Application.glfw_objects" />
+      <item itemvalue="CMake Application.CopyIlmBaseLibs" />
+      <item itemvalue="CMake Application.eLut" />
+      <item itemvalue="CMake Application.Half" />
+      <item itemvalue="CMake Application.toFloat" />
+      <item itemvalue="CMake Application.Iex" />
+      <item itemvalue="CMake Application.IexMath" />
+      <item itemvalue="CMake Application.IlmThread" />
+      <item itemvalue="CMake Application.Imath" />
+      <item itemvalue="CMake Application.b44ExpLogTable" />
+      <item itemvalue="CMake Application.dwaLookups" />
+      <item itemvalue="CMake Application.IlmImf" />
+      <item itemvalue="CMake Application.IlmImf-obj" />
+      <item itemvalue="CMake Application.tbb_def_files" />
+      <item itemvalue="CMake Application.tbb_static" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9c06758c-7004-4ca6-894c-41cb67ce447f" name="Changes" comment="" />
+      <created>1665061572106</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1665061572106</updated>
+      <workItem from="1665061574020" duration="5595000" />
+      <workItem from="1665766428130" duration="1000" />
+      <workItem from="1666711152544" duration="5870000" />
+      <workItem from="1666733094564" duration="1475000" />
+      <workItem from="1666804059539" duration="38000" />
+      <workItem from="1666875807731" duration="4254000" />
+      <workItem from="1666908116396" duration="1313000" />
+      <workItem from="1666946698963" duration="6000" />
+      <workItem from="1667060415050" duration="3730000" />
+      <workItem from="1667070841923" duration="4445000" />
+      <workItem from="1667077921550" duration="616000" />
+      <workItem from="1667078713460" duration="44000" />
+      <workItem from="1667079382901" duration="9000" />
+      <workItem from="1667127887511" duration="599000" />
+      <workItem from="1667156728479" duration="6210000" />
+      <workItem from="1667301808259" duration="3372000" />
+      <workItem from="1667334196776" duration="2347000" />
+      <workItem from="1667495641260" duration="34000" />
+      <workItem from="1667850585302" duration="2185000" />
+      <workItem from="1667943229883" duration="543000" />
+      <workItem from="1668015948003" duration="7931000" />
+      <workItem from="1668088849423" duration="6969000" />
+      <workItem from="1668097636845" duration="4685000" />
+      <workItem from="1668114827433" duration="6054000" />
+      <workItem from="1668120911070" duration="2000" />
+      <workItem from="1668191907763" duration="657000" />
+      <workItem from="1668202848491" duration="14000" />
+      <workItem from="1668280427454" duration="3374000" />
+      <workItem from="1668368766640" duration="7849000" />
+      <workItem from="1668443377857" duration="2287000" />
+      <workItem from="1668623015478" duration="3843000" />
+      <workItem from="1668697825321" duration="8607000" />
+      <workItem from="1668792260107" duration="634000" />
+      <workItem from="1668861711574" duration="4251000" />
+      <workItem from="1668875688762" duration="22000" />
+      <workItem from="1668904655200" duration="1893000" />
+      <workItem from="1668984935366" duration="2519000" />
+      <workItem from="1669026176623" duration="2832000" />
+      <workItem from="1669151430685" duration="536000" />
+      <workItem from="1669298768750" duration="6896000" />
+      <workItem from="1669328230989" duration="2072000" />
+      <workItem from="1669390534684" duration="2062000" />
+      <workItem from="1669492200845" duration="74000" />
+      <workItem from="1669504283198" duration="350000" />
+      <workItem from="1669733782195" duration="7613000" />
+      <workItem from="1669742488714" duration="34000" />
+      <workItem from="1669821167399" duration="612000" />
+      <workItem from="1669843875691" duration="32000" />
+      <workItem from="1670079760863" duration="2553000" />
+      <workItem from="1670150317275" duration="609000" />
+      <workItem from="1670168443979" duration="833000" />
+      <workItem from="1670171048893" duration="103000" />
+      <workItem from="1670368996566" duration="1019000" />
+      <workItem from="1670370363218" duration="777000" />
+      <workItem from="1670424440740" duration="661000" />
+      <workItem from="1670435175269" duration="6748000" />
+      <workItem from="1670515874935" duration="6293000" />
+      <workItem from="1670666820688" duration="11620000" />
+      <workItem from="1670710218740" duration="2392000" />
+      <workItem from="1670806041429" duration="78000" />
+      <workItem from="1670950690887" duration="256000" />
+      <workItem from="1671035285198" duration="1000" />
+      <workItem from="1671118515841" duration="371000" />
+      <workItem from="1671141228550" duration="12000" />
+      <workItem from="1671208706079" duration="5336000" />
+      <workItem from="1671232530666" duration="2993000" />
+      <workItem from="1671312488185" duration="7939000" />
+      <workItem from="1671894497562" duration="10390000" />
+      <workItem from="1671992008325" duration="12654000" />
+      <workItem from="1672166141301" duration="7753000" />
+      <workItem from="1672227702504" duration="6986000" />
+      <workItem from="1672240847425" duration="532000" />
+      <workItem from="1672241673533" duration="767000" />
+      <workItem from="1672252448512" duration="1963000" />
+      <workItem from="1672336171516" duration="2862000" />
+      <workItem from="1672426001837" duration="599000" />
+      <workItem from="1672587583264" duration="3803000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/include/nori/scene.h</url>
+          <line>173</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

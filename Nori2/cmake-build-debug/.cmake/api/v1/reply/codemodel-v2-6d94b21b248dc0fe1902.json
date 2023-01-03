@@ -1,0 +1,553 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.2"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						15,
+						20
+					]
+				},
+				{
+					"build" : "ext_build",
+					"childIndexes" : 
+					[
+						2,
+						11,
+						12
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build-Debug-460ec85f929d2da6861c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.2"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "ext",
+					"targetIndexes" : 
+					[
+						16
+					]
+				},
+				{
+					"build" : "ext_build/openexr",
+					"childIndexes" : 
+					[
+						3,
+						9
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr-Debug-7db9f833068bed213ada.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "ext/openexr",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "ext_build/openexr/IlmBase",
+					"childIndexes" : 
+					[
+						4,
+						5,
+						6,
+						7,
+						8
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.IlmBase-Debug-eaec5d843caa305f541f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "ext/openexr/IlmBase"
+				},
+				{
+					"build" : "ext_build/openexr/IlmBase/Half",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.IlmBase.Half-Debug-45efd869c7f0d71fc924.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "ext/openexr/IlmBase/Half",
+					"targetIndexes" : 
+					[
+						1,
+						10,
+						19
+					]
+				},
+				{
+					"build" : "ext_build/openexr/IlmBase/Iex",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.IlmBase.Iex-Debug-2d8c26a39d93197156cc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "ext/openexr/IlmBase/Iex",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "ext_build/openexr/IlmBase/IexMath",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.IlmBase.IexMath-Debug-dccdaf26886ef465a49d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "ext/openexr/IlmBase/IexMath",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "ext_build/openexr/IlmBase/Imath",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.IlmBase.Imath-Debug-e14a2a39d250cf0d55ff.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "ext/openexr/IlmBase/Imath",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "ext_build/openexr/IlmBase/IlmThread",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.IlmBase.IlmThread-Debug-8f896aaff5eb6ce46c43.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "ext/openexr/IlmBase/IlmThread",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "ext_build/openexr/OpenEXR",
+					"childIndexes" : 
+					[
+						10
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.OpenEXR-Debug-3d62f4315314f990716f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 1,
+					"source" : "ext/openexr/OpenEXR"
+				},
+				{
+					"build" : "ext_build/openexr/OpenEXR/IlmImf",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.openexr.OpenEXR.IlmImf-Debug-35fa270c59940e585282.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"parentIndex" : 9,
+					"projectIndex" : 1,
+					"source" : "ext/openexr/OpenEXR/IlmImf",
+					"targetIndexes" : 
+					[
+						4,
+						5,
+						8,
+						9
+					]
+				},
+				{
+					"build" : "ext_build/tbb",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.tbb-Debug-5628f2e0b07c7fc9cfb8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 3,
+					"source" : "ext/tbb",
+					"targetIndexes" : 
+					[
+						17,
+						18
+					]
+				},
+				{
+					"build" : "ext_build/nanogui",
+					"childIndexes" : 
+					[
+						13
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-ext_build.nanogui-Debug-3735c1fd3a15e00a42c3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 4,
+					"source" : "ext/nanogui",
+					"targetIndexes" : 
+					[
+						13,
+						14
+					]
+				},
+				{
+					"build" : "ext_build/nanogui/ext_build/glfw",
+					"childIndexes" : 
+					[
+						14
+					],
+					"jsonFile" : "directory-ext_build.nanogui.ext_build.glfw-Debug-dcbf81621a93f26d77f1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.11.2"
+					},
+					"parentIndex" : 12,
+					"projectIndex" : 5,
+					"source" : "ext/nanogui/ext/glfw"
+				},
+				{
+					"build" : "ext_build/nanogui/ext_build/glfw/src",
+					"jsonFile" : "directory-ext_build.nanogui.ext_build.glfw.src-Debug-6725089b1bac11af99ed.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.11.2"
+					},
+					"parentIndex" : 13,
+					"projectIndex" : 5,
+					"source" : "ext/nanogui/ext/glfw/src",
+					"targetIndexes" : 
+					[
+						11,
+						12
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						3,
+						4
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "nori",
+					"targetIndexes" : 
+					[
+						15,
+						16,
+						20
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						2,
+						9,
+						10
+					],
+					"name" : "openexr",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0,
+						4,
+						5,
+						8,
+						9
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					],
+					"name" : "ilmbase",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						6,
+						7,
+						10,
+						19
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						11
+					],
+					"name" : "tbb",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						17,
+						18
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						5
+					],
+					"directoryIndexes" : 
+					[
+						12
+					],
+					"name" : "NanoGUI",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						13,
+						14
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						13,
+						14
+					],
+					"name" : "GLFW",
+					"parentIndex" : 4,
+					"targetIndexes" : 
+					[
+						11,
+						12
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "CopyIlmBaseLibs::@c9b89c753bf581715845",
+					"jsonFile" : "target-CopyIlmBaseLibs-Debug-d41f35aa4f9fa9f542fd.json",
+					"name" : "CopyIlmBaseLibs",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "Half::@bc73201a0ff31525839c",
+					"jsonFile" : "target-Half-Debug-ffd5fade59c27623b4c9.json",
+					"name" : "Half",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "Iex::@2d5ce12303fd5a715ea3",
+					"jsonFile" : "target-Iex-Debug-6ce7b7f6c48ea49ac62d.json",
+					"name" : "Iex",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "IexMath::@334c737c54925b8ad8cb",
+					"jsonFile" : "target-IexMath-Debug-718edd44c7018deb9c78.json",
+					"name" : "IexMath",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "IlmImf::@c7e2e96394a199d2be4c",
+					"jsonFile" : "target-IlmImf-Debug-44d4c2b3c03be56323c3.json",
+					"name" : "IlmImf",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "IlmImf-obj::@c7e2e96394a199d2be4c",
+					"jsonFile" : "target-IlmImf-obj-Debug-8d0a58cfe0e93e8430ab.json",
+					"name" : "IlmImf-obj",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "IlmThread::@ad0fbd93a99e11f50aa5",
+					"jsonFile" : "target-IlmThread-Debug-cf97a5c337b7b0dec74a.json",
+					"name" : "IlmThread",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "Imath::@cff27ddb2a1d5995498d",
+					"jsonFile" : "target-Imath-Debug-cbdf8770176f0125c346.json",
+					"name" : "Imath",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "b44ExpLogTable::@c7e2e96394a199d2be4c",
+					"jsonFile" : "target-b44ExpLogTable-Debug-1288ffd653db7666f987.json",
+					"name" : "b44ExpLogTable",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "dwaLookups::@c7e2e96394a199d2be4c",
+					"jsonFile" : "target-dwaLookups-Debug-03ca16cc409737680f27.json",
+					"name" : "dwaLookups",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "eLut::@bc73201a0ff31525839c",
+					"jsonFile" : "target-eLut-Debug-0d65ae858587755dc557.json",
+					"name" : "eLut",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "glfw::@e1a83f3f4978d8c6d945",
+					"jsonFile" : "target-glfw-Debug-6dd444802bc20fd3ffa3.json",
+					"name" : "glfw",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "glfw_objects::@e1a83f3f4978d8c6d945",
+					"jsonFile" : "target-glfw_objects-Debug-a58da92d830807220aba.json",
+					"name" : "glfw_objects",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 12,
+					"id" : "nanogui::@778dc1955f638a1c4882",
+					"jsonFile" : "target-nanogui-Debug-61f9d6d2d862c07a52d2.json",
+					"name" : "nanogui",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 12,
+					"id" : "nanogui-obj::@778dc1955f638a1c4882",
+					"jsonFile" : "target-nanogui-obj-Debug-4703e670d808021495d1.json",
+					"name" : "nanogui-obj",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nori::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nori-Debug-b344dead0e170b537492.json",
+					"name" : "nori",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pugixml::@1513f232e2be2c4ffccf",
+					"jsonFile" : "target-pugixml-Debug-2e281f96cad82ba1f78b.json",
+					"name" : "pugixml",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "tbb_def_files::@3dd1ab55f51ddf8a6aef",
+					"jsonFile" : "target-tbb_def_files-Debug-0928eb273f77a725a394.json",
+					"name" : "tbb_def_files",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "tbb_static::@3dd1ab55f51ddf8a6aef",
+					"jsonFile" : "target-tbb_static-Debug-6bd609c0ad8410cb7733.json",
+					"name" : "tbb_static",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "toFloat::@bc73201a0ff31525839c",
+					"jsonFile" : "target-toFloat-Debug-567fbaef89eb8c11cdce.json",
+					"name" : "toFloat",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "warptest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-warptest-Debug-fa7a8ced6e4d82cba40e.json",
+					"name" : "warptest",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/cmake-build-debug",
+		"source" : "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
