@@ -68,6 +68,7 @@ add_executable(nori
   include/nori/warp.h
   include/nori/media.h
   include/nori/phasefunction.h
+  include/nori/density.h
 
   # Source code files
   src/accel.cpp
@@ -114,6 +115,7 @@ add_executable(nori
   src/phasefunction.cpp
   src/media.cpp
   src/path_media_slides_refactor.cpp
+  src/density.cpp
 )
 
 add_definitions(${NANOGUI_EXTRA_DEFS})

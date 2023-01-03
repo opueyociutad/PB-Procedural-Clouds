@@ -61,6 +61,7 @@ NoriObject *loadFromXML(const std::string &filename) {
 		EBSDF          = NoriObject::EBSDF,
 		ETexture       = NoriObject::ETexture,
 		EPhaseFunction = NoriObject::EPhaseFunction,
+		EDensityFunction = NoriObject::EDensityFunction,
 		EEmitter       = NoriObject::EEmitter,
 		EMedium        = NoriObject::EMedium,
 		ECamera        = NoriObject::ECamera,
@@ -96,6 +97,7 @@ NoriObject *loadFromXML(const std::string &filename) {
 	tags["camera"]     = ECamera;
 	tags["medium"]     = EMedium;
 	tags["phase"]      = EPhaseFunction;
+	tags["density"]    = EDensityFunction;
 	tags["integrator"] = EIntegrator;
 	tags["sampler"]    = ESampler;
 	tags["rfilter"]    = EReconstructionFilter;

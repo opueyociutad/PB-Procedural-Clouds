@@ -9,6 +9,7 @@
 #include <nori/frame.h>
 #include <nori/bbox.h>
 #include <nori/dpdf.h>
+#include <nori/density.h>
 #include <utility>
 
 NORI_NAMESPACE_BEGIN
@@ -88,6 +89,8 @@ protected:
 	Accel* m_accel;
 	/// Phase function of the media
 	PhaseFunction* m_phaseFunction = nullptr;
+	// Procedural density function of the media, only used in heterogeneous media
+	DensityFunction* m_densityFunction;
 
 	/// Max free path coefficient
 	float mu_max = 0.0f;
@@ -123,14 +126,5 @@ public:
 
 	void addChild(NoriObject *obj, const std::string& name);
 };
-
-
-class SDFObject {
-public:
-	/// Returns rho (density of media) [0,1)
-	virtual float computeDensity(Point3f x) const = 0;
-};
-
-
 
 NORI_NAMESPACE_END

@@ -33,11 +33,11 @@ public :
 		return fract2((Vector2f(p3.x())+Vector2f(p3.y(), p3.z())).cwiseProduct(Vector2f(p3.z(), p3.y())));
 	}
 
-		// Random normalized vector
+	// Random normalized vector
 	Vector3f randVec(Vector3f p) const {
 		Vector2f r = hash23(p);
 		float th = acos(2.*r.x()-1.);
-		float phi = 2.*3.14159*r.y();
+		float phi = 2.*M_PI*r.y();
 		return Vector3f(cos(th)*sin(phi), cos(phi), sin(th)*sin(phi));
 	}
 
@@ -57,7 +57,7 @@ public :
 			lerp(lerp(ldf, rdf, s.x()), lerp(luf, ruf, s.x()), s.y()), s.z());
 	}
 
-#define OCTAVES 6
+#define OCTAVES 5
 	float fbm(Vector3f p) const {
 		float r = 0;
 		float a = 0.5;
@@ -71,12 +71,13 @@ public :
 
 #define SEED Vector3f(5)
 	float scene(Vector3f p) const {
+		return (p.cwiseProduct(Vector3f(0.5,1,1))).norm()-1+5*fbm(0.3*p);
 		return (p.cwiseProduct(Vector3f(0.5,1,1))+Vector3f(0,0,2)).norm()-3-5*fbm(0.3*p+SEED);
 	}
 
 #define MAX_STEPS 100
-#define MAX_DIST 100
-#define MIN_DIST 0.0001
+#define MAX_DIST 30
+#define MIN_DIST 0.001
 	Vector3f march(Vector3f cam, Vector3f ray) const {
 		float dist = 0.0;
 		float d = 0.0;
@@ -89,7 +90,7 @@ public :
 			if (d < MIN_DIST || dist > MAX_DIST) break;
 			steps++;
 		}
-		if (dist > 90) return Vector3f(-1);
+		if (dist > 25) return Vector3f(-1);
 		return (Vector3f(d,d,d)-Vector3f(scene(p-Vector3f(0.01,0,0)), scene(p-Vector3f(0,0.01,0)), scene(p-Vector3f(0,0,0.01)))).normalized();
 	}
 
