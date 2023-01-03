@@ -173,7 +173,20 @@ public:
 		mu_max = max_rho * (sigma_a + sigma_s);
 	}
 
+	float sampleDist(const Ray3f& ray, float sample) const override {
+		return -log(1-sample) / mu_max;
+	}
+
+	float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const override {
+		float dist = distanceTravelledInMedia(t, medBound);
+		return 1.0f - exp(-mu_max * dist);
+	}
+	float pdfDist(float t) const override {
+		return 1.0f;
+	}
+
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
+
 
 	/// Transmittance between 2 points
 	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound, Sampler* sampler) const override {
