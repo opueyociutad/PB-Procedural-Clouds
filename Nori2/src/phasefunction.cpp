@@ -4,6 +4,7 @@
 
 #include <nori/object.h>
 #include <nori/phasefunction.h>
+#include <nori/frame.h>
 
 NORI_NAMESPACE_BEGIN
 
@@ -16,8 +17,21 @@ public:
 	}
 
 	virtual Color3f sample(PFQueryRecord& mRec, const Point2f &sample) const {
-		throw std::logic_error("Function not yet implemented");
-		return {0};
+		float cosTheta;
+		if (std::abs(g) < 1e-3)
+			cosTheta = 1 - 2 * sample.x();
+		else {
+			float sqrTerm = (1 - g * g) / (1 - g + 2 * g * sample.x());
+			cosTheta = (1 + g * g - sqrTerm * sqrTerm) / (2 * g);
+		}
+		float theta = acos(cosTheta);
+		float sinTheta = std::sqrt(std::max(0.0f, 1 - cosTheta * cosTheta));
+		float phi = 2 * M_PI * sample.y();
+
+		Frame fr(mRec.wi);
+		Vector3f localWo(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+		mRec.wo = fr.toWorld(localWo);
+		return this->eval(mRec);
 	}
 
 	virtual Color3f eval(const PFQueryRecord &mRec) const override {
@@ -26,8 +40,8 @@ public:
 	}
 
 	virtual float pdf(const PFQueryRecord &mRec) const override {
-		throw std::logic_error("Function not yet implemented");
-		return 0;
+		//     phi               azimuth
+		return (0.5f * INV_PI);
 	}
 
 	std::string toString() const override {

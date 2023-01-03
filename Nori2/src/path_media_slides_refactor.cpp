@@ -95,11 +95,11 @@ public :
 		float pdf = 1.0f;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
 			L = scene->transmittance(ray.o, it.p, allMediaBoundaries) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
-			if (intersectedMedia) pdf = 1 - mediacdf(itMedia, it.t);
+			if (intersectedMedia) pdf = 1 - itMedia.cdf(ray, it.t);
 		} else { // Medium interaction!
 			L = scene->transmittance(ray.o, itMedia.p, allMediaBoundaries, itMedia)
 					* InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
-			pdf = 1.0f;
+			pdf = 1.0f; // Simplified with transmittance (doesn't calc transmittance to curr intersection)
 		}
 #warning MISSING NOT INTERSECTING CASE
 

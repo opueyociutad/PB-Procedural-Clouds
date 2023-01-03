@@ -34,7 +34,7 @@
 		</phase>
 
 		<density type="cloud">
-			<float name="seed" value="0"/>
+			<float name="seed" value="7"/>
 		</density>
 
 		<mesh type="obj">

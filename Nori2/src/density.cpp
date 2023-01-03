@@ -21,14 +21,14 @@ NORI_NAMESPACE_BEGIN
 		return v - Vector3f(floor(v.x()), floor(v.y()), floor(v.z()));
 	}
 
-	// Rand 2d (https://www.shadertoy.com/view/4djSRW)
+	// Pseudorandom vector3 to vector2 (https://www.shadertoy.com/view/4djSRW)
 	Vector2f hash23(Vector3f p3) {
 		p3 = fract3(p3.cwiseProduct(Vector3f(0.1031, 0.1030, 0.0973)));
 		p3 = p3 + Vector3f(p3.dot(Vector3f(p3.y(), p3.z(), p3.x())+Vector3f(33.33)));
 		return fract2((Vector2f(p3.x())+Vector2f(p3.y(), p3.z())).cwiseProduct(Vector2f(p3.z(), p3.y())));
 	}
 
-		// Random normalized vector
+	// Random normalized vector3
 	Vector3f randVec(Vector3f p) {
 		Vector2f r = hash23(p);
 		float th = acos(2.*r.x()-1.);
@@ -72,7 +72,7 @@ public:
 
 	virtual float eval(Vector3f p) const override {
 		float n = perlin(2*p+Vector3f(seed));
-		return smoothstep(0.01, -0.1, p.norm()-1);
+		return 0.5+0.5*n;
 	}
 
 	std::string toString() const override {

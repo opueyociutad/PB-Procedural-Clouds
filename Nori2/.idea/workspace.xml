@@ -39,7 +39,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c06758c-7004-4ca6-894c-41cb67ce447f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/media.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/media.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/scene.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/scene.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/nori" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/nori" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/nori/media.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/nori/media.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.exr" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.png" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/media.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/media.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/phasefunction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/phasefunction.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/scene.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,11 +111,6 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.nori">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="CopyIlmBaseLibs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="CopyIlmBaseLibs" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -315,7 +324,11 @@
       <workItem from="1672252448512" duration="1963000" />
       <workItem from="1672336171516" duration="2862000" />
       <workItem from="1672426001837" duration="599000" />
-      <workItem from="1672587583264" duration="3803000" />
+      <workItem from="1672587583264" duration="5349000" />
+      <workItem from="1672611116612" duration="5000" />
+      <workItem from="1672679798534" duration="1376000" />
+      <workItem from="1672708221589" duration="804000" />
+      <workItem from="1672766027387" duration="6491000" />
     </task>
     <servers />
   </component>

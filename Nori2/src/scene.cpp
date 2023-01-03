@@ -128,7 +128,7 @@ float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vect
 		if (medBound.pMedia == medIt.pMedia) {
 			T /= medIt.mu_max;
 		} else {
-			T *= medBound.pMedia->transmittance(x0, xz, medBound);
+			T *= medBound.pMedia->transmittance(x0, xz, medBound, m_sampler);
 		}
 	}
 	return T;
@@ -138,7 +138,7 @@ float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vect
 float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds) const {
 	float T = 1.0f;
 	for (const MediaBoundaries& medBound : medBounds) {
-		T *= medBound.pMedia->transmittance(x0, xz, medBound);
+		T *= medBound.pMedia->transmittance(x0, xz, medBound, m_sampler);
 	}
 	return T;
 }
