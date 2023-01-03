@@ -43,6 +43,7 @@ public:
 		ESampler,
 		ETest,
 		EReconstructionFilter,
+		EDensityFunction,
 		EClassTypeCount
 	};
 
@@ -101,6 +102,7 @@ public:
 			case EMedium:           return "medium";
 			case EPhaseFunction:    return "phasefunction";
 			case ETest:             return "test";
+			case EDensityFunction:  return "densityFunction";
 			default:                return "<unknown>";
 		}
 	}

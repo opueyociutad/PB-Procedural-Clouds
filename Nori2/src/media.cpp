@@ -8,8 +8,7 @@
 
 NORI_NAMESPACE_BEGIN
 
-
-PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSampler), m_accel(new Accel) {}
+PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSampler), m_accel(new Accel), m_densityFunction(nullptr) {}
 
 float MediaIntersection::pdf() const {
 	const FreePathSampler* sampler = pMedia->getFreePathSampler();
@@ -91,6 +90,13 @@ void PMedia::addChild(NoriObject *obj, const std::string& name) {
 				m_phaseFunction = static_cast<PhaseFunction*>(obj);
 			}
 		break;
+		case EDensityFunction: {
+				if (m_densityFunction) {
+					throw NoriException("There can only be one Density Function per participating Media!");
+				}
+				m_densityFunction = static_cast<DensityFunction*>(obj);
+			}
+		break;
 		default: {
 		}
 	}
@@ -149,7 +155,6 @@ public:
 
 NORI_REGISTER_CLASS(HomogeneousMedia, "homogeneous_media");
 
-
 class HeterogeneousMedia : public PMedia {
 private:
 	/// Max density of the media
@@ -169,7 +174,12 @@ public:
 		mu_max = max_rho * (sigma_a + sigma_s);
 	}
 
-	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
+	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
+		float d = m_densityFunction->eval(p);
+		float mu_a = d * max_rho * sigma_a;
+		float mu_s = d * max_rho * sigma_s;
+		return {mu_a, mu_s, mu_max};
+	}
 
 	/// Transmittance between 2 points
 	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const override {
@@ -188,8 +198,7 @@ public:
 		const float MAX_MARCH_T = (yEnd - yStart).norm();
 		float tau_t = 0.0f;
 		for (float t = 0.0f; t <= MAX_MARCH_T; t += dt) {
-			Point3f queryPt = yStart + t*d;
-			MediaCoeffs mediaCoeffs = this->getMediaCoeffs(queryPt);
+			MediaCoeffs mediaCoeffs = this->getMediaCoeffs(yStart+t*d);
 			tau_t += (mediaCoeffs.mu_a + mediaCoeffs.mu_s);
 		}
 		tau_t *= dt;
@@ -199,6 +208,7 @@ public:
 
 	std::string toString() const override {
 		std::string pf = m_phaseFunction->toString();
+		std::string df = m_densityFunction->toString();
 		return tfm::format(
 				"HeterogeneousMedia[\n"
 				"  max_rho = %f,\n"
@@ -206,12 +216,17 @@ public:
 				"  sigma_s = %f,\n"
 				"  mu_t    = %f,\n"
 				"  pf      = %s\n"
+				"  df      = %s\n"
 				"]",
 				max_rho,
 				sigma_a,
 				sigma_s,
 				mu_max,
-				indent(pf, 2));
+				indent(pf, 2),
+				indent(df, 2));
 	}
 };
+
+NORI_REGISTER_CLASS(HeterogeneousMedia, "heterogeneous_media");
+
 NORI_NAMESPACE_END
