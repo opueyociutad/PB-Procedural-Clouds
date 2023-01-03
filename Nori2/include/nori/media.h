@@ -3,16 +3,15 @@
 //
 
 #pragma once
-#include <nori/object.h>
-#include <nori/accel.h>
-NORI_NAMESPACE_BEGIN
 
 #include <nori/object.h>
+#include <nori/accel.h>
 #include <nori/frame.h>
 #include <nori/bbox.h>
 #include <nori/dpdf.h>
-
 #include <utility>
+
+NORI_NAMESPACE_BEGIN
 
 
 struct MediaCoeffs {
@@ -37,27 +36,6 @@ struct MediaCoeffs {
 	friend std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m);
 };
 
-
-class FreePathSampler {
-public:
-
-	FreePathSampler() {};
-
-	/// Returns the distance t to collision wrt mu_t
-	float sample(float mu_t, float sample) const {
-		return -log(1-sample) / mu_t;
-	}
-
-	/// Returns the pdf of the sample t wrt mu_t
-	float pdf(float mu_t, float t) const {
-		return mu_t * exp(- mu_t * t);
-	}
-
-	/// Returns the cdf of the sample t wrt mu_t
-	float cdf(float mu_t, float t) const {
-		return 1 - exp(- mu_t * t);
-	}
-};
 
 struct MediaBoundaries {
 	/// Associated pMedia
@@ -97,29 +75,34 @@ struct MediaIntersection {
 			p(std::move(_p)), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound) {}
 
 	float pdf() const;
+
+	float cdf(const Ray3f& ray, float closerT) const;
 };
 
-/// Calculates cdf across all medias that are not it up to distance t
-float mediacdf(const MediaIntersection& mediaIts, float t);
 
 class PMedia : public NoriObject {
 protected:
 	/// Bounding box
-	Mesh* m_mesh;
+	Mesh* m_mesh = nullptr;
 	/// Accelerated bounding box of the associated mesh
 	Accel* m_accel;
 	/// Phase function of the media
-	PhaseFunction* m_phaseFunction;
-	/// Free path sampler
-	FreePathSampler* m_freePathSampler;
+	PhaseFunction* m_phaseFunction = nullptr;
 
 	/// Max free path coefficient
-	float mu_max;
+	float mu_max = 0.0f;
 
 public:
-	PMedia(FreePathSampler* freePathSampler);
+	PMedia();
+
+	virtual float sampleDist(const Ray3f& ray, float sample) const = 0;
+
+	virtual float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const = 0;
+
+	virtual float pdfDist(float t) const = 0;
+
 	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const = 0;
+	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound, Sampler* sampler) const = 0;
 
 	/// Media coefficients
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const = 0;
@@ -132,9 +115,6 @@ public:
 
 	/// Phase function getter
 	const PhaseFunction* getPhaseFunction() const { return m_phaseFunction; }
-
-	/// Free path sampler getter
-	const FreePathSampler* getFreePathSampler() const { return m_freePathSampler; }
 
 	/// Gets max free path coefficient
 	float getMu_t() const { return mu_max; }

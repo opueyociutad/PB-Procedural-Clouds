@@ -5,17 +5,25 @@
 #include <nori/common.h>
 #include <nori/media.h>
 #include <nori/phasefunction.h>
+#include <nori/sampler.h>
 
 NORI_NAMESPACE_BEGIN
 
+float distanceTravelledInMedia(float t, const MediaBoundaries& medBound) {
+	if (medBound.wasInside) return std::min(t, medBound.tOut);
+	else if (t > medBound.tBoundary) return std::min(medBound.tOut - medBound.tBoundary, t - medBound.tBoundary);
+	else return 0.0f;
+}
 
-PMedia::PMedia(FreePathSampler* freePathSampler) : m_freePathSampler(freePathSampler), m_accel(new Accel) {}
+
+PMedia::PMedia() : m_accel(new Accel) {}
+
+float MediaIntersection::cdf(const Ray3f& ray, float closerT) const {
+	return this->pMedia->cdfDist(ray, closerT, this->medBound);
+}
 
 float MediaIntersection::pdf() const {
-	const FreePathSampler* sampler = pMedia->getFreePathSampler();
-	float tIn = t - medBound.tBoundary;
-#warning pdf might not be properly calculated with boundaries
-	return sampler->pdf(mu_max, tIn);
+	return this->pMedia->pdfDist(t);
 }
 
 std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
@@ -23,19 +31,6 @@ std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
 	return os;
 }
 
-float mediacdf(const MediaIntersection& mediaIts, float t) {
-	float cdf;
-	float mu_t = mediaIts.mu_max;
-	const FreePathSampler* fsm = mediaIts.pMedia->getFreePathSampler();
-	if (mediaIts.medBound.wasInside) {
-		cdf = fsm->cdf(mu_t, std::min(t, mediaIts.medBound.tOut));
-	} else if (t < mediaIts.medBound.tBoundary){
-		cdf = 0.0f;
-	} else {
-		cdf = fsm->cdf(mu_t, std::min(t, mediaIts.medBound.tOut) - mediaIts.medBound.tBoundary);
-	}
-	return cdf;
-}
 
 bool PMedia::rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoundaries) const {
 	Intersection its;
@@ -58,7 +53,7 @@ bool PMedia::rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoun
 bool PMedia::rayIntersectSample(const Ray3f& ray, const MediaBoundaries& boundaries, float sample, MediaIntersection& medIts) const {
 	if (!boundaries.intersected) return false;
 	else {
-		float t = m_freePathSampler->sample(mu_max, sample);
+		float t = this->sampleDist(ray, sample);
 		if (boundaries.wasInside) {
 			if (t > boundaries.tOut) return false;
 			else {
@@ -107,27 +102,36 @@ private:
 	float mu_a, mu_s;
 public:
 
-	explicit HomogeneousMedia(const PropertyList &propList) :
-		PMedia(new FreePathSampler)
-	{
+	explicit HomogeneousMedia(const PropertyList &propList)	{
 		rho = propList.getFloat("rho", 0.0f);
 		sigma_a = propList.getFloat("sigma_a", 0.0f);
 		sigma_s = propList.getFloat("sigma_s", 0.0f);
 		mu_a = rho * sigma_a;
 		mu_s = rho * sigma_s;
-		mu_max = mu_s + mu_a;
+		mu_max = mu_s + mu_a; // mu_max = mu_t
+	}
+
+	float sampleDist(const Ray3f& ray, float sample) const override {
+		return -log(1-sample) / mu_max;
+	}
+
+	float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const override {
+		float dist = distanceTravelledInMedia(t, medBound);
+		return 1 - exp(-mu_max * dist);
+	}
+
+	float pdfDist(float t) const override {
+		return mu_max * exp(- mu_max * t);
 	}
 
 	MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
 		return {mu_a, mu_s, mu_max};
 	}
 
-	float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const override {
+	float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound, Sampler* sampler) const override {
 		float t = (xz-x0).norm();
-		if (medBound.wasInside) t = std::min(t, medBound.tOut);
-		else if (t > medBound.tBoundary) t = std::min(medBound.tOut - medBound.tBoundary, t - medBound.tBoundary);
-		else return 1.0f; // Case not intersecting media
-		return exp(-mu_max * t);
+		float dist = distanceTravelledInMedia(t, medBound);
+		return exp(-mu_max * dist);
 	}
 
 	std::string toString() const override {
@@ -161,8 +165,7 @@ private:
 	float dt;
 
 public:
-	explicit HeterogeneousMedia(const PropertyList &propList) :
-			PMedia(new FreePathSampler)	{
+	explicit HeterogeneousMedia(const PropertyList &propList) {
 		max_rho = propList.getFloat("max_rho", 0.0f);
 		sigma_a = propList.getFloat("sigma_a", 0.0f);
 		sigma_s = propList.getFloat("sigma_s", 0.0f);
@@ -173,29 +176,29 @@ public:
 	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override;
 
 	/// Transmittance between 2 points
-	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound) const override {
+	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound, Sampler* sampler) const override {
 		float tPts = (xz - x0).norm();
 		Vector3f d = (xz - x0).normalized();
+		float tMin, tMax;
 		Point3f yStart, yEnd;
 		if (medBound.wasInside) {
-			yStart = x0;
-			yEnd = (tPts < medBound.tOut) ? xz : (x0 + d * medBound.tOut);
+			tMin = 0;
+			tMax = std::min(tPts, medBound.tOut);
 		} else if (tPts > medBound.tBoundary) {
-			yStart = x0 + medBound.tBoundary*d;
-			yEnd = (tPts < medBound.tOut) ? xz : (x0 + d * medBound.tOut);
+			tMin = medBound.tBoundary;
+			tMax = std::min(tPts, medBound.tOut);
 		} else return 1.0f; // Case not intersecting media
 
-		// Ray marching to estimate tau(t)
-		const float MAX_MARCH_T = (yEnd - yStart).norm();
-		float tau_t = 0.0f;
-		for (float t = 0.0f; t <= MAX_MARCH_T; t += dt) {
-			Point3f queryPt = yStart + t*d;
-			MediaCoeffs mediaCoeffs = this->getMediaCoeffs(queryPt);
-			tau_t += (mediaCoeffs.mu_a + mediaCoeffs.mu_s);
+		// Ratio tracking
+		float tr = 1.0f;
+		float t = tMin;
+		while (true) {
+			t -= std::log(1 - sampler->next1D()) *  mu_max;
+			if (t > tMax) break;
+			MediaCoeffs mc = this->getMediaCoeffs(yStart + t*d);
+			tr *= (1 - std::max(0.0f, (mc.mu_a + mc.mu_s) / mc.mu_max));
 		}
-		tau_t *= dt;
-
-		return exp(-tau_t);
+		return tr;
 	}
 
 	std::string toString() const override {
