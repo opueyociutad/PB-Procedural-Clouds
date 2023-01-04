@@ -45,6 +45,7 @@
       <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/nori" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/nori" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/nori/media.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/nori/media.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" afterDir="false" />
     </list>
@@ -327,7 +328,7 @@
       <workItem from="1672679798534" duration="1376000" />
       <workItem from="1672708221589" duration="804000" />
       <workItem from="1672766027387" duration="7687000" />
-      <workItem from="1672850125089" duration="7007000" />
+      <workItem from="1672850125089" duration="8739000" />
     </task>
     <servers />
   </component>

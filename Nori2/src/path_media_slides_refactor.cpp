@@ -54,11 +54,6 @@ public :
 		Color3f Lems(0);
 		Color3f Lmat(0);
 
-		if (it.mesh->isEmitter()) {
-			EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
-			return it.mesh->getEmitter()->eval(lightEmitterRecord);
-		}
-
 		// Sample the emitter
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
@@ -95,7 +90,12 @@ public :
 		Color3f L(0.0f);
 		float pdf = 1.0f;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
-			L = scene->transmittance(ray.o, it.p, allMediaBoundaries, itMedia) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
+			if (it.mesh->isEmitter()) {
+				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
+				return it.mesh->getEmitter()->eval(lightEmitterRecord);
+			} else {
+				L = scene->transmittance(ray.o, it.p, allMediaBoundaries, itMedia) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
+			}
 			//if (intersectedMedia) pdf = 1 - itMedia.cdf(ray, it.t);
 			// pdf is 1 since sampling according to transmittance
 			// "The probability of not sampling a medium interaction is equal to the transmittance of the ray segment"

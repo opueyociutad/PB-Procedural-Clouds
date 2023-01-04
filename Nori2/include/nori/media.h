@@ -75,10 +75,10 @@ struct MediaIntersection {
 	MediaIntersection(): it_pdf(1.0f), pMedia(nullptr) {}
 
 	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const float _mu_t, const MediaBoundaries& _medBound) :
-			p(std::move(_p)), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound), it_pdf(1.0f) {}
+			p(_p), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound), it_pdf(1.0f) {}
 
 	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const float _mu_t, const MediaBoundaries& _medBound, float _it_pdf) :
-			p(std::move(_p)), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound), it_pdf(_it_pdf) {}
+			p(_p), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound), it_pdf(_it_pdf) {}
 
 	float cdf(const Ray3f& ray, float closerT) const;
 };
