@@ -161,6 +161,7 @@ public:
 private:
 	std::vector<Mesh *> m_meshes;
 	std::vector<Emitter *> m_emitters;
+	std::vector<PMedia *> m_medias;
 
 	Emitter *m_enviromentalEmitter = nullptr;
 
@@ -170,9 +171,6 @@ private:
 	Accel *m_accel = nullptr;
 
 	DiscretePDF m_pdf;
-public:
-	std::vector<PMedia *> m_medias;
-
 };
 
 NORI_NAMESPACE_END

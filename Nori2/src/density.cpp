@@ -114,13 +114,26 @@ private:
 		return lerp(lerp(lerp(ldb, rdb, s.x()), lerp(lub, rub, s.x()), s.y()),
 			lerp(lerp(ldf, rdf, s.x()), lerp(luf, ruf, s.x()), s.y()), s.z());
 	}
+
+#define OCTAVES 5
+	float fbm(Vector3f p) const {
+		float r = 0;
+		float a = 0.5;
+		for (int i = 0; i < OCTAVES; i++) {
+			r += a*perlin(p);
+			a *= 0.5;
+			p *= 2;
+		}
+		return r;
+	}
+
 public:
 	explicit Cloud(const PropertyList &propList) {
 		seed = propList.getFloat("seed", 0.0f);
 	}
 
 	virtual float eval(Vector3f p) const override {
-		float n = perlin(2*p+Vector3f(seed));
+		float n = fbm(2*p+Vector3f(seed));
 		return smoothstep(0,0.9,n);
 	}
 
