@@ -15,7 +15,7 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="128"/>
+		<integer name="sampleCount" value="1024"/>
 	</sampler>
 
 	<!-- Define the light source
@@ -73,7 +73,7 @@
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
 		<float name="sigma_a" value="0.05" />
-		<float name="sigma_s" value="0.3" />
+		<float name="sigma_s" value="0.65" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0.0" />

@@ -26,7 +26,7 @@ public :
 		Color3f Lems(0);
 
 		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
-		float inscatteringPDF = coeffs.mu_s / (coeffs.mu_s + coeffs.mu_n);
+		float inscatteringPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
 		// Sample
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
@@ -73,13 +73,13 @@ public :
 		Color3f Lmis = Lems;
 
 		// Russian roulette for termination
-		BSDFQueryRecord bsdfRecord(it.toLocal(ray.d), it.uv);
+		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f throughput = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		float pdfRR;
 		if (RR(throughput.getLuminance(), sampler, pdfRR)) {
 			return Lmis;
 		}
-		cout << "Nuevo rayo!!" << endl;
+
 		Ray3f newRay(it.p, it.toWorld(bsdfRecord.wo));
 		return Lmis + throughput * this->Li(scene, sampler, newRay) / pdfRR;
 	}
