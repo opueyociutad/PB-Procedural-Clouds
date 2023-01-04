@@ -86,13 +86,7 @@ public:
 	}
 
 	virtual float eval(Vector3f p) const override {
-		return 0.0001;
-		p += Vector3f(seed);
-		p -= Vector3f(floor(p.x()), floor(p.y()), floor(p.z()));
-		return (p-Vector3f(0.5)).norm() < 0.3 ? 0.9999 : 0.0001;
-		float n = perlin(p+Vector3f(seed));
-		if (n < 0) cout << "SUGMA" << n << endl;
-		if (n > 1) cout << "SUGMA" << n<< endl;
+		float n = perlin(2*p+Vector3f(seed));
 		return n-0.0001;
 	}
 

@@ -177,7 +177,7 @@ public:
 		mu_max = max_rho * (sigma_a + sigma_s);
 	}
 
-	virtual MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
+	MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
 		float d = m_densityFunction->eval(p);
 		float mu_a = d * max_rho * sigma_a;
 		float mu_s = d * max_rho * sigma_s;
@@ -189,11 +189,15 @@ public:
 		else {
 			float t = boundaries.wasInside ? 0.0f : boundaries.tBoundary;
 			MediaCoeffs cfs;
+			int i = 0;
 			while (true) {
+				i++;
 				t += sampleDist(sampler->next1D());
-				if (t > boundaries.tOut) return false;
+				if (t > boundaries.tOut) {
+					return false;
+				}
 				cfs = this->getMediaCoeffs(ray.o + ray.d * t);
-				if (cfs.mu_n < sampler->next1D()) break;
+				if ((cfs.mu_n / mu_max) < sampler->next1D()) break;
 			}
 			medIts = MediaIntersection(ray.o + ray.d * t, t, this, mu_max, boundaries, cfs.mu_s / cfs.mu_max);
 			return true;
@@ -223,7 +227,7 @@ public:
 		float tr = 1.0f;
 		float t = tMin;
 		while (true) {
-			t += -std::log(1 - sampler->next1D()) / mu_max;
+			t += sampleDist(sampler->next1D());
 			if (t > tMax) break;
 			MediaCoeffs mc = this->getMediaCoeffs(x0 + t*d);
 			/// Max-check just in case
