@@ -27,7 +27,7 @@ struct MediaCoeffs {
 
 	MediaCoeffs() {}
 
-	MediaCoeffs(float _mu_a, float _mu_s, float _mu_t) : mu_a(_mu_a), mu_s(_mu_s), mu_max(_mu_t) {
+	MediaCoeffs(float _mu_a, float _mu_s, float _mu_max) : mu_a(_mu_a), mu_s(_mu_s), mu_max(_mu_max) {
 		mu_n = mu_max - (mu_a + mu_s);
 	}
 
@@ -100,6 +100,8 @@ protected:
 
 public:
 	PMedia();
+
+	~PMedia();
 
 	float sampleDist(float sample) const { return -log(1-sample) / mu_max; }
 

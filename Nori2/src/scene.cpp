@@ -100,7 +100,7 @@ std::vector<MediaBoundaries> Scene::rayIntersectMediaBoundaries(const Ray3f& ray
 	for (const PMedia* media : m_medias) {
 		MediaBoundaries currMedBound;
 		if (media->rayIntersectBoundaries(ray, currMedBound)) {
-			allMediaBoundaries.emplace_back(currMedBound);
+			allMediaBoundaries.push_back(currMedBound);
 		}
 	}
 	return allMediaBoundaries;

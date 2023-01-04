@@ -18,6 +18,13 @@ float distanceTravelledInMedia(float t, const MediaBoundaries& medBound) {
 
 PMedia::PMedia() : m_accel(new Accel), m_densityFunction(nullptr) {}
 
+PMedia::~PMedia() {
+	delete m_mesh;
+	delete m_accel;
+	delete m_densityFunction;
+	delete m_phaseFunction;
+}
+
 float MediaIntersection::cdf(const Ray3f& ray, float closerT) const {
 	return this->pMedia->cdfDist(ray, closerT, this->medBound);
 }
@@ -32,15 +39,18 @@ bool PMedia::rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoun
 	Intersection its;
 	if (!m_accel->rayIntersect(ray, its, false)) return false;
 
-	bool inside = its.shFrame.n.dot(ray.d) >= 0;
+	float cos = its.geoFrame.n.dot(ray.d);
+	bool inside = cos >= 0;
 	if (inside) {
 		mediaBoundaries = MediaBoundaries(this, true, 0.0f, true, its.t);
 	} else {
 		// little march as sanity check
-		const float rayMarchTrick = 0.00001f;
+		const float rayMarchTrick = 0.0001f;
 		Ray3f insideRay(its.p + rayMarchTrick*ray.d, ray.d);
 		Intersection itsInside;
-		m_accel->rayIntersect(insideRay, itsInside, false);
+		bool intersected = m_accel->rayIntersect(insideRay, itsInside, false);
+		// Sometimes it has some errors at corners...
+		if (!intersected) return false;
 		mediaBoundaries = MediaBoundaries(this, true, its.t, false,  its.t + itsInside.t - rayMarchTrick);
 	}
 	return true;
@@ -200,7 +210,6 @@ public:
 		float tPts = (xz - x0).norm();
 		Vector3f d = (xz - x0).normalized();
 		float tMin, tMax;
-		Point3f yStart, yEnd;
 		if (medBound.wasInside) {
 			tMin = 0;
 			tMax = std::min(tPts, medBound.tOut);
@@ -216,7 +225,8 @@ public:
 		while (true) {
 			t += -std::log(1 - sampler->next1D()) * mu_max;
 			if (t > tMax) break;
-			MediaCoeffs mc = this->getMediaCoeffs(yStart + t*d);
+			MediaCoeffs mc = this->getMediaCoeffs(x0 + t*d);
+			/// Max-check just in case
 			tr *= (1 - std::max(0.0f, (mc.mu_a + mc.mu_s) / mc.mu_max));
 		}
 		return tr;

@@ -76,6 +76,7 @@ public :
 		}
 
 		Ray3f newRay(it.p, it.toWorld(bsdfRecord.wo));
+		return Lmis;
 		return Lmis + throughput * this->Li(scene, sampler, newRay) / pdfRR;
 	}
 
