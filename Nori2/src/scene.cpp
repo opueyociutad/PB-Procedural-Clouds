@@ -111,7 +111,7 @@ bool Scene::rayIntersectMediaSample(const Ray3f& ray, const std::vector<MediaBou
 	float closestT = INFINITY;
 	for (const MediaBoundaries& mediaBound : allMediaBoundaries) {
 		MediaIntersection currMedIts;
-		if (mediaBound.pMedia->rayIntersectSample(ray, mediaBound, m_sampler->next1D(), currMedIts) &&
+		if (mediaBound.pMedia->rayIntersectSample(ray, mediaBound, m_sampler, currMedIts) &&
 				(!hasIntersected || currMedIts.t < closestT)) {
 			hasIntersected = true;
 			closestT = currMedIts.t;
@@ -125,9 +125,7 @@ bool Scene::rayIntersectMediaSample(const Ray3f& ray, const std::vector<MediaBou
 float Scene::transmittance(const Point3f& x0, const Point3f& xz, const std::vector<MediaBoundaries>& medBounds, const MediaIntersection& medIt) const {
 	float T = 1.0f;
 	for (const MediaBoundaries& medBound : medBounds) {
-		if (medBound.pMedia == medIt.pMedia) {
-			T /= medIt.mu_max;
-		} else {
+		if (medBound.pMedia != medIt.pMedia) {
 			T *= medBound.pMedia->transmittance(x0, xz, medBound, m_sampler);
 		}
 	}

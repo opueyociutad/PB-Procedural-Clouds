@@ -29,7 +29,7 @@
 		<string name="filename" value="meshes/walls.obj"/>
 
 		<bsdf type="diffuse">
-			<color name="albedo" value="0.065 0.630 0.05"/>
+			<color name="albedo" value="0.630 0.630 0.630"/>
 		</bsdf>
 	</mesh>
 
@@ -54,7 +54,7 @@
 		<string name="filename" value="meshes/light.obj"/>
 
 		<emitter type="area">
-			<color name="radiance" value="1 1 1"/>
+			<color name="radiance" value="40 40 40"/>
 		</emitter>
 	</mesh>
 	<!--
@@ -72,8 +72,8 @@
 
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
-		<float name="sigma_a" value="0.1" />
-		<float name="sigma_s" value="0.4" />
+		<float name="sigma_a" value="0.05" />
+		<float name="sigma_s" value="0.3" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0.0" />

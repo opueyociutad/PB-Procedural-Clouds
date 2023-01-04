@@ -22,10 +22,6 @@ float MediaIntersection::cdf(const Ray3f& ray, float closerT) const {
 	return this->pMedia->cdfDist(ray, closerT, this->medBound);
 }
 
-float MediaIntersection::pdf() const {
-	return this->pMedia->pdfDist(t);
-}
-
 std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
 	os << "MediaCoeffs[mu_a: " << m.mu_a << ", mu_s: " << m.mu_s << ", mu_n: " << m.mu_n << ", mu_t: " << m.mu_max << "]";
 	return os;
@@ -48,27 +44,6 @@ bool PMedia::rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoun
 		mediaBoundaries = MediaBoundaries(this, true, its.t, false,  its.t + itsInside.t - rayMarchTrick);
 	}
 	return true;
-}
-
-bool PMedia::rayIntersectSample(const Ray3f& ray, const MediaBoundaries& boundaries, float sample, MediaIntersection& medIts) const {
-	if (!boundaries.intersected) return false;
-	else {
-		float t = this->sampleDist(ray, sample);
-		if (boundaries.wasInside) {
-			if (t > boundaries.tOut) return false;
-			else {
-				medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_max, boundaries);
-				return true;
-			}
-		} else {
-			if (t > boundaries.tOut) return false;
-			else {
-				t += boundaries.tBoundary;
-				medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_max, boundaries);
-				return true;
-			}
-		}
-	}
 }
 
 void PMedia::addChild(NoriObject *obj, const std::string& name) {
@@ -118,17 +93,30 @@ public:
 		mu_max = mu_s + mu_a; // mu_max = mu_t
 	}
 
-	float sampleDist(const Ray3f& ray, float sample) const override {
-		return -log(1-sample) / mu_max;
+	bool rayIntersectSample(const Ray3f& ray, const MediaBoundaries& boundaries, Sampler* sampler, MediaIntersection& medIts) const override {
+		if (!boundaries.intersected) return false;
+		else {
+			float t = this->sampleDist(sampler->next1D());
+			if (boundaries.wasInside) {
+				if (t > boundaries.tOut) return false;
+				else {
+					medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_max, boundaries);
+					return true;
+				}
+			} else {
+				if (t > boundaries.tOut) return false;
+				else {
+					t += boundaries.tBoundary;
+					medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_max, boundaries);
+					return true;
+				}
+			}
+		}
 	}
 
 	float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const override {
 		float dist = distanceTravelledInMedia(t, medBound);
 		return 1 - exp(-mu_max * dist);
-	}
-
-	float pdfDist(float t) const override {
-		return mu_max * exp(- mu_max * t);
 	}
 
 	MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
@@ -186,16 +174,25 @@ public:
 		return {mu_a, mu_s, mu_max};
 	}
 
-	float sampleDist(const Ray3f& ray, float sample) const override {
-		return -log(1-sample) / mu_max;
+	bool rayIntersectSample(const Ray3f& ray, const MediaBoundaries& boundaries, Sampler* sampler, MediaIntersection& medIts) const override {
+		if (!boundaries.intersected) return false;
+		else {
+			float t = boundaries.wasInside ? 0.0f : boundaries.tBoundary;
+			MediaCoeffs cfs;
+			while (true) {
+				t += sampleDist(sampler->next1D());
+				if (t > boundaries.tOut) return false;
+				cfs = this->getMediaCoeffs(ray.o + ray.d * t);
+				if (cfs.mu_n < sampler->next1D()) break;
+			}
+			medIts = MediaIntersection(ray.o + ray.d * t, t, this, mu_max, boundaries, cfs.mu_s / cfs.mu_max);
+			return true;
+		}
 	}
 
 	float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const override {
 		float dist = distanceTravelledInMedia(t, medBound);
 		return 1.0f - exp(-mu_max * dist);
-	}
-	float pdfDist(float t) const override {
-		return 1.0f;
 	}
 
 	/// Transmittance between 2 points
@@ -212,11 +209,12 @@ public:
 			tMax = std::min(tPts, medBound.tOut);
 		} else return 1.0f; // Case not intersecting media
 
-		// Ratio tracking
+		// Ratio tracking, similar from PBRT
+		// https://www.pbr-book.org/3ed-2018/Light_Transport_II_Volume_Rendering/Sampling_Volume_Scattering
 		float tr = 1.0f;
 		float t = tMin;
 		while (true) {
-			t -= std::log(1 - sampler->next1D()) *  mu_max;
+			t += -std::log(1 - sampler->next1D()) * mu_max;
 			if (t > tMax) break;
 			MediaCoeffs mc = this->getMediaCoeffs(yStart + t*d);
 			tr *= (1 - std::max(0.0f, (mc.mu_a + mc.mu_s) / mc.mu_max));

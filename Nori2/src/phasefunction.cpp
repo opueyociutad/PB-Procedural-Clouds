@@ -17,9 +17,11 @@ public:
 	}
 
 	Color3f sample(PFQueryRecord& mRec, const Point2f &sample) const override {
+		// similar from pbrt
+		// https://www.pbr-book.org/3ed-2018/Light_Transport_II_Volume_Rendering/Sampling_Volume_Scattering
 		float cosTheta;
-		if (std::abs(g) < 1e-3)
-			cosTheta = 1 - 2 * sample.x();
+		// g=0
+		if (std::abs(g) < 1e-3) cosTheta = 1 - 2 * sample.x();
 		else {
 			float sqrTerm = (1 - g * g) / (1 - g + 2 * g * sample.x());
 			cosTheta = (1 + g * g - sqrTerm * sqrTerm) / (2 * g);
@@ -30,17 +32,17 @@ public:
 		Frame fr(mRec.wi);
 		Vector3f localWo(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 		mRec.wo = fr.toWorld(localWo);
-		return this->eval(mRec);
+		return {1.0f};
 	}
 
 	Color3f eval(const PFQueryRecord &mRec) const override {
 		float cosTheta = mRec.wi.dot(mRec.wo);
-		return (1/M_PI) * (1 - g*g)/(1 + g*g - 2*g*cosTheta);
+		return (1.0f/(4.0f*M_PI)) * (1.0f - g*g)/pow(1.0f + g*g - 2.0f*g*cosTheta, 1.5);
 	}
 
 	float pdf(const PFQueryRecord &mRec) const override {
-		//     phi               azimuth
-		return (0.5f * INV_PI) * mRec.wi.dot(mRec.wo);
+		float cosTheta = mRec.wi.dot(mRec.wo);
+		return (1.0f/(4.0f*M_PI)) * (1.0f - g*g)/pow(1.0f + g*g - 2.0f*g*cosTheta, 1.5);
 	}
 
 	std::string toString() const override {
