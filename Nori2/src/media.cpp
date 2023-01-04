@@ -40,7 +40,7 @@ bool PMedia::rayIntersectBoundaries(const Ray3f& ray, MediaBoundaries& mediaBoun
 		const float rayMarchTrick = 0.00001f;
 		Ray3f insideRay(its.p + rayMarchTrick*ray.d, ray.d);
 		Intersection itsInside;
-		m_accel->rayIntersect(ray, itsInside, false);
+		m_accel->rayIntersect(insideRay, itsInside, false);
 		mediaBoundaries = MediaBoundaries(this, true, its.t, false,  its.t + itsInside.t - rayMarchTrick);
 	}
 	return true;
