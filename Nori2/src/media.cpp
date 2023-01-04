@@ -223,7 +223,7 @@ public:
 		float tr = 1.0f;
 		float t = tMin;
 		while (true) {
-			t += -std::log(1 - sampler->next1D()) * mu_max;
+			t += -std::log(1 - sampler->next1D()) / mu_max;
 			if (t > tMax) break;
 			MediaCoeffs mc = this->getMediaCoeffs(x0 + t*d);
 			/// Max-check just in case
