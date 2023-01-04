@@ -1,3 +1,4 @@
+
 #include <nori/warp.h>
 #include <nori/integrator.h>
 #include <nori/scene.h>
@@ -71,8 +72,8 @@ public :
 
 #define SEED Vector3f(5)
 	float scene(Vector3f p) const {
-		return (p.cwiseProduct(Vector3f(0.5,1,1))).norm()-1+5*fbm(0.3*p);
-		return (p.cwiseProduct(Vector3f(0.5,1,1))+Vector3f(0,0,2)).norm()-3-5*fbm(0.3*p+SEED);
+		float n = 0.5*perlin(5*p+Vector3f(0));
+		return fmax(n, p.norm()-1);
 	}
 
 #define MAX_STEPS 100
@@ -106,3 +107,4 @@ public :
 
 NORI_REGISTER_CLASS(PathSDF, "path_sdf");
 NORI_NAMESPACE_END
+

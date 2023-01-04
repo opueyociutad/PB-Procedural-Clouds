@@ -93,12 +93,12 @@ protected:
 	/// Phase function of the media
 	PhaseFunction* m_phaseFunction = nullptr;
 	// Procedural density function of the media, only used in heterogeneous media
-	DensityFunction* m_densityFunction;
 
 	/// Max free path coefficient
 	float mu_max = 0.0f;
 
 public:
+	DensityFunction* m_densityFunction;
 	PMedia();
 
 	~PMedia();
