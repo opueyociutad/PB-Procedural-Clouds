@@ -7,7 +7,7 @@
 		<float name="fov" value="60.7856"/>
 		<transform name="toWorld">
 			<scale value="1,1,1"/>
-			<lookat target="0, 0, 0" origin="0, 0, 4" up="0, 1, 0"/>
+			<lookat target="0, 0, 0" origin="3, 3, 5" up="0, 1, 0"/>
 		</transform>
 
 		<integer name="height" value="600"/>
@@ -20,7 +20,7 @@
 
 	<emitter type="pointlight">
 		<color name="radiance" value="100, 100, 100"/>
-		<point name="position" value="2, 1, 1"/>
+		<point name="position" value="0, 2, 0"/>
 	</emitter>
 
 	<medium type="heterogeneous_media">
@@ -34,7 +34,7 @@
 		</phase>
 
 		<density type="cloud">
-			<float name="seed" value="7"/>
+			<float name="seed" value="0"/>
 		</density>
 
 		<mesh type="obj">

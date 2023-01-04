@@ -2,14 +2,15 @@
 
 NORI_NAMESPACE_BEGIN
 
-
-	// Linear interpolation
-	double lerp(double a, double b, double t) {
-		return (1-t)*a + t*b;
+	float smoothstep(float a, float b, float x) {
+		if (x <= a) return 0;
+		if (x >= b) return 1;
+		x = (x-a) / (b-a);
+		return x*x*(3-2*x);
 	}
 
-	float smoothstep(float a, float b, float x) {
-		return x < a ? a : (x > b ? b : 3*x*x - 2*x*x*x);
+	float fract(float t) {
+		return t - floor(t);
 	}
 
 	Vector2f fract2(Vector2f v) {
@@ -28,6 +29,16 @@ NORI_NAMESPACE_BEGIN
 		return fract2((Vector2f(p3.x())+Vector2f(p3.y(), p3.z())).cwiseProduct(Vector2f(p3.z(), p3.y())));
 	}
 
+	float hash13(Vector3i p3) {
+		return ((int)abs(p3.y()) % 2) == 0 ? 1 : 0;
+		Vector3f p = p3.cast<float>();
+		p *= 1500;
+		p  = fract3(p * .1031);
+		p += Vector3f(p.dot(Vector3f(p.z(), p.y(), p.x()) + Vector3f(31.32)));
+		float r = fract((p.x() + p.y()) * p.z());
+		return r;
+	}
+
 	// Random normalized vector3
 	Vector3f randVec(Vector3f p) {
 		Vector2f r = hash23(p);
@@ -37,19 +48,23 @@ NORI_NAMESPACE_BEGIN
 	}
 
 	float perlin(Vector3f p) {
-		Vector3f i = Vector3f(floor(p.x()), floor(p.y()), floor(p.z()));
-		Vector3f f = p-i;
+		Vector3i i = Vector3i(floor(p.x()), floor(p.y()), floor(p.z()));
+		Vector3f f = p-i.cast<float>();
+		f = Vector3f(1)-f;
+		//cout << "p: (" + std::to_string(p.x()) + "," + std::to_string(p.y()) + "," + std::to_string(p.z()) + ")\ti: (" + std::to_string(i.x()) + "," + std::to_string(i.y()) + "," + std::to_string(i.z()) + ")\tf: (" + std::to_string(f.x()) + "," + std::to_string(f.y()) + "," + std::to_string(f.z()) << endl;
+		//return smoothstep(0, 1, sin(10*p.y()));
 		Vector3f s = 3*f.cwiseProduct(f) - 2*f.cwiseProduct(f.cwiseProduct(f)); // smoothstep
-		float ldb = randVec(i+Vector3f(0,0,0)).dot(f-Vector3f(0,0,0));
-		float rdb = randVec(i+Vector3f(1,0,0)).dot(f-Vector3f(1,0,0));
-		float lub = randVec(i+Vector3f(0,1,0)).dot(f-Vector3f(0,1,0));
-		float rub = randVec(i+Vector3f(1,1,0)).dot(f-Vector3f(1,1,0));
-		float ldf = randVec(i+Vector3f(0,0,1)).dot(f-Vector3f(0,0,1));
-		float rdf = randVec(i+Vector3f(1,0,1)).dot(f-Vector3f(1,0,1));
-		float luf = randVec(i+Vector3f(0,1,1)).dot(f-Vector3f(0,1,1));
-		float ruf = randVec(i+Vector3f(1,1,1)).dot(f-Vector3f(1,1,1));
-		return lerp(lerp(lerp(ldb, rdb, s.x()), lerp(lub, rub, s.x()), s.y()),
-			lerp(lerp(ldf, rdf, s.x()), lerp(luf, ruf, s.x()), s.y()), s.z());
+		float ldb = hash13(i-Vector3i(0,0,0));
+		float rdb = hash13(i-Vector3i(1,0,0));
+		float lub = hash13(i-Vector3i(0,1,0));
+		float rub = hash13(i-Vector3i(1,1,0));
+		float ldf = hash13(i-Vector3i(0,0,1));
+		float rdf = hash13(i-Vector3i(1,0,1));
+		float luf = hash13(i-Vector3i(0,1,1));
+		float ruf = hash13(i-Vector3i(1,1,1));
+		//return lerp(hash13(i-Vector3i(0,0,0)), hash13(i-Vector3i(0,1,0)), f.y());
+		return lerp(lerp(lerp(ldb, rdb, f.x()), lerp(lub, rub, f.x()), f.y()),
+			lerp(lerp(ldf, rdf, f.x()), lerp(luf, ruf, f.x()), f.y()), f.z());
 	}
 
 #define OCTAVES 5
@@ -71,8 +86,14 @@ public:
 	}
 
 	virtual float eval(Vector3f p) const override {
-		float n = perlin(2*p+Vector3f(seed));
-		return 0.5+0.5*n;
+		return 0.0001;
+		p += Vector3f(seed);
+		p -= Vector3f(floor(p.x()), floor(p.y()), floor(p.z()));
+		return (p-Vector3f(0.5)).norm() < 0.3 ? 0.9999 : 0.0001;
+		float n = perlin(p+Vector3f(seed));
+		if (n < 0) cout << "SUGMA" << n << endl;
+		if (n > 1) cout << "SUGMA" << n<< endl;
+		return n-0.0001;
 	}
 
 	std::string toString() const override {
