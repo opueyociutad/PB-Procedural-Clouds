@@ -36,8 +36,7 @@
 		<float name="sigma_s" value="0.4"/>
 		<float name="delta_t" value="0.01"/>
 
-		<phase type="henyey_greenstein">
-			<float name="g" value="0.0"/>
+		<phase type="rayleigh">
 		</phase>
 
 		<density type="cloud">
