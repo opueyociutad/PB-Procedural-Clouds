@@ -42,8 +42,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/nori" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/nori" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/nori/density.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/nori/density.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/cloud_test/cbox_media_refactor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/cloud_test/cbox_media_refactor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/density.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/density.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" afterDir="false" />
     </list>
@@ -323,7 +326,7 @@
       <workItem from="1672766027387" duration="7687000" />
       <workItem from="1672850125089" duration="16878000" />
       <workItem from="1672921542598" duration="602000" />
-      <workItem from="1672932890623" duration="177000" />
+      <workItem from="1672932890623" duration="1311000" />
     </task>
     <servers />
   </component>

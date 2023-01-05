@@ -21,11 +21,10 @@ public :
 	}
 
 	Color3f InScattering(const Scene* scene, Sampler* sampler, const Ray3f& ray, const MediaIntersection& itMedia) const {
-		#warning Null collision not implemented!
-
 		Color3f Lems(0);
 
 		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
+		/// Probability of real particle over fake particle
 		float inscatteringPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
 		// Sample
 		float pdf_light;
@@ -34,29 +33,29 @@ public :
 		Color3f Le = em->sample(emitterRecord, sampler->next2D(), 0);
 		if (scene->isVisible(ray.o, emitterRecord.p)) {
 			PFQueryRecord mRec(ray.d, emitterRecord.wi);
+			// Here transmittance is accounted since we are not sampling distances wrt it
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
 			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s
 			       / pdf_light;
 		}
 
-		Color3f Lmis = Lems / inscatteringPDF;
+		Lems /= inscatteringPDF;
 		float pdfRR;
 		// If absorption do not continue the ray
 		if (RR(coeffs.alpha(), sampler, pdfRR)) {
-			return Lmis;
+			return Lems;
 		}
 
+		// Phase function sampling
 		PFQueryRecord mRec(ray.d);
 		Color3f pf = itMedia.pMedia->getPhaseFunction()->sample(mRec, sampler->next2D());
 		Ray3f newRay(ray.o, mRec.wo);
-		Color3f Lret = Lmis + pf * this->Li(scene, sampler, newRay) / pdfRR;
+		Color3f Lret = Lems + pf * this->Li(scene, sampler, newRay) / pdfRR;
 		return Lret;
 	}
 
 	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
 		Color3f Lems(0);
-		Color3f Lmat(0);
-
 		// Sample the emitter
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
@@ -67,19 +66,16 @@ public :
 			Lems = Le * it.mesh->getBSDF()->eval(bsdfRecord) * scene->transmittance(ray.o, emitterRecord.p) / pdf_light;
 		}
 
-		// Sample the BRDF and MIS, NOT FOR NOW, todo
-		Color3f Lmis = Lems;
-
 		// Russian roulette for termination
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
 		Color3f throughput = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		float pdfRR;
 		if (RR(throughput.getLuminance(), sampler, pdfRR)) {
-			return Lmis;
+			return Lems;
 		}
 
 		Ray3f newRay(it.p, it.toWorld(bsdfRecord.wo));
-		return Lmis + throughput * this->Li(scene, sampler, newRay) / pdfRR;
+		return Lems + throughput * this->Li(scene, sampler, newRay) / pdfRR;
 	}
 
 	Color3f Li(const Scene* scene, Sampler* sampler, const Ray3f& ray) const {
@@ -93,19 +89,14 @@ public :
 		Color3f L(0.0f);
 		float pdf = 1.0f;
 		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
-			if (it.mesh->isEmitter()) {
-				EmitterQueryRecord lightEmitterRecord(it.mesh->getEmitter(), ray.o, it.p, it.shFrame.n, it.uv);
-				return it.mesh->getEmitter()->eval(lightEmitterRecord);
-			} else {
-				L = scene->transmittance(ray.o, it.p, allMediaBoundaries, itMedia) * DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
-			}
-			//if (intersectedMedia) pdf = 1 - itMedia.cdf(ray, it.t);
+			L = DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
 			// pdf is 1 since sampling according to transmittance
 			// "The probability of not sampling a medium interaction is equal to the transmittance of the ray segment"
-		} else { // Medium interaction!
-			L = scene->transmittance(ray.o, itMedia.p, allMediaBoundaries, itMedia)
-					* InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
-			pdf = 1.0f; // Simplified with transmittance (doesn't calc transmittance to curr intersection)
+			pdf = 1.0f;
+		} else {
+			// Transmittance not accounted because it gets simplified by the sampling!!
+			L = InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
+			pdf = 1.0f; // Simplified with transmittance sampling!
 		}
 		return L / pdf;
 	}
