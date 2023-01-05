@@ -24,8 +24,6 @@ public :
 		Color3f Lems(0);
 
 		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
-		/// Probability of real particle over fake particle
-		float inscatteringPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
 		// Sample
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
@@ -35,23 +33,24 @@ public :
 			PFQueryRecord mRec(ray.d, emitterRecord.wi);
 			// Here transmittance is accounted since we are not sampling distances wrt it
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
-			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s
+			       * itMedia.pMedia->getPhaseFunction()->eval(mRec)
 			       / pdf_light;
 		}
 
-		Lems /= inscatteringPDF;
-		float pdfRR;
+		Color3f Lcont = 0;
 		// If absorption do not continue the ray
-		if (RR(coeffs.alpha(), sampler, pdfRR)) {
-			return Lems;
+		float pdfRR;
+		if (!RR(coeffs.alpha(), sampler, pdfRR)) {
+			// Phase function sampling
+			PFQueryRecord mRec(ray.d);
+			Color3f pf = itMedia.pMedia->getPhaseFunction()->sample(mRec, sampler->next2D());
+			Ray3f newRay(ray.o, mRec.wo);
+			Lcont = pf * this->Li(scene, sampler, newRay) / pdfRR;
 		}
+		/// Probability of real particle over fake particle
+		float inscatteringPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
 
-		// Phase function sampling
-		PFQueryRecord mRec(ray.d);
-		Color3f pf = itMedia.pMedia->getPhaseFunction()->sample(mRec, sampler->next2D());
-		Ray3f newRay(ray.o, mRec.wo);
-		Color3f Lret = Lems + pf * this->Li(scene, sampler, newRay) / pdfRR;
-		return Lret;
+		return (Lems + Lcont) * coeffs.mu_s / inscatteringPDF;
 	}
 
 	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
