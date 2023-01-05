@@ -62,18 +62,27 @@ public:
 	}
 
 	virtual Color3f sample(PFQueryRecord& mRec, const Point2f &sample) const {
-		throw std::logic_error("Function not yet implemented");
-		return {0};
+		float theta = acos(2 * sample.x() - 1);
+		float phi = 2 * M_PI * sample.y();
+
+		Frame fr(mRec.wi);
+		Vector3f localWo(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+		mRec.wo = fr.toWorld(localWo);
+		return {1.0f};
 	}
 
 	virtual Color3f eval(const PFQueryRecord &mRec) const override {
+		/*
+		 * Note: (3 / 16*PI) comes from (3/4) from the theta term
+		 * and 1 / (4PI) for the phi (normalization)
+		 */
 		float cosTheta = mRec.wi.dot(mRec.wo);
 		return (3 / (16*M_PI)) * (1 + cosTheta*cosTheta);
 	}
 
 	virtual float pdf(const PFQueryRecord &mRec) const override {
-		throw std::logic_error("Function not yet implemented");
-		return 0;
+		float cosTheta = mRec.wi.dot(mRec.wo);
+		return (3 / (16*M_PI)) * (1 + cosTheta*cosTheta);
 	}
 
 	std::string toString() const override {
