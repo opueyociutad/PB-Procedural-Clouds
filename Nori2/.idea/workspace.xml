@@ -181,7 +181,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="nori" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="scenes/cloud_test/cbox_media_refactor.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nori" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="nori">
+    <configuration name="nori" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="scenes/path_media_test/cbox_media_refactor.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nori" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="nori">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
