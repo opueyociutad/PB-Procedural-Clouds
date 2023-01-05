@@ -7,7 +7,7 @@
 		<float name="fov" value="60.7856"/>
 		<transform name="toWorld">
 			<scale value="1,1,1"/>
-			<lookat target="0, 0, 0" origin="0, 0, 5" up="0, 1, 0"/>
+			<lookat target="0, 10, 0" origin="0, 0, 10" up="0, 1, 0"/>
 		</transform>
 
 		<integer name="height" value="600"/>
@@ -15,12 +15,19 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="128"/>
+		<integer name="sampleCount" value="16"/>
 	</sampler>
 
+	<!-- Define the light source -->
+	<emitter type="environment">
+		<string name="filename" value="env.exr"/>
+		<float name ="rotate" value="0"/>
+		<color name ="radiance" value="200,200,200"/>
+	</emitter>
+
 	<emitter type="pointlight">
-		<color name="radiance" value="100, 100, 100"/>
-		<point name="position" value="0, 2, 0"/>
+		<color name="radiance" value="1200, 1100, 1000"/>
+		<point name="position" value="0, 15, 0"/>
 	</emitter>
 
 	<medium type="heterogeneous_media">
@@ -33,20 +40,23 @@
 			<float name="g" value="0.0"/>
 		</phase>
 
-		<density type="cloud">
-			<float name="seed" value="0"/>
+		<density type="sky">
+			<float name="seed" value="29"/>
+			<vector name="scale" value="1, 1, 1"/>
+			<vector name="position" value="0, 10, 0"/>
 		</density>
 
 		<mesh type="obj">
 			<string name="filename" value="unitCube.obj"/>
 			<transform name="toWorld">
-				<scale value="1, 1, 1"/>
-				<translate value="0, 0, 0"/>
+				<scale value="20, 4, 20"/>
+				<translate value="0, 10, 0"/>
 			</transform>
 			<bsdf type="diffuse">
 				<color name="albedo" value="0,0,0"/>
 			</bsdf>
 		</mesh>
+
 	</medium>
 
 </scene>
