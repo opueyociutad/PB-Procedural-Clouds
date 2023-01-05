@@ -86,9 +86,9 @@ public:
 	explicit Sky(const PropertyList &propList) : DensityFunction(propList) {}
 
 	virtual float eval(Vector3f p) const override {
-		float n = fbm(3*p+Vector3f(seed));
+		float n = fbm(p+Vector3f(seed));
 		p = p.cwiseProduct(scale) + position;
-		return smoothstep(0.5, 0.5, n)*smoothstep(0.01, -0.11, (p.y()-1-5*n));
+		return smoothstep(0, 0.5, n)*smoothstep(0.01, -0.11, (p.y()-1-5*n));
 	}
 
 	std::string toString() const override {
