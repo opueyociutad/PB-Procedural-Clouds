@@ -86,7 +86,7 @@ public:
 	}
 
 	virtual float eval(Vector3f p) const override {
-		float n = perlin(2*p+Vector3f(seed));
+		float n = perlin(3*p+Vector3f(seed));
 		return n-0.0001;
 	}
 

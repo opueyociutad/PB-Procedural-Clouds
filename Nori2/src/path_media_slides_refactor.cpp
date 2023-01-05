@@ -46,7 +46,10 @@ public :
 			return Lmis;
 		}
 
-		Color3f Lret = Lmis + this->Li(scene, sampler, ray) / pdfRR;
+		PFQueryRecord mRec(ray.d);
+		Color3f pf = itMedia.pMedia->getPhaseFunction()->sample(mRec, sampler->next2D());
+		Ray3f newRay(ray.o, mRec.wo);
+		Color3f Lret = Lmis + pf * this->Li(scene, sampler, newRay) / pdfRR;
 		return Lret;
 	}
 
@@ -76,7 +79,6 @@ public :
 		}
 
 		Ray3f newRay(it.p, it.toWorld(bsdfRecord.wo));
-		return Lmis;
 		return Lmis + throughput * this->Li(scene, sampler, newRay) / pdfRR;
 	}
 
