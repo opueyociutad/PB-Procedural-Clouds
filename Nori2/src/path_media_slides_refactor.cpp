@@ -20,10 +20,10 @@ public :
 		return sampler->next1D() > k;
 	}
 
-	Color3f InScattering(const Scene* scene, Sampler* sampler, const Ray3f& ray, const MediaIntersection& itMedia) const {
+	Color3f InScattering(const Scene* scene, Sampler* sampler, const Ray3f& ray, const MediaIntersection& itMedia,
+						 const MediaCoeffs& coeffs) const {
 		Color3f Lems(0);
 
-		MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(ray.o);
 		// Sample
 		float pdf_light;
 		const Emitter* em = scene->sampleEmitter(sampler->next1D(), pdf_light);
@@ -33,7 +33,7 @@ public :
 			PFQueryRecord mRec(ray.d, emitterRecord.wi);
 			// Here transmittance is accounted since we are not sampling distances wrt it
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
-			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s
+			       * itMedia.pMedia->getPhaseFunction()->eval(mRec)
 			         / pdf_light;
 		}
 
@@ -47,10 +47,8 @@ public :
 			Ray3f newRay(ray.o, mRec.wo);
 			Lcont = pf * this->Li(scene, sampler, newRay) / pdfRR;
 		}
-		/// Probability of real particle over fake particle
-		float collisionPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
 
-		return (Lems + Lcont)/ collisionPDF;
+		return Lems + Lcont;
 	}
 
 	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
@@ -67,6 +65,7 @@ public :
 
 		// Russian roulette for termination
 		BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.uv);
+		// Just in case, throughput=1 always due to the PF used
 		Color3f throughput = it.mesh->getBSDF()->sample(bsdfRecord, sampler->next2D());
 		float pdfRR;
 		if (RR(throughput.getLuminance(), sampler, pdfRR)) {
@@ -94,8 +93,9 @@ public :
 			pdf = 1.0f;
 		} else {
 			// Transmittance not accounted because it gets simplified by the sampling!!
-			L = InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia);
-			pdf = 1.0f; // Simplified with transmittance sampling!
+			MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(itMedia.p);
+			L = coeffs.mu_s * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia, coeffs);
+			pdf = coeffs.mu_a + coeffs.mu_s; // Transmittance simplified, remaining mu_t at xs
 		}
 		return L / pdf;
 	}
