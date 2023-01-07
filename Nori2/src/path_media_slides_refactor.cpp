@@ -33,8 +33,8 @@ public :
 			PFQueryRecord mRec(ray.d, emitterRecord.wi);
 			// Here transmittance is accounted since we are not sampling distances wrt it
 			Lems = Le * scene->transmittance(ray.o, emitterRecord.p)
-			       * itMedia.pMedia->getPhaseFunction()->eval(mRec)
-			       / pdf_light;
+			       * itMedia.pMedia->getPhaseFunction()->eval(mRec) * coeffs.mu_s
+			         / pdf_light;
 		}
 
 		Color3f Lcont = 0;
@@ -48,9 +48,9 @@ public :
 			Lcont = pf * this->Li(scene, sampler, newRay) / pdfRR;
 		}
 		/// Probability of real particle over fake particle
-		float inscatteringPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
+		float collisionPDF = (coeffs.mu_a + coeffs.mu_s) / (coeffs.mu_max);
 
-		return (Lems + Lcont) * coeffs.mu_s / inscatteringPDF;
+		return (Lems + Lcont)/ collisionPDF;
 	}
 
 	Color3f DirectLight(const Scene* scene, Sampler* sampler, const Ray3f& ray, const Intersection& it) const {
