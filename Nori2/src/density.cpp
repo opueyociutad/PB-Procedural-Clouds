@@ -9,7 +9,9 @@ public:
 	virtual float eval(Vector3f p) const override {
 		p = p.cwiseQuotient(scale) - position.cwiseQuotient(scale);
 		float n = fbm(p+Vector3f(seed));
-		return smoothstep(-0.5, 0.5, n)*smoothstep(-0.1, 0.1, -((p.cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1-0.75*fmax(2, p.y()+2)*n));
+		float shape = ((p-Vector3f(1.75,0.6,-0.5)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1;
+		shape = fmin(shape, ((p-Vector3f(-1.25,-0.6,0)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-0.9);
+		return smoothstep(-0.5, 0.3, n)*smoothstep(-0.1, 0.1, -(shape-fmax(2, p.y()+2)*n));
 	}
 
 	std::string toString() const override {
