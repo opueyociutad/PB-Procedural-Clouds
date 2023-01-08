@@ -49,6 +49,7 @@ public:
 			}
 		}
 		m_luminance /= 100*100;
+		m_rotate = props.getFloat("rotate", 0);
 	}
 	~EnvironmentEmitter()
 	{
@@ -75,7 +76,7 @@ public:
 		if (!m_environment)
 			return m_radiance;
 
-		float phi = atan2(lRec.wi[2], lRec.wi[0]);
+		float phi = m_rotate+atan2(lRec.wi[2], lRec.wi[0]);
 		float theta = acos(lRec.wi[1]);
 		if (phi < 0) phi += 2 * M_PI;
 
@@ -121,6 +122,7 @@ public:
 
 
 protected:
+	float m_rotate;
 	Color3f m_radiance;
 	Bitmap *m_environment;
 	std::string m_environment_name;

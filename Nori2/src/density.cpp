@@ -7,9 +7,9 @@ public:
 	explicit Cloud(const PropertyList &propList) : DensityFunction(propList) {}
 
 	virtual float eval(Vector3f p) const override {
+		p = p.cwiseQuotient(scale) - position.cwiseQuotient(scale);
 		float n = fbm(p+Vector3f(seed));
-		p = p.cwiseProduct(scale) + position;
-		return smoothstep(-0.5, 0.5, n) * smoothstep(-0.01, 0.11, -((p.cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1-0.75*fmax(2, p.y()+2)*n));
+		return smoothstep(-0.5, 0.5, n)*smoothstep(-0.1, 0.1, -((p.cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1-0.75*fmax(2, p.y()+2)*n));
 	}
 
 	std::string toString() const override {

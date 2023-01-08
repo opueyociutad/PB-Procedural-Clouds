@@ -4,44 +4,65 @@
 	<integrator type="path_media_slides_refactor"/>
 
 	<camera type="perspective">
-		<float name="fov" value="50"/>
+		<float name="fov" value="90"/>
 		<transform name="toWorld">
 			<scale value="1,1,1"/>
-			<lookat target="0,0,0" origin="0,0,10" up="0,1,0"/>
+			<lookat target="7.5,-1.5,0" origin="0,-10,30" up="0,1,0"/>
 		</transform>
 
-		<integer name="height" value="600"/>
-		<integer name="width" value="800"/>
+		<integer name="width" value="640"/>
+		<integer name="height" value="360"/>
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="256"/>
+		<integer name="sampleCount" value="512"/>
 	</sampler>
 
 	<emitter type="pointlight">
-		<color name="radiance" value="5000, 5000, 5000"/>
-		<point name="position" value="7, 10, 0"/>
+		<color name="radiance" value="5000000000, 5000000000, 5000000000"/>
+		<point name="position" value="-750, 1000, -500"/>
 	</emitter>
 
 	<medium type="heterogeneous_media">
 		<float name="max_rho" value="1.0"/>
 		<float name="sigma_a" value="0.2"/>
-		<float name="sigma_s" value="0.4"/>
-		<float name="delta_t" value="0.01"/>
+		<float name="sigma_s" value="0.6"/>
 
-		<phase type="rayleigh">
+		<phase type="henyey_greenstein">
+			<float name="g" value ="0.8"/>
 		</phase>
 
 		<density type="cloud">
-			<float name="seed" value="29"/>
-			<vector name="scale" value="1, 1, 1"/>
+			<float name="seed" value="42"/>
+			<vector name="scale" value="4, 4, 4"/>
 			<vector name="position" value="0, 0, 0"/>
 		</density>
 
 		<mesh type="obj">
+			<string name="filename" value="unitCube.obj"/>
+			<transform name="toWorld">
+				<scale value="16, 16, 7"/>
+				<translate value="0, 0, 0"/>
+			</transform>
+			<bsdf type="diffuse">
+				<color name="albedo" value="0,0,0"/>
+			</bsdf>
+		</mesh>
+	</medium>
+
+	<medium type="homogeneous_media">
+		<float name="rho" value="1.0" />
+		<float name="sigma_a" value="0.02" />
+		<float name="sigma_s" value="0.06" />
+
+		<phase type="henyey_greenstein">
+			<float name="g" value="0.6" />
+		</phase>
+
+		<mesh type="obj">
 			<string name="filename" value="sphere.obj"/>
 			<transform name="toWorld">
-				<scale value="10, 10, 10"/>
+				<scale value="50, 50, 50"/>
 				<translate value="0, 0, 0"/>
 			</transform>
 			<bsdf type="diffuse">
