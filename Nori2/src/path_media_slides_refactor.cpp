@@ -105,9 +105,8 @@ public :
 
 		// Multiple Importance Sampling
 		Color3f Lmis(0);
-		// Different source, can add
+		// Different source, can add OR same source, MIS
 		if (emitter_nee != emitter_pf || !isVisible) Lmis = Lnee + Lpf;
-		// Same source, MIS
 		else Lmis = mediaMIS(rayPF, rayNEE, Lpf, Lnee,itMedia.pMedia->getPhaseFunction(), ray,
 							pnee_nee, pdf_pf_em);
 
@@ -150,13 +149,13 @@ public :
 
 		// Multiple Importance Sampling
 		Color3f Lmis(0);
+		// Different source, can add OR same source, MIS
 		if (emitter_nee != emitter_pf || !isVisible) Lmis = Lnee + Lbsdf;
-		// Same source, MIS
 		else Lmis = surfaceMIS(rayBSDF, rayNEE, Lbsdf, Lnee, it.mesh->getBSDF(), -ray.d,
 							   it,
 		                       pnee_nee, pdf_pf_em);
+
 		// Russian roulette for termination
-		// Just in case, throughput=1 always due to the PF used
 		float pdfRR;
 		if (RR(sampleBSDF.getLuminance(), sampler, pdfRR)) {
 			return Lmis;
@@ -183,7 +182,7 @@ public :
 			// (1 - cdf = transmittance)
 			pdf = 1.0f;
 		} else {
-			// Transmittance not accounted because it gets simplified by the sampling!!
+			// Transmittance not accounted because it gets simplified by the sampling (not mu_t, accounted below)
 			MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(itMedia.p);
 			L = coeffs.mu_s * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia, coeffs);
 			pdf = itMedia.pdf; // Transmittance simplified, remaining mu_t at xs
