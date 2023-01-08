@@ -64,23 +64,17 @@ struct MediaIntersection {
 	float t;
 	/// Intersected media
 	const PMedia* pMedia;
-	/// Media coefficients associated with the intersection
-	float mu_max;
-	/// pdf for sampling that point (delta tracking...)
-	float it_pdf;
 
 	/// Associated media boundaries
 	MediaBoundaries medBound;
+	/// pdf of the sample (transmittance / pdf)
+	float pdf;
 
-	MediaIntersection(): it_pdf(1.0f), pMedia(nullptr) {}
+	MediaIntersection(): pMedia(nullptr) {}
 
-	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const float _mu_t, const MediaBoundaries& _medBound) :
-			p(_p), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound), it_pdf(1.0f) {}
+	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const MediaBoundaries& _medBound, float _pdf) :
+			p(_p), t(_t), pMedia(_pMedia), medBound(_medBound), pdf(_pdf) {}
 
-	MediaIntersection(Point3f  _p, float _t, const PMedia* _pMedia, const float _mu_t, const MediaBoundaries& _medBound, float _it_pdf) :
-			p(_p), t(_t), pMedia(_pMedia), mu_max(_mu_t), medBound(_medBound), it_pdf(_it_pdf) {}
-
-	float cdf(const Ray3f& ray, float closerT) const;
 };
 
 
@@ -104,8 +98,6 @@ public:
 	~PMedia();
 
 	float sampleDist(float sample) const { return -log(1-sample) / mu_max; }
-
-	virtual float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const = 0;
 
 	/// Transmittance between 2 points
 	virtual float transmittance(const Point3f& x0, const Point3f& xz, const MediaBoundaries& medBound, Sampler* sampler) const = 0;

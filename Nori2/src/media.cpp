@@ -25,10 +25,6 @@ PMedia::~PMedia() {
 	delete m_phaseFunction;
 }
 
-float MediaIntersection::cdf(const Ray3f& ray, float closerT) const {
-	return this->pMedia->cdfDist(ray, closerT, this->medBound);
-}
-
 std::ostream& operator<<(std::ostream& os, const MediaCoeffs& m) {
 	os << "MediaCoeffs[mu_a: " << m.mu_a << ", mu_s: " << m.mu_s << ", mu_n: " << m.mu_n << ", mu_t: " << m.mu_max << "]";
 	return os;
@@ -63,7 +59,6 @@ void PMedia::addChild(NoriObject *obj, const std::string& name) {
 				Mesh *mesh = static_cast<Mesh *>(obj);
 				m_mesh = mesh;
 				m_accel->addMesh(mesh);
-				std::cout << "SUS4" << std::endl;
 				m_accel->build();
 			}
 		break;
@@ -110,23 +105,24 @@ public:
 			if (boundaries.wasInside) {
 				if (t > boundaries.tOut) return false;
 				else {
-					medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_max, boundaries);
+					Point3f pt = ray.o + ray.d*t;
+					MediaCoeffs mediaCoeffs = this->getMediaCoeffs(pt);
+					// mu_max = mu_t in homogeneous
+					medIts = MediaIntersection(pt, t, this, boundaries, mediaCoeffs.mu_max);
 					return true;
 				}
 			} else {
 				if (t > boundaries.tOut) return false;
 				else {
 					t += boundaries.tBoundary;
-					medIts = MediaIntersection(ray.o + ray.d*t, t, this, mu_max, boundaries);
+					Point3f pt = ray.o + ray.d*t;
+					MediaCoeffs mediaCoeffs = this->getMediaCoeffs(pt);
+					// mu_max = mu_t in homogeneous
+					medIts = MediaIntersection(pt, t, this, boundaries, mediaCoeffs.mu_max);
 					return true;
 				}
 			}
 		}
-	}
-
-	float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const override {
-		float dist = distanceTravelledInMedia(t, medBound);
-		return 1 - exp(-mu_max * dist);
 	}
 
 	MediaCoeffs getMediaCoeffs(const Point3f& p) const override {
@@ -199,14 +195,9 @@ public:
 				cfs = this->getMediaCoeffs(ray.o + ray.d * t);
 				if ((cfs.mu_n / mu_max) < sampler->next1D()) break;
 			}
-			medIts = MediaIntersection(ray.o + ray.d * t, t, this, mu_max, boundaries, cfs.mu_s / cfs.mu_max);
+			medIts = MediaIntersection(ray.o + ray.d * t, t, this, boundaries, cfs.mu_a + cfs.mu_s);
 			return true;
 		}
-	}
-
-	float cdfDist(const Ray3f& ray, float t, const MediaBoundaries& medBound) const override {
-		float dist = distanceTravelledInMedia(t, medBound);
-		return 1.0f - exp(-mu_max * dist);
 	}
 
 	/// Transmittance between 2 points

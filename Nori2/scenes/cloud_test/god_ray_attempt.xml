@@ -15,8 +15,14 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="256"/>
+		<integer name="sampleCount" value="1"/>
 	</sampler>
+
+	<emitter type="environment">
+		<string name="filename" value="envmap.exr"/>
+		<float name ="rotate" value="180"/>
+		<color name ="radiance" value="200,200,200"/>
+	</emitter>
 
 	<emitter type="pointlight">
 		<color name="radiance" value="5000, 5000, 5000"/>
@@ -36,7 +42,7 @@
 		<density type="cloud">
 			<float name="seed" value="29"/>
 			<vector name="scale" value="1, 1, 1"/>
-			<vector name="position" value="0, 0.0, 0"/>
+			<vector name="position" value="0, 0, 0"/>
 		</density>
 
 		<mesh type="obj">
@@ -64,7 +70,7 @@
 		<mesh type="obj">
 			<string name="filename" value="../cloud_test/unitCube.obj"/>
 			<transform name="toWorld">
-				<scale value="5, 5, 5"/>
+				<scale value="2, 2, 2"/>
 				<translate value="0, 0.893051, 0.41198"/>
 			</transform>
 			<bsdf type="diffuse">
