@@ -131,8 +131,9 @@ public :
 		float pnee_nee = emitterRecord.pdf * pdf_light;
 		if (isVisible) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
+			float cs = abs(it.shFrame.n.dot(emitterRecord.wi));
 			Lnee = Le * it.mesh->getBSDF()->eval(bsdfRecord)
-					* scene->transmittance(ray.o, emitterRecord.p)
+					* scene->transmittance(ray.o, emitterRecord.p) * cs
 					/ pdf_light;
 		}
 		Ray3f rayNEE(ray.o, emitterRecord.wi);
