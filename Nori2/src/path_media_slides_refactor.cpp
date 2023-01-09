@@ -57,7 +57,6 @@ public :
 	const double MAX_SCENE = 200.0;
 	Color3f sampledDirectionLight(const Scene* scene, const Ray3f& rayPF, float& pdfEm, const Emitter*& emitter) const {
 		Intersection pfIt;
-		// MISSING SEARCH
 		bool pfIntersected = scene->rayIntersect(rayPF, pfIt);
 		Color3f Lpf(0);
 		if (!pfIntersected && scene->getEnvironmentalEmitter() != nullptr) {
@@ -161,8 +160,7 @@ public :
 			return Lmis;
 		}
 
-		Ray3f newRay(it.p, it.toWorld(bsdfRecord.wo));
-		return Lmis + sampleBSDF * this->LiT(scene, sampler, newRay) / pdfRR;
+		return Lmis + sampleBSDF * this->LiT(scene, sampler, rayBSDF) / pdfRR;
 	}
 
 	Color3f LiT(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool first=false) const {
@@ -172,6 +170,11 @@ public :
 		MediaIntersection itMedia;
 		bool intersectedMedia = scene->rayIntersectMediaSample(ray, allMediaBoundaries, itMedia);
 		if (!intersected && !intersectedMedia && !first) return {0.0f};
+		else if (intersected && (!intersectedMedia || itMedia.t >= it.t) && it.mesh->isEmitter() && first) {
+			const Emitter* emitter = it.mesh->getEmitter();
+			EmitterQueryRecord emitterQueryRecord(emitter, ray.o, it.p, it.shFrame.n, it.uv);
+			return emitter->eval(emitterQueryRecord);
+		}
 		else if (!intersected && !intersectedMedia && first) return scene->getBackground(ray);
 
 		Color3f L(0.0f);
