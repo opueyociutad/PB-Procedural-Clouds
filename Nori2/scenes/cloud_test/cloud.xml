@@ -19,8 +19,8 @@
 	</sampler>
 
 	<emitter type="pointlight">
-		<color name="radiance" value="50000, 50000, 50000"/>
-		<point name="position" value="-7.5, 25, -30"/>
+		<color name="radiance" value="1000000, 1000000, 1000000"/>
+		<point name="position" value="0, 160, -300"/>
 	</emitter>
 
 	<emitter type="environment">
@@ -30,7 +30,7 @@
 	</emitter>
 
 	<medium type="heterogeneous_media">
-		<float name="max_rho" value="2"/>
+		<float name="max_rho" value="1.6"/>
 		<float name="sigma_a" value="0.2"/>
 		<float name="sigma_s" value="0.6"/>
 
@@ -39,7 +39,7 @@
 		</phase>
 
 		<density type="cloud">
-			<float name="seed" value="10"/>
+			<float name="seed" value="42"/>
 			<vector name="scale" value="8, 8, 8"/>
 			<vector name="position" value="0, 10, 0"/>
 		</density>
