@@ -15,22 +15,22 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="128"/>
+		<integer name="sampleCount" value="32"/>
 	</sampler>
 
 	<emitter type="pointlight">
-		<color name="radiance" value="1500000, 1500000, 1500000"/>
+		<color name="radiance" value="1000000, 1000000, 1000000"/>
 		<point name="position" value="0, 500, -300"/>
 	</emitter>
 
 	<emitter type="environment">
 		<string name="filename" value="env2.exr"/>
 		<float name ="rotate" value="-2.2"/>
-		<color name ="radiance" value="500,500,500"/>
+		<color name ="radiance" value="600,600,600"/>
 	</emitter>
 
 	<medium type="heterogeneous_media">
-		<float name="max_rho" value="3.0"/>
+		<float name="max_rho" value="1.0"/>
 		<float name="sigma_a" value="0.2"/>
 		<float name="sigma_s" value="0.6"/>
 
@@ -39,9 +39,9 @@
 		</phase>
 
 		<density type="sky">
-			<float name="seed" value="-39"/>
+			<float name="seed" value="0"/>
 			<vector name="scale" value="1, 1, 1"/>
-			<vector name="position" value="-4, 10, -2"/>
+			<vector name="position" value="0, 10, 0"/>
 		</density>
 
 		<mesh type="obj">
@@ -56,10 +56,11 @@
 		</mesh>
 	</medium>
 
+	<!--
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
-		<float name="sigma_a" value="0.007" />
-		<float name="sigma_s" value="0.021" />
+		<float name="sigma_a" value="0.001" />
+		<float name="sigma_s" value="0.003" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0" />
@@ -76,5 +77,6 @@
 			</bsdf>
 		</mesh>
 	</medium>
+	-->
 
 </scene>

@@ -56,6 +56,7 @@ public:
 
 NORI_REGISTER_CLASS(HenyeyGreenstein, "henyey_greenstein");
 
+// We don't use it and the sampling is likely to be wrong, it is just the isotropic
 class Rayleigh : public PhaseFunction {
 public:
 	Rayleigh(const PropertyList &propList) {
@@ -74,7 +75,7 @@ public:
 	virtual Color3f eval(const PFQueryRecord &mRec) const override {
 		/*
 		 * Note: (3 / 16*PI) comes from (3/4) from the theta term
-		 * and 1 / (4PI) for the phi (normalization)
+		 * and 1 / (4PI) for the normalization
 		 */
 		float cosTheta = mRec.wi.dot(mRec.wo);
 		return (3 / (16*M_PI)) * (1 + cosTheta*cosTheta);

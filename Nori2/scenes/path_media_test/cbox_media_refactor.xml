@@ -10,12 +10,12 @@
 			<lookat target="0, 0.893051, 4.41198" origin="0, 0.919769, 5.41159" up="0, 1, 0"/>
 		</transform>
 
-		<integer name="height" value="600"/>
-		<integer name="width" value="800"/>
+		<integer name="height" value="300"/>
+		<integer name="width" value="400"/>
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="256"/>
+		<integer name="sampleCount" value="1024"/>
 	</sampler>
 
 	<!-- Define the light source
@@ -72,8 +72,8 @@
 
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
-		<float name="sigma_a" value="0.04" />
-		<float name="sigma_s" value="0.3" />
+		<float name="sigma_a" value="0.1" />
+		<float name="sigma_s" value="0.35" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0.5" />

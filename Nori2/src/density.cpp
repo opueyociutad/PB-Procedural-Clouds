@@ -11,7 +11,7 @@ public:
 		float n = fbm(p+Vector3f(seed));
 		float shape = ((p-Vector3f(1.5,0.6,-0.5)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1;
 		shape = fmin(shape, ((p-Vector3f(-1.5,-0.6,0)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-0.9);
-		return smoothstep(-0.5, 0.3, n)*smoothstep(-0.1, 0.1, -(shape-fmax(2, p.y()+2)*n));
+		return smoothstep(-0.5, 0.3, n)*smoothstep(-0.1, 0.1, -(shape-fmax(3, p.y()+2)*n));
 	}
 
 	std::string toString() const override {
