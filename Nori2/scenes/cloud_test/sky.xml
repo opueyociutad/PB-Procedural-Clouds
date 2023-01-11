@@ -4,10 +4,10 @@
 	<integrator type="path_media_slides_refactor"/>
 
 	<camera type="perspective">
-		<float name="fov" value="90"/>
+		<float name="fov" value="85"/>
 		<transform name="toWorld">
 			<scale value="1,1,1"/>
-			<lookat target="0, 10, 0" origin="0, -20, 20" up="0, 1, 0"/>
+			<lookat target="0, 10, 0" origin="0, -15, 20" up="0, 1, 0"/>
 		</transform>
 
 		<integer name="width" value="426"/>
@@ -19,18 +19,18 @@
 	</sampler>
 
 	<emitter type="pointlight">
-		<color name="radiance" value="2000000, 2000000, 2000000"/>
+		<color name="radiance" value="1500000, 1500000, 1500000"/>
 		<point name="position" value="0, 500, -300"/>
 	</emitter>
 
 	<emitter type="environment">
 		<string name="filename" value="env2.exr"/>
 		<float name ="rotate" value="-2.2"/>
-		<color name ="radiance" value="300,300,300"/>
+		<color name ="radiance" value="500,500,500"/>
 	</emitter>
 
 	<medium type="heterogeneous_media">
-		<float name="max_rho" value="1.0"/>
+		<float name="max_rho" value="3.0"/>
 		<float name="sigma_a" value="0.2"/>
 		<float name="sigma_s" value="0.6"/>
 
@@ -39,9 +39,9 @@
 		</phase>
 
 		<density type="sky">
-			<float name="seed" value="3"/>
+			<float name="seed" value="-39"/>
 			<vector name="scale" value="1, 1, 1"/>
-			<vector name="position" value="0, 10, 0"/>
+			<vector name="position" value="-4, 10, -2"/>
 		</density>
 
 		<mesh type="obj">
@@ -58,8 +58,8 @@
 
 	<medium type="homogeneous_media">
 		<float name="rho" value="1.0" />
-		<float name="sigma_a" value="0.0004" />
-		<float name="sigma_s" value="0.0012" />
+		<float name="sigma_a" value="0.007" />
+		<float name="sigma_s" value="0.021" />
 
 		<phase type="henyey_greenstein">
 			<float name="g" value="0" />
@@ -69,7 +69,7 @@
 			<string name="filename" value="unitCube.obj"/>
 			<transform name="toWorld">
 				<scale value="50, 50, 50"/>
-				<translate value="0, -16, 30"/>
+				<translate value="0, -15, 20"/>
 			</transform>
 			<bsdf type="diffuse">
 				<color name="albedo" value="0,0,0"/>

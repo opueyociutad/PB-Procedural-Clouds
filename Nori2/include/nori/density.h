@@ -10,6 +10,7 @@ protected:
 	float seed;
 	Vector3f scale, position;
 
+	// Smoothstep
 	float smoothstep(float a, float b, float x) const {
 		if (x <= a) return 0;
 		if (x >= b) return 1;
@@ -22,23 +23,16 @@ protected:
 		return (1-t)*a + t*b;
 	}
 
-	Vector2f fract2(Vector2f v) const {
-		return v - Vector2f(floor(v.x()), floor(v.y()));
-	}
-
-
-	Vector3f fract3(Vector3f v) const {
-		return v - Vector3f(floor(v.x()), floor(v.y()), floor(v.z()));
-	}
-
-	// Rand 2d (https://www.shadertoy.com/view/4djSRW)
+	#define fract2(v) (v - Vector2f(floor(v.x()), floor(v.y())))
+	#define fract3(v) (v - Vector3f(floor(v.x()), floor(v.y()), floor(v.z())))
+	// Rand 2D (https://www.shadertoy.com/view/4djSRW)
 	Vector2f hash23(Vector3f p3) const {
 		p3 = fract3(p3.cwiseProduct(Vector3f(0.1031, 0.1030, 0.0973)));
 		p3 = p3 + Vector3f(p3.dot(Vector3f(p3.y(), p3.z(), p3.x())+Vector3f(33.33)));
 		return fract2((Vector2f(p3.x())+Vector2f(p3.y(), p3.z())).cwiseProduct(Vector2f(p3.z(), p3.y())));
 	}
 
-	// Random normalized vector
+	// Random normalized 3D vector
 	Vector3f randVec(Vector3f p) const {
 		Vector2f r = hash23(p);
 		float th = acos(2.*r.x()-1.);
@@ -46,6 +40,7 @@ protected:
 		return Vector3f(cos(th)*sin(phi), cos(phi), sin(th)*sin(phi));
 	}
 
+	// 3D perlin noise
 	float perlin(Vector3f p) const {
 		Vector3f i = Vector3f(floor(p.x()), floor(p.y()), floor(p.z()));
 		Vector3f f = p-i;
@@ -62,7 +57,8 @@ protected:
 			lerp(lerp(ldf, rdf, s.x()), lerp(luf, ruf, s.x()), s.y()), s.z());
 	}
 
-#define OCTAVES 8
+	#define OCTAVES 8
+	// 3D fractal noise
 	float fbm(Vector3f p) const {
 		float r = 0;
 		float a = 0.5;

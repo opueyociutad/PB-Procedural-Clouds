@@ -111,7 +111,6 @@ add_executable(nori
   src/path_mis.cpp
   src/path_media_hardcoded.cpp
   src/path_media_slides.cpp
-  src/path_sdf.cpp
   src/phasefunction.cpp
   src/media.cpp
   src/path_media_slides_refactor.cpp

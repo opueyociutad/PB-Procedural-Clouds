@@ -9,8 +9,8 @@ public:
 	virtual float eval(Vector3f p) const override {
 		p = p.cwiseQuotient(scale) - position.cwiseQuotient(scale);
 		float n = fbm(p+Vector3f(seed));
-		float shape = ((p-Vector3f(-1.5,0.6,-0.5)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1;
-		shape = fmin(shape, ((p-Vector3f(1.5,-0.6,0)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-0.9);
+		float shape = ((p-Vector3f(1.5,0.6,-0.5)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-1;
+		shape = fmin(shape, ((p-Vector3f(-1.5,-0.6,0)).cwiseProduct(0.75*Vector3f(0.5,1,1))).norm()-0.9);
 		return smoothstep(-0.5, 0.3, n)*smoothstep(-0.1, 0.1, -(shape-fmax(2, p.y()+2)*n));
 	}
 
@@ -51,9 +51,9 @@ public:
 	explicit Sky(const PropertyList &propList) : DensityFunction(propList) {}
 
 	virtual float eval(Vector3f p) const override {
-		float n = fbm(p+Vector3f(seed));
 		p = p.cwiseProduct(scale) + position;
-		return smoothstep(0, 0.5, n)*smoothstep(0.01, -0.11, (p.y()-1-5*n));
+		float n = fbm(0.1*p+Vector3f(seed));
+		return smoothstep(0, 0.3, n)*smoothstep(0.01, -0.11, (p.y()-0.5));
 	}
 
 	std::string toString() const override {

@@ -10,8 +10,8 @@
 			<lookat target="0, 10, 0" origin="0, -16, 30" up="0, 1, 0"/>
 		</transform>
 
-		<integer name="width" value="960"/>
-		<integer name="height" value="540"/>
+		<integer name="width" value="640"/>
+		<integer name="height" value="360"/>
 	</camera>
 
 	<sampler type="independent">

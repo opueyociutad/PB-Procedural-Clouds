@@ -10,12 +10,12 @@
 			<lookat target="-2, 15, 0" origin="-50, 15, 60" up="0, 1, 0"/>
 		</transform>
 
-		<integer name="width" value="426"/>
-		<integer name="height" value="240"/>
+		<integer name="width" value="640"/>
+		<integer name="height" value="360"/>
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="128"/>
+		<integer name="sampleCount" value="2048"/>
 	</sampler>
 
 	<emitter type="pointlight">
