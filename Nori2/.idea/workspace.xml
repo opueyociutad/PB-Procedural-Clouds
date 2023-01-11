@@ -39,18 +39,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c06758c-7004-4ca6-894c-41cb67ce447f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/scenes/path_media_test/hg_phase_function.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cache-v2-84260c4c30d228641bd9.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/ext_build/openexr/OpenEXR/IlmImf/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/ext_build/openexr/OpenEXR/IlmImf/cmake_install.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/.cmake/api/v1/reply/cache-v2-f4ea12cb0591a926e615.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/nori.dir/src/path_media_slides_refactor.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/nori" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/nori" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/cloud_test/cloud.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/cloud_test/cloud.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.exr" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.png" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/density.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/density.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/media.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/media.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/phasefunction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/phasefunction.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,26 +82,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/scenes/cloud_test&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "/home/oscar/Documents/MRGCV/MSoA-22-23/Nori2/scenes/path_media_test",
+    "nodejs_package_manager_path": "npm"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scenes/path_media_test" />
       <recent name="$PROJECT_DIR$/scenes/cloud_test" />
       <recent name="$PROJECT_DIR$/scenes/path_media_test/meshes" />
-      <recent name="$PROJECT_DIR$/scenes/path_media_test" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/cmake-build-release" />
     </key>
@@ -183,7 +185,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="nori" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="scenes/path_media_test/cbox_media_refactor.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nori" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="nori">
+    <configuration name="nori" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="scenes/path_media_test/hg_phase_function.xml" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="nori" TARGET_NAME="nori" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="nori" RUN_TARGET_NAME="nori">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -344,7 +346,9 @@
       <workItem from="1673366198800" duration="808000" />
       <workItem from="1673393332598" duration="137000" />
       <workItem from="1673394107583" duration="12000" />
-      <workItem from="1673397161083" duration="2000" />
+      <workItem from="1673397161083" duration="2024000" />
+      <workItem from="1673445555661" duration="3096000" />
+      <workItem from="1673450476820" duration="5171000" />
     </task>
     <servers />
   </component>

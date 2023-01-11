@@ -193,6 +193,7 @@ public:
 					return false;
 				}
 				cfs = this->getMediaCoeffs(ray.o + ray.d * t);
+				// Intersection with p = mu_t / mu_max
 				if ((cfs.mu_n / mu_max) < sampler->next1D()) break;
 			}
 			medIts = MediaIntersection(ray.o + ray.d * t, t, this, boundaries, cfs.mu_a + cfs.mu_s);
