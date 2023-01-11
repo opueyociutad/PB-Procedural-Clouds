@@ -38,7 +38,20 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c06758c-7004-4ca6-894c-41cb67ce447f" name="Changes" comment="" />
+    <list default="true" id="9c06758c-7004-4ca6-894c-41cb67ce447f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cache-v2-84260c4c30d228641bd9.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/ext_build/openexr/OpenEXR/IlmImf/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/ext_build/openexr/OpenEXR/IlmImf/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.cmake/api/v1/reply/cache-v2-f4ea12cb0591a926e615.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_deps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scenes/path_media_test/cbox_media_refactor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/path_media_slides_refactor.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -326,6 +339,12 @@
       <workItem from="1673212481799" duration="656000" />
       <workItem from="1673217585560" duration="5378000" />
       <workItem from="1673267837968" duration="909000" />
+      <workItem from="1673276050466" duration="421000" />
+      <workItem from="1673366031342" duration="22000" />
+      <workItem from="1673366198800" duration="808000" />
+      <workItem from="1673393332598" duration="137000" />
+      <workItem from="1673394107583" duration="12000" />
+      <workItem from="1673397161083" duration="2000" />
     </task>
     <servers />
   </component>

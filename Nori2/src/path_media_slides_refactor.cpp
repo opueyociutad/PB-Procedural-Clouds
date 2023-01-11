@@ -104,7 +104,7 @@ public :
 
 		// Multiple Importance Sampling
 		Color3f Lmis(0);
-		// Different source, can add OR same source, MIS
+		// Different source, can add <-> same source, MIS
 		if (emitter_nee != emitter_pf || !isVisible) Lmis = Lnee + Lpf;
 		else Lmis = mediaMIS(rayPF, rayNEE, Lpf, Lnee,itMedia.pMedia->getPhaseFunction(), ray,
 							pnee_nee, pdf_pf_em);
