@@ -54,19 +54,21 @@ public :
 	}
 
 
-	const double MAX_SCENE = 200.0;
+	#define MAX_SCENE 200.0
+	// Returns the direct light of the reflected ray attenuated by the transmittance
 	Color3f sampledDirectionLight(const Scene* scene, const Ray3f& rayPF, float& pdfEm, const Emitter*& emitter) const {
 		Intersection pfIt;
-		// MISSING SEARCH
 		bool pfIntersected = scene->rayIntersect(rayPF, pfIt);
 		Color3f Lpf(0);
 		if (!pfIntersected && scene->getEnvironmentalEmitter() != nullptr) {
+			// Reflected ray didn't intersect with anything, return environment
 			emitter = scene->getEnvironmentalEmitter();
 			EmitterQueryRecord emitterQueryRecord;
 			emitterQueryRecord.wi = rayPF.d;
 			Lpf = scene->transmittance(rayPF.o, rayPF.o + MAX_SCENE * rayPF.d) * emitter->eval(emitterQueryRecord);
 			pdfEm = emitter->pdf(emitterQueryRecord);
 		} else if (pfIntersected && pfIt.mesh->isEmitter()) {
+			// Reflected ray intersects with emitter
 			emitter = pfIt.mesh->getEmitter();
 			EmitterQueryRecord emitterQueryRecord(emitter, rayPF.o, pfIt.p, pfIt.shFrame.n, pfIt.uv);
 			Lpf = scene->transmittance(rayPF.o, pfIt.p) * emitter->eval(emitterQueryRecord);
@@ -132,8 +134,9 @@ public :
 		float pnee_nee = emitterRecord.pdf * pdf_light;
 		if (isVisible) {
 			BSDFQueryRecord bsdfRecord(it.toLocal(-ray.d), it.toLocal(emitterRecord.wi), it.uv, ESolidAngle);
+			float cs = abs(it.shFrame.n.dot(emitterRecord.wi));
 			Lnee = Le * it.mesh->getBSDF()->eval(bsdfRecord)
-					* scene->transmittance(ray.o, emitterRecord.p)
+					* scene->transmittance(ray.o, emitterRecord.p) * cs
 					/ pdf_light;
 		}
 		Ray3f rayNEE(ray.o, emitterRecord.wi);
@@ -161,27 +164,48 @@ public :
 			return Lmis;
 		}
 
-		Ray3f newRay(it.p, it.toWorld(bsdfRecord.wo));
-		return Lmis + sampleBSDF * this->LiT(scene, sampler, newRay) / pdfRR;
+		return Lmis + sampleBSDF * this->LiT(scene, sampler, rayBSDF) / pdfRR;
 	}
 
 	Color3f LiT(const Scene* scene, Sampler* sampler, const Ray3f& ray, bool first=false) const {
+
 		Intersection it;
 		bool intersected = scene->rayIntersect(ray, it);
+
+		// Check intersection with scene
 		std::vector<MediaBoundaries> allMediaBoundaries = scene->rayIntersectMediaBoundaries(ray);
 		MediaIntersection itMedia;
 		bool intersectedMedia = scene->rayIntersectMediaSample(ray, allMediaBoundaries, itMedia);
-		if (!intersected && !intersectedMedia && !first) return {0.0f};
-		else if (!intersected && !intersectedMedia && first) return scene->getBackground(ray);
+		/* Base cases:
+		 * In all of these cases there are no collisions with the media. 
+		 * The probability of not colliding with the media is equals to 1-cdf.
+		 * Since 1-cdf is equals to the transmittance, the probability and the transmittance cancel out
+		 */
+		if (!intersected && !intersectedMedia && !first) {
+			// Secondary ray didn't intersect with anything
+			// Return 0 to avoid double counting of environment light
+			return {0.0f};
+		} else if (intersected && (!intersectedMedia || itMedia.t >= it.t) && it.mesh->isEmitter() && first) {
+			// Ray intersected with emitter, return
+			const Emitter* emitter = it.mesh->getEmitter();
+			EmitterQueryRecord emitterQueryRecord(emitter, ray.o, it.p, it.shFrame.n, it.uv);
+			return emitter->eval(emitterQueryRecord);
+		} else if (!intersected && !intersectedMedia && first) {
+			// First ray didn't intersect with anything, return environment
+			return scene->getBackground(ray);
+		}
+
+		// Ray intersected with geometry or media
 
 		Color3f L(0.0f);
 		float pdf = 1.0f;
-		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) { // We hit a surface!
+		if (intersected && (!intersectedMedia || itMedia.t >= it.t)) {
+			// Intersected with a surface
 			L = DirectLight(scene, sampler, Ray3f(it.p, ray.d), it);
 			// pdf is 1 since sampling according to transmittance
-			// (1 - cdf = transmittance)
-			pdf = 1.0f;
+			pdf = 1.0f; // (1 - cdf = transmittance)
 		} else {
+			// Intersected with media
 			// Transmittance not accounted because it gets simplified by the sampling (not mu_t, accounted below)
 			MediaCoeffs coeffs = itMedia.pMedia->getMediaCoeffs(itMedia.p);
 			L = coeffs.mu_s * InScattering(scene, sampler, Ray3f(itMedia.p, ray.d), itMedia, coeffs);
