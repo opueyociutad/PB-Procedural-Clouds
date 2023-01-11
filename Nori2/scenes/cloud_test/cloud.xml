@@ -15,7 +15,7 @@
 	</camera>
 
 	<sampler type="independent">
-		<integer name="sampleCount" value="2048"/>
+		<integer name="sampleCount" value="1"/>
 	</sampler>
 
 	<emitter type="pointlight">
@@ -66,7 +66,7 @@
 		</phase>
 
 		<mesh type="obj">
-			<string name="filename" value="unitCube.obj"/>
+			<string name="filename" value="sphere.obj"/>
 			<transform name="toWorld">
 				<scale value="50, 50, 50"/>
 				<translate value="0, -16, 30"/>
@@ -78,3 +78,4 @@
 	</medium>
 
 </scene>
+

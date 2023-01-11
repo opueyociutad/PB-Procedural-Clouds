@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene>
+	<integrator type="path_media_slides_refactor"/>
+
+	<camera type="perspective">
+		<float name="fov" value="90"/>
+		<transform name="toWorld">
+			<scale value="1,1,1"/>
+			<lookat target="0, 10, 0" origin="0, -20, 20" up="0, 1, 0"/>
+		</transform>
+
+		<integer name="width" value="426"/>
+		<integer name="height" value="240"/>
+	</camera>
+
+	<sampler type="independent">
+		<integer name="sampleCount" value="128"/>
+	</sampler>
+
+	<emitter type="pointlight">
+		<color name="radiance" value="2000000, 2000000, 2000000"/>
+		<point name="position" value="0, 500, -300"/>
+	</emitter>
+
+	<emitter type="environment">
+		<string name="filename" value="env2.exr"/>
+		<float name ="rotate" value="-2.2"/>
+		<color name ="radiance" value="300,300,300"/>
+	</emitter>
+
+	<medium type="heterogeneous_media">
+		<float name="max_rho" value="1.0"/>
+		<float name="sigma_a" value="0.2"/>
+		<float name="sigma_s" value="0.6"/>
+
+		<phase type="henyey_greenstein">
+			<float name="g" value ="0.8"/>
+		</phase>
+
+		<density type="sky">
+			<float name="seed" value="3"/>
+			<vector name="scale" value="1, 1, 1"/>
+			<vector name="position" value="0, 10, 0"/>
+		</density>
+
+		<mesh type="obj">
+			<string name="filename" value="unitCube.obj"/>
+			<transform name="toWorld">
+				<scale value="100, 10, 100"/>
+				<translate value="0, 10, 0"/>
+			</transform>
+			<bsdf type="diffuse">
+				<color name="albedo" value="0,0,0"/>
+			</bsdf>
+		</mesh>
+	</medium>
+
+	<medium type="homogeneous_media">
+		<float name="rho" value="1.0" />
+		<float name="sigma_a" value="0.0004" />
+		<float name="sigma_s" value="0.0012" />
+
+		<phase type="henyey_greenstein">
+			<float name="g" value="0" />
+		</phase>
+
+		<mesh type="obj">
+			<string name="filename" value="unitCube.obj"/>
+			<transform name="toWorld">
+				<scale value="50, 50, 50"/>
+				<translate value="0, -16, 30"/>
+			</transform>
+			<bsdf type="diffuse">
+				<color name="albedo" value="0,0,0"/>
+			</bsdf>
+		</mesh>
+	</medium>
+
+</scene>
