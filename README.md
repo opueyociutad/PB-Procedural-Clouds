@@ -7,6 +7,8 @@ In a nutshell, our procedural clouds use volumetric SDFs modulated by Perlin noi
 
 God rays are volumetric shadows produced by the difference in density of the cloud and a thin medium (air with some scattering) to visualize them.
 
+*Note: Everything is implemented under the [Nori](http://wjakob.github.io/nori/) engine.*
+
 # Cool results
 ## Procedural clouds and God Rays
 Big cloud blocking the sun, producing god rays.
