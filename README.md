@@ -3,7 +3,7 @@ We implemented **Procedural Clouds** and a **Volumetric Path Tracer** capable of
 
 Since clouds are an heterogeneous medium, we simulate interactions by **delta tracking** and estimate transmittance by **ratio tracking**. Our volumetric path tracer uses **Multiple Importance Sampling (MIS)** to reduce variance.
 
-In a nutshell, our procedural clouds use volumetric **Perlin noise** w/ several frequency octaves weighted with **SDFs** to provide a certain shape.
+In a nutshell, our procedural clouds use volumetric SDFs modulated by Perlin noise with several octaves.
 
 God rays are volumetric shadows produced by the difference in density of the cloud and a thin medium (air with some scattering) to visualize them.
 
